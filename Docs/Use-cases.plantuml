@@ -2,10 +2,24 @@
 left to right direction
 
 "User" as user
+"API" as api
 
-user --> (Login)
-user --> (Register)
-(Register) ..> (Verify Email): <<include>>
-(Login) <.. (Verify Login): <<extends>>
+
+rectangle System {
+    usecase "Login" as u1
+    usecase "Register" as u2
+    usecase "Verify Email" as u3
+    usecase "Verify Login" as u4
+}
+
+user --> u1
+user --> u2
+
+u2 .> u3: <<include>>
+u1 <. u4: <<extends>>
+
+u1 -- api
+u2 -- api
+
 
 @enduml
