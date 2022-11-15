@@ -1,0 +1,11 @@
+@startuml Use cases
+left to right direction
+
+"User" as user
+
+user --> (Login)
+user --> (Register)
+(Register) ..> (Verify Email): <<include>>
+(Login) <.. (Verify Login): <<extends>>
+
+@enduml
