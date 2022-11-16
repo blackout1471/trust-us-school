@@ -1,12 +1,18 @@
 @startuml ERD
 left to right direction
 
+entity "UserPasswords" as up{
+    ID int (PK)
+    UsersID int (FK)
+    --
+    HashedPassword varchar(200)
+    Salt varchar(200)
+}
+
 entity Users {
     ID int (PK)
     --
     Email varchar(100)
-    HashedPassword varchar(200)
-    Salt varchar(200)
     HashedVerification varchar(200)
     IsVerified boolean
     FirstName varchar(50)
@@ -44,4 +50,8 @@ Users::ID"      1" -- "*"ur::UsersID
 Roles::ID"1" -- "*"ur::RolesID
 
 Users::ID"      1" -- "*"vul::UsersID
+
+up::UserID"1" -- "1"Users::ID
+
+
 @enduml
