@@ -1,0 +1,47 @@
+@startuml ERD
+left to right direction
+
+entity Users {
+    ID int (PK)
+    --
+    Email varchar(100)
+    HashedPassword varchar(200)
+    Salt varchar(200)
+    HashedVerification varchar(200)
+    IsVerified boolean
+    FirstName varchar(50)
+    LastName varchar(50)
+    PhoneNumber varcher(20)
+}
+entity "VerifiedUserLocations" as vul {
+    ID int (PK)
+    UsersID int (FK)
+    --
+    IP binary(16)
+    IPType byte
+    UserAgent varchar(256)
+}
+
+entity "Users_Roles" as ur {
+    UsersID int (FK)
+    RolesID int (FK)
+    --
+}
+
+entity Roles {
+    ID int (PK)
+    --
+    Name varchar(50)
+}
+
+entity "LeakedPasswords" as lp {
+    lp : HashedPassword nvchar(60) (PK)
+    --
+    lp : PwnCount int
+}
+
+Users::ID"      1" -- "*"ur::UsersID
+Roles::ID"1" -- "*"ur::RolesID
+
+Users::ID"      1" -- "*"vul::UsersID
+@enduml
