@@ -7,6 +7,6 @@ namespace IdentityApi.Interfaces
     {
         Task<DbUser> CreateUser(DbUser userCreate);
         Task<DbUser> GetUserByEmail(string email);
-        Task<DbUser> GetUserByID(int id);
+        Task<DbUser> GetUserByID(int userID);
     }
 }

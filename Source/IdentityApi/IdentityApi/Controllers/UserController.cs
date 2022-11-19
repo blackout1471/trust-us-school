@@ -26,7 +26,7 @@ namespace IdentityApi.Controllers
                 var user = await _userManager.Login(userLogin);
 
                 if (user == null)
-                    return NotFound();
+                    return NoContent();
 
                 return Ok(_tokenManager.GenerateUserToken(user));
             }

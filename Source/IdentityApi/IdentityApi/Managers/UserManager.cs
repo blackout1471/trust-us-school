@@ -1,4 +1,5 @@
 ﻿using IdentityApi.DbModels;
+using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
 
@@ -14,21 +15,38 @@ namespace IdentityApi.Managers
 
         public async Task<User> CreateUser(UserCreate userCreate)
         {
+            var existingUser = await _userProvider.GetUserByEmail(userCreate.Email);
+
+            if(existingUser != null)
+            {
+                // TODO: log
+
+                throw new Exception("Email already in use");
+            }
+
+
             // TODO: create mapper
 
             var toCreateDbUser = new DbUser()
             {
                 Email = userCreate.Email,
-                HashedPassword = userCreate.Password, // TODO: Replace with salted password
-                Salt = "123" // TODO: Replace with the salt
+                FirstName = userCreate.FirstName,
+                LastName = userCreate.LastName,
+                PhoneNumber = userCreate.PhoneNumber
             };
+
+            toCreateDbUser.Salt = Security.GetSalt(50);
+            toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
 
             var createdUser = await _userProvider.CreateUser(toCreateDbUser);
 
             return new User()
             {
-                Id = createdUser.ID,
-                Email = createdUser.Email
+                ID = createdUser.ID,
+                Email = createdUser.Email,
+                FirstName = createdUser.FirstName,  
+                LastName = createdUser.LastName,
+                PhoneNumber = createdUser.PhoneNumber
             };
         }
 
@@ -41,11 +59,21 @@ namespace IdentityApi.Managers
                 return null;
             }
 
-            return new User()
+            if(existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
             {
-                Id = existingUser.ID,
-                Email = existingUser.Email
-            };
+                // login success 
+
+                return existingUser;
+            }
+            else
+            {
+                // login failed
+
+                // TODO: log
+
+                // update tries, if tries >= 3 lock account  <- consider moving both to sp and returning dbuser
+                throw new Exception("Login failed, username or password is incorrect");
+            }
         }
     }
 }

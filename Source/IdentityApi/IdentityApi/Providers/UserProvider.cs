@@ -20,6 +20,7 @@ namespace IdentityApi.Providers
         {
             try
             {
+                // TODO: Make this usings into a nice method
                 using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
                 {
                     using (SqlCommand cmd = new SqlCommand("SP_CreateUser", con))
@@ -35,6 +36,9 @@ namespace IdentityApi.Providers
 
                         var dataTable = new DataTable();
                         dataTable.Load(dataReader);
+
+                        if (dataTable.Rows.Count == 0)
+                            return null;
 
                         return DRToUser(dataTable.Rows[0]);
                     }
@@ -69,6 +73,9 @@ namespace IdentityApi.Providers
                     var dataTable = new DataTable();
                     dataTable.Load(dataReader);
 
+                    if (dataTable.Rows.Count == 0)
+                        return null;
+
                     return DRToUser(dataTable.Rows[0]);
                 }
             }
@@ -87,8 +94,13 @@ namespace IdentityApi.Providers
                 dbUser.ID = Convert.ToInt32(dr["ID"]);
                 dbUser.HashedPassword = dr["HashedPassword"].ToString();
                 dbUser.Salt = dr["Salt"].ToString();
-
-                // TODO: Add the rest of the information
+                dbUser.FirstName = dr["FirstName"].ToString();
+                dbUser.LastName = dr["LastName"].ToString();
+                dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
+                dbUser.IsVerified = (bool)dr["IsLocked"];
+                dbUser.IsLocked = (bool)dr["IsLocked"];
+                dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
+                dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
                 return dbUser;
             }
@@ -99,5 +111,6 @@ namespace IdentityApi.Providers
                 throw e;
             }
         }
+
     }
 }

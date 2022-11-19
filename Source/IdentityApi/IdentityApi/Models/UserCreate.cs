@@ -1,8 +1,7 @@
 ﻿namespace IdentityApi.Models
 {
-    public class UserCreate
+    public class UserCreate : UserBase
     {
-        public string Email { get; set; }
         public string Password { get; set; }
     }
 }

@@ -43,7 +43,57 @@ namespace IdentityApi.Managers
             }
         }
 
-        public ClaimsPrincipal GetPrincipal(string token)
+        public UserToken GenerateUserToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim("id", user.ID.ToString()),
+                new Claim("email", user.Email)
+            };
+
+            var token = new JwtSecurityToken(
+                _configuration["Jwt:Issuer"],
+                _configuration["Jwt:Audience"],
+                claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: credentials
+            );
+
+            UserToken userToken = new UserToken();
+            userToken.Token = new JwtSecurityTokenHandler().WriteToken(token);
+            userToken.UserID = user.ID;
+            userToken.Email = user.Email;
+
+            return userToken;
+        }
+
+        public bool ValidateToken(string token)
+        {
+            ClaimsPrincipal principal = GetPrincipal(token);
+
+            if (principal == null)
+                return false;
+
+            try
+            {
+                ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
+
+                var userToken = ClaimsIdentityToUserToken(identity, token);
+
+                return userToken == null ? false : true;
+            }
+            catch (Exception e)
+            {
+                // TODO: Log
+
+                return false;
+            }
+        }
+
+        private ClaimsPrincipal GetPrincipal(string token)
         {
             try
             {
@@ -75,63 +125,12 @@ namespace IdentityApi.Managers
                 throw e;
             }
         }
-
-        public UserToken GenerateUserToken(User user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-                new Claim("id", user.Id.ToString()),
-                new Claim("email", user.Email)
-            };
-
-            var token = new JwtSecurityToken(
-                _configuration["Jwt:Issuer"],
-                _configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: credentials
-            );
-
-            UserToken userToken = new UserToken();
-            userToken.Token = new JwtSecurityTokenHandler().WriteToken(token);
-            userToken.ID = user.Id;
-            userToken.Email = user.Email;
-
-            return userToken;
-        }
-
-        public bool ValidateToken(string token)
-        {
-            ClaimsPrincipal principal = GetPrincipal(token);
-
-            if (principal == null)
-                return false;
-
-            try
-            {
-                ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
-
-                var userToken = ClaimsIdentityToUserToken(identity, token);
-
-                return userToken == null ? false : true;
-            }
-            catch (Exception e)
-            {
-                // TODO: Log
-
-                return false;
-            }
-        }
-
         private UserToken ClaimsIdentityToUserToken(ClaimsIdentity identity, string token)
         {
             var userToken = new UserToken();
 
             userToken.Email = identity.FindFirst("email").Value;
-            userToken.ID = Convert.ToInt32(identity.FindFirst("id").Value);
+            userToken.UserID = Convert.ToInt32(identity.FindFirst("id").Value);
             userToken.Token = token;
 
             return userToken;

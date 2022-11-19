@@ -1,8 +1,11 @@
 ﻿namespace IdentityApi.Models
 {
-    public class User
+    public class User : UserBase
     {
-        public int Id { get; set; }
-        public string Email { get; set; }
+        public int ID { get; set; }
+        public bool IsVerified { get; set; }
+        public bool IsLocked { get; set; }
+        public int FailedTries { get; set; }
+        public DateTime? LockedDate { get; set; }
     }
 }
