@@ -1,7 +1,6 @@
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
-using System;
 
 namespace IdentityApi
 {
@@ -34,10 +33,14 @@ namespace IdentityApi
                 .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
                 {
                     AutoRegisterTemplate = true,
-                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+                    NumberOfReplicas = 0,
+                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
+                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticConfiguration:Username"], configuration["ElasticConfiguration:Password"])
+                                                        .ServerCertificateValidationCallback((o, certificate, arg3, arg4) => { return true; }), // TODO: Add not self signed certificate for elasticsearch
+                    TypeName = null
                 })
-                .ReadFrom.Configuration(configuration)
-                .CreateBootstrapLogger();
+                .CreateLogger();
 
             builder.Host.UseSerilog();
 
