@@ -10,13 +10,6 @@ namespace IdentityApi
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile(
-                    $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-                    optional: true)
-                .Build();
-
             // Add services to the container.
 
             builder.Services.AddControllers();
