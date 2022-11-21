@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MessageService.Setups.Configurations
+namespace MessageService.Configurations
 {
     public interface ISMTPConfigModel
     {

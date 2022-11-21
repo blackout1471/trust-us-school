@@ -1,7 +1,6 @@
-﻿using MessageService.Messages;
+﻿using MessageService.Configurations;
+using MessageService.Messages;
 using MessageService.Recipients;
-using MessageService.Setups;
-using MessageService.Setups.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;

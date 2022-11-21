@@ -1,6 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using MessageService.MessageServices;
-using MessageService.Setups.Configurations;
 using Sandbox;
 
 Config config = new Config

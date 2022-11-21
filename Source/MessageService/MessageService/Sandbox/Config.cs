@@ -1,4 +1,4 @@
-﻿using MessageService.Setups.Configurations;
+﻿using MessageService.Configurations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
