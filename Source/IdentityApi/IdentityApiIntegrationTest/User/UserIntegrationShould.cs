@@ -1,16 +1,23 @@
 using IdentityApi.Models;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace IdentityApiIntegrationTest.User
 {
     public class UserIntegrationShould : IClassFixture<IdentityApiFactory>
     {
+        /// <summary>
+        /// The http client used to call the api which is being tested.
+        /// </summary>
         private readonly HttpClient _client;
+
+        private readonly string _baseUrl;
 
         public UserIntegrationShould(IdentityApiFactory factory)
         {
-            _client = factory.CreateDefaultClient();
+            _client = factory.HttpClient;
+            _baseUrl = "api/user/";
         }
 
         [Fact]
@@ -18,6 +25,7 @@ namespace IdentityApiIntegrationTest.User
         {
             // Arrange
             var expected = HttpStatusCode.OK;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
             var newUserRequest = new UserCreate
             {
                 Email = "test",
@@ -31,13 +39,14 @@ namespace IdentityApiIntegrationTest.User
                 Email = "test",
                 Password = "test"
             };
-            var createCustomerResponse = await _client.PostAsJsonAsync("api/user/Create", newUserRequest);
+            var createCustomerResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/user/Login", customerLoginRequest);
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Login", customerLoginRequest);
+            actual = response.StatusCode;
 
             // Assert
-            Assert.Equal(expected, response.StatusCode);
+            Assert.Equal(expected, actual);
         }
 
 
@@ -46,6 +55,7 @@ namespace IdentityApiIntegrationTest.User
         {
             // Arrange
             var expected = HttpStatusCode.NoContent;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
             var customerLoginRequest = new UserLogin
             {
                 Email = "notexists@notexists.dk",
@@ -53,10 +63,65 @@ namespace IdentityApiIntegrationTest.User
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/user/Login", customerLoginRequest);
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Login", customerLoginRequest);
+            actual = response.StatusCode;
 
             // Assert
-            Assert.Equal(expected, response.StatusCode);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void ExpectStatusCode200_WhenUserIsRegistered_Register()
+        {
+            // Arrange
+            var expected = HttpStatusCode.OK;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = new UserCreate
+            {
+                Email = "test2",
+                Password = "test2",
+                FirstName = "test2",
+                LastName = "test2",
+                PhoneNumber = "454545452"
+            };
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actual = response.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void ExpectStatusCode200_WhenUserExists_GetUserByToken()
+        {
+            // Arrange
+            var expected = HttpStatusCode.OK;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = new UserCreate
+            {
+                Email = "test3",
+                Password = "test3",
+                FirstName = "test3",
+                LastName = "test3",
+                PhoneNumber = "454545452"
+            };
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            var token = await createUserResponse.Content.ReadFromJsonAsync<UserToken>();
+
+            // Act
+            using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, _baseUrl + "getuserbytoken"))
+            {
+                requestMessage.Headers.Authorization =
+                    new AuthenticationHeaderValue("Bearer", token?.Token);
+
+                var response = await _client.SendAsync(requestMessage);
+                actual = response.StatusCode;
+            }
+
+            // Assert
+            Assert.Equal(expected, actual);
         }
     }
 }

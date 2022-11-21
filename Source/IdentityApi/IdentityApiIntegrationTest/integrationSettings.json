@@ -1,5 +1,0 @@
-{
-  "ConnectionStrings": {
-    "SQLserver": "Server=localhost,1443;Database=TrustUS;User Id=TestIntegration;Password=Pass1234;"
-  }
-}
