@@ -6,7 +6,6 @@ using IdentityApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
-using Xunit;
 
 namespace IdentityApiIntegrationTest
 {
@@ -22,13 +21,8 @@ namespace IdentityApiIntegrationTest
             })
             .Build();
 
-        
-
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            _dbContainer.ExecScriptAsync(@"C:\\repos\\trust-us-school\\Scripts\\DbScheme.sql")
-                .Wait();
-
             builder.ConfigureAppConfiguration(config =>
             {
                 var integrationConfig = new ConfigurationBuilder()
@@ -48,6 +42,10 @@ namespace IdentityApiIntegrationTest
         public async Task InitializeAsync()
         {
             await _dbContainer.StartAsync();
+
+            // TODO: find relative path
+            var content = await File.ReadAllTextAsync(@"C:\\repos\\trust-us-school\\Scripts\\DbScheme.sql");
+            await _dbContainer.ExecScriptAsync(content);
         }
     }
 }

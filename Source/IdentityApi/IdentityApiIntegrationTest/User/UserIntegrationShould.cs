@@ -1,4 +1,5 @@
 using IdentityApi.Models;
+using System.Net;
 using System.Net.Http.Json;
 
 namespace IdentityApiIntegrationTest.User
@@ -13,10 +14,11 @@ namespace IdentityApiIntegrationTest.User
         }
 
         [Fact]
-        public async void ExpectStatusCode200_When_UserLogin()
+        public async void ExpectStatusCode200_WhenUserLoginSuccessfully_Login()
         {
-            // Setup data
-            var newUser = new UserCreate
+            // Arrange
+            var expected = HttpStatusCode.OK;
+            var newUserRequest = new UserCreate
             {
                 Email = "test",
                 Password = "test",
@@ -24,20 +26,37 @@ namespace IdentityApiIntegrationTest.User
                 LastName = "test",
                 PhoneNumber = "45454545"
             };
-            var create = await _client.PostAsJsonAsync("api/user/Register", newUser);
-
-            // Arrange
-            var customerLogin = new UserLogin
+            var customerLoginRequest = new UserLogin
             {
-                Email = "Test",
-                Password = "Test"
+                Email = "test",
+                Password = "test"
+            };
+            var createCustomerResponse = await _client.PostAsJsonAsync("api/user/Create", newUserRequest);
+
+            // Act
+            var response = await _client.PostAsJsonAsync("api/user/Login", customerLoginRequest);
+
+            // Assert
+            Assert.Equal(expected, response.StatusCode);
+        }
+
+
+        [Fact]
+        public async void ExpectStatusCode204_WhenUserNotExists_Login()
+        {
+            // Arrange
+            var expected = HttpStatusCode.NoContent;
+            var customerLoginRequest = new UserLogin
+            {
+                Email = "notexists@notexists.dk",
+                Password = "notexists"
             };
 
             // Act
-            var response = await _client.PostAsJsonAsync("api/user/Login", customerLogin);
+            var response = await _client.PostAsJsonAsync("api/user/Login", customerLoginRequest);
 
             // Assert
-            Assert.True(true);
+            Assert.Equal(expected, response.StatusCode);
         }
     }
 }
