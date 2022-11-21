@@ -6,8 +6,12 @@ name: .NET
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - 'Docs/**'
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - 'Docs/**'
 
 jobs:
   build:
