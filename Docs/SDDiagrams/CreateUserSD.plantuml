@@ -1,0 +1,40 @@
+@startuml Create User SD
+
+
+actor User
+participant UserController
+participant UserManager
+participant UserProvider
+participant TokenManager
+participant Security
+
+User->UserController: Create user (email, password)
+UserController->UserManager: Create user (email, password)
+UserManager->UserProvider: Get user by email(email)
+UserProvider->UserManager: Return User
+
+alt User found
+
+UserManager->UserController: User already exists
+UserController->User: User already exists
+
+end
+
+
+UserManager->Security: Get salt
+Security->User: Return salt
+
+UserManager->Security: Salt password (password, salt)
+Security->UserManager: Return salted password
+
+UserManager->UserProvider: Save user in database (user)
+UserProvider->UserManager: Return saved user
+
+
+UserManager->UserController: Returns User
+UserController->TokenManager: Get token for user (User)
+TokenManager->UserController: Returns Token
+
+UserController->User: Return token
+
+@enduml

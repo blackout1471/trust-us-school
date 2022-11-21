@@ -16,9 +16,10 @@ namespace IdentityApi.Managers
         {
             _configuration = configuration;
             _logger = logger;
-            _secret = _configuration["JWT:Key"];
+            _secret = _configuration["Jwt:Key"];
         }
 
+        /// <inheritdoc/>
         public UserToken GetUserTokenFromToken(string token)
         {
             var principal = GetPrincipal(token);
@@ -43,6 +44,7 @@ namespace IdentityApi.Managers
             }
         }
 
+        /// <inheritdoc/>
         public UserToken GenerateUserToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
@@ -51,8 +53,8 @@ namespace IdentityApi.Managers
             // Fills token with user information
             var claims = new[]
             {
-                new Claim("id", user.ID.ToString()),
-                new Claim("email", user.Email)
+                new Claim("ID", user.ID.ToString()),
+                new Claim("EmailAdress", user.Email)
             };
 
             // Configuries the token
@@ -72,6 +74,7 @@ namespace IdentityApi.Managers
             return userToken;
         }
 
+        /// <inheritdoc/>
         public bool ValidateToken(string token)
         {
             ClaimsPrincipal principal = GetPrincipal(token);
@@ -95,6 +98,9 @@ namespace IdentityApi.Managers
             }
         }
 
+        /// <summary>
+        /// Gets the token principal from the token
+        /// </summary>
         private ClaimsPrincipal GetPrincipal(string token)
         {
             try
@@ -108,14 +114,16 @@ namespace IdentityApi.Managers
                     throw new Exception();
                 }
 
-                byte[] key = Convert.FromBase64String(_secret);
+                byte[] key = Encoding.UTF8.GetBytes(_secret);
 
                 TokenValidationParameters parameters = new TokenValidationParameters()
                 {
                     RequireExpirationTime = true,
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidAudience = _configuration["Jwt:Audience"],
+                    ValidIssuer = _configuration["Jwt:Issuer"],
                 };
 
                 return tokenHandler.ValidateToken(token, parameters, out SecurityToken securityToken);
@@ -136,7 +144,7 @@ namespace IdentityApi.Managers
         {
             var userToken = new UserToken();
 
-            userToken.Email = identity.FindFirst("email").Value;
+            userToken.Email = identity.FindFirst("EmailAdress").Value;
             userToken.UserID = Convert.ToInt32(identity.FindFirst("id").Value);
             userToken.Token = token;
 

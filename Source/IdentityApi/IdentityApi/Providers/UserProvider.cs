@@ -16,7 +16,8 @@ namespace IdentityApi.Providers
             _configuration = configuration;
         }
 
-        public async Task<DbUser> CreateUser(DbUser userCreate)
+        /// <inheritdoc/>
+        public async Task<DbUser> CreateUserAsync(DbUser userCreate)
         {
             try
             {
@@ -52,12 +53,30 @@ namespace IdentityApi.Providers
             }
         }
 
-        public async Task<DbUser> GetUserByID(int id)
+        /// <inheritdoc/>
+        public async Task<DbUser> GetUserByIDAsync(int id)
         {
-            throw new NotImplementedException();
+            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+            {
+                // no need for sp since input is an integer therefore sql injection is not possible
+                using (SqlCommand cmd = new SqlCommand($"select top(1)* from Users  where ID = {id}", con))
+                {
+                    con.Open();
+                    var dataReader = await cmd.ExecuteReaderAsync();
+
+                    var dataTable = new DataTable();
+                    dataTable.Load(dataReader);
+
+                    if (dataTable.Rows.Count == 0)
+                        return null;
+
+                    return DRToUser(dataTable.Rows[0]);
+                }
+            }
         }
 
-        public async Task<DbUser> GetUserByEmail(string userEmail)
+        /// <inheritdoc/>
+        public async Task<DbUser> GetUserByEmailAsync(string userEmail)
         {
             using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
             {
@@ -81,6 +100,9 @@ namespace IdentityApi.Providers
             }
         }
 
+        /// <summary>
+        /// Maps datarow to db user
+        /// </summary>
         private DbUser DRToUser(DataRow dr)
         {
             try
@@ -92,8 +114,6 @@ namespace IdentityApi.Providers
 
                 dbUser.Email = dr["Email"].ToString();
                 dbUser.ID = Convert.ToInt32(dr["ID"]);
-                dbUser.HashedPassword = dr["HashedPassword"].ToString();
-                dbUser.Salt = dr["Salt"].ToString();
                 dbUser.FirstName = dr["FirstName"].ToString();
                 dbUser.LastName = dr["LastName"].ToString();
                 dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
@@ -102,6 +122,11 @@ namespace IdentityApi.Providers
                 dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
                 dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
+                if(dr.Table.Columns.Contains("HashedPassword"))
+                    dbUser.HashedPassword = dr["HashedPassword"]?.ToString();
+
+                if (dr.Table.Columns.Contains("Salt"))
+                    dbUser.Salt = dr["Salt"]?.ToString();
                 return dbUser;
             }
             catch (Exception e)

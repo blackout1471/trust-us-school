@@ -8,8 +8,7 @@ namespace IdentityApi.Helpers
         /// <summary>
         /// Uses Sha512 to compute the hash of the password
         /// </summary>
-        /// <param name="password"></param>
-        /// <returns></returns>
+        /// <returns>Sha512 computed hash</returns>
         private static string GetEncryptedPassword(string password)
         {
             SHA512 algorithm = SHA512.Create();
@@ -26,8 +25,7 @@ namespace IdentityApi.Helpers
         /// <summary>
         /// Generates random salt based on the salt length
         /// </summary>
-        /// <param name="saltLength"></param>
-        /// <returns></returns>
+        /// <returns>Random generated salt</returns>
         public static string GetSalt(int saltLength = 50)
         {
             byte[] buffer = RandomNumberGenerator.GetBytes(saltLength);

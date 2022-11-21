@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="899px" preserveAspectRatio="none" style="width:2384px;height:899px;background:#FFFFFF;" version="1.1" viewBox="0 0 2384 899" width="2384px" zoomAndPan="magnify"><defs/><g><!--MD5=[29f97d496cbdc4ec81664c6d94dc9bf6]
+class UserController--><g id="elem_UserController"><rect codeLine="7" fill="#F1F1F1" height="188.875" id="UserController" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="736" x="383" y="7"/><ellipse cx="701.25" cy="23" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M704.0156,18.875 Q704.1719,18.6563 704.3594,18.5469 Q704.5469,18.4375 704.7656,18.4375 Q705.1406,18.4375 705.375,18.7031 Q705.6094,18.9531 705.6094,19.5625 L705.6094,21.0156 Q705.6094,21.625 705.375,21.8906 Q705.1406,22.1563 704.7656,22.1563 Q704.4219,22.1563 704.2188,21.9531 Q704.0156,21.7656 703.9063,21.25 Q703.8594,20.8906 703.6719,20.7031 Q703.3438,20.3281 702.7344,20.1094 Q702.125,19.8906 701.5,19.8906 Q700.7344,19.8906 700.0938,20.2188 Q699.4688,20.5469 698.9688,21.2969 Q698.4844,22.0469 698.4844,23.0781 L698.4844,24.1719 Q698.4844,25.4063 699.375,26.2344 Q700.2656,27.0469 701.8594,27.0469 Q702.7969,27.0469 703.4531,26.7969 Q703.8438,26.6406 704.2656,26.2031 Q704.5313,25.9375 704.6719,25.8594 Q704.8281,25.7813 705.0313,25.7813 Q705.3594,25.7813 705.6094,26.0469 Q705.875,26.2969 705.875,26.6406 Q705.875,26.9844 705.5313,27.3906 Q705.0313,27.9688 704.2344,28.2969 Q703.1563,28.75 701.8594,28.75 Q700.3438,28.75 699.1406,28.125 Q698.1563,27.625 697.4688,26.5625 Q696.7813,25.4844 696.7813,24.2031 L696.7813,23.0469 Q696.7813,21.7188 697.3906,20.5781 Q698.0156,19.4219 699.1094,18.8125 Q700.2031,18.1875 701.4375,18.1875 Q702.1719,18.1875 702.8125,18.3594 Q703.4688,18.5156 704.0156,18.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="91" x="721.75" y="28.7285">UserController</text><line style="stroke:#181818;stroke-width:0.5;" x1="384" x2="1118" y1="39" y2="39"/><rect fill="none" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="391" y="50.3047"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="280" x="403" y="57.5332">_logger{readonly} : ILogger&lt;UserController&gt;</text><rect fill="none" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="391" y="67.9141"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="257" x="403" y="75.1426">_userManager{readonly} : IUserManager</text><rect fill="none" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="391" y="85.5234"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="210" x="403" y="92.752">_tokenManager : ITokenManager</text><line style="stroke:#181818;stroke-width:0.5;" x1="384" x2="1118" y1="99.8281" y2="99.8281"/><ellipse cx="394" cy="114.1328" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="710" x="403" y="118.3613">UserController(logger : ILogger&lt;UserController&gt;, userManager : IUserManager, tokenManager : ITokenManager)</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="4" x="403" y="135.9707"> </text><ellipse cx="394" cy="149.3516" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="431" x="403" y="153.5801">Create(userCreate : UserCreate) : Task&lt;ActionResult&lt;UserToken&gt;&gt;</text><ellipse cx="394" cy="166.9609" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="407" x="403" y="171.1895">Login(userLogin : UserLogin) : Task&lt;ActionResult&lt;UserToken&gt;&gt;</text><ellipse cx="394" cy="184.5703" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="318" x="403" y="188.7988">GetUserFromToken() : Task&lt;ActionResult&lt;User&gt;&gt;</text></g><!--MD5=[56ab46cd423624563d94b9f2eeeea516]
+class IUserManager--><g id="elem_IUserManager"><rect codeLine="25" fill="#F1F1F1" height="100.8281" id="IUserManager" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="389" x="424.5" y="256"/><ellipse cx="569.25" cy="272" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M570.2031,268.6406 L570.2031,275.2969 L571.9219,275.2969 Q572.5313,275.2969 572.7969,275.5313 Q573.0625,275.7656 573.0625,276.1563 Q573.0625,276.5313 572.7969,276.7656 Q572.5313,277 571.9219,277 L566.7813,277 Q566.1719,277 565.9063,276.7656 Q565.6406,276.5313 565.6406,276.1406 Q565.6406,275.7656 565.9063,275.5313 Q566.1719,275.2969 566.7813,275.2969 L568.5,275.2969 L568.5,268.6406 L566.7813,268.6406 Q566.1719,268.6406 565.9063,268.4063 Q565.6406,268.1719 565.6406,267.7813 Q565.6406,267.4063 565.9063,267.1719 Q566.1719,266.9375 566.7813,266.9375 L571.9219,266.9375 Q572.5313,266.9375 572.7969,267.1719 Q573.0625,267.4063 573.0625,267.7813 Q573.0625,268.1719 572.7969,268.4063 Q572.5313,268.6406 571.9219,268.6406 L570.2031,268.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="91" x="589.75" y="277.7285">IUserManager</text><line style="stroke:#181818;stroke-width:0.5;" x1="425.5" x2="812.5" y1="288" y2="288"/><line style="stroke:#181818;stroke-width:0.5;" x1="425.5" x2="812.5" y1="296" y2="296"/><ellipse cx="435.5" cy="310.3047" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="363" x="444.5" y="314.5332">CreateUserAsync(userCreate : UserCreate) : Task&lt;User&gt;</text><ellipse cx="435.5" cy="327.9141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="310" x="444.5" y="332.1426">LoginAsync(userLogin : UserLogin) : Task&lt;User&gt;</text><ellipse cx="435.5" cy="345.5234" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="255" x="444.5" y="349.752">GetUserByIDAsync(id : int) : Task&lt;User&gt;</text></g><!--MD5=[1258d900524f45f247dd7f1e09584eb4]
+class ITokenManager--><g id="elem_ITokenManager"><rect codeLine="31" fill="#F1F1F1" height="100.8281" id="ITokenManager" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="364" x="1044" y="256"/><ellipse cx="1170.75" cy="272" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M1171.7031,268.6406 L1171.7031,275.2969 L1173.4219,275.2969 Q1174.0313,275.2969 1174.2969,275.5313 Q1174.5625,275.7656 1174.5625,276.1563 Q1174.5625,276.5313 1174.2969,276.7656 Q1174.0313,277 1173.4219,277 L1168.2813,277 Q1167.6719,277 1167.4063,276.7656 Q1167.1406,276.5313 1167.1406,276.1406 Q1167.1406,275.7656 1167.4063,275.5313 Q1167.6719,275.2969 1168.2813,275.2969 L1170,275.2969 L1170,268.6406 L1168.2813,268.6406 Q1167.6719,268.6406 1167.4063,268.4063 Q1167.1406,268.1719 1167.1406,267.7813 Q1167.1406,267.4063 1167.4063,267.1719 Q1167.6719,266.9375 1168.2813,266.9375 L1173.4219,266.9375 Q1174.0313,266.9375 1174.2969,267.1719 Q1174.5625,267.4063 1174.5625,267.7813 Q1174.5625,268.1719 1174.2969,268.4063 Q1174.0313,268.6406 1173.4219,268.6406 L1171.7031,268.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="102" x="1191.25" y="277.7285">ITokenManager</text><line style="stroke:#181818;stroke-width:0.5;" x1="1045" x2="1407" y1="288" y2="288"/><line style="stroke:#181818;stroke-width:0.5;" x1="1045" x2="1407" y1="296" y2="296"/><ellipse cx="1055" cy="310.3047" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="289" x="1064" y="314.5332">GenerateUserToken(user : User) : UserToken</text><ellipse cx="1055" cy="327.9141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="222" x="1064" y="332.1426">ValidateToken(token : string) : bool</text><ellipse cx="1055" cy="345.5234" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="338" x="1064" y="349.752">GetUserTokenFromToken(token : string) : UserToken</text></g><!--MD5=[6c06fb0cd17dfe24a13aaf4bb7e771c8]
+class TokenManager--><g id="elem_TokenManager"><rect codeLine="37" fill="#F1F1F1" height="83.2188" id="TokenManager" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="533" x="1154.5" y="60"/><ellipse cx="1368.75" cy="76" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M1371.5156,71.875 Q1371.6719,71.6563 1371.8594,71.5469 Q1372.0469,71.4375 1372.2656,71.4375 Q1372.6406,71.4375 1372.875,71.7031 Q1373.1094,71.9531 1373.1094,72.5625 L1373.1094,74.0156 Q1373.1094,74.625 1372.875,74.8906 Q1372.6406,75.1563 1372.2656,75.1563 Q1371.9219,75.1563 1371.7188,74.9531 Q1371.5156,74.7656 1371.4063,74.25 Q1371.3594,73.8906 1371.1719,73.7031 Q1370.8438,73.3281 1370.2344,73.1094 Q1369.625,72.8906 1369,72.8906 Q1368.2344,72.8906 1367.5938,73.2188 Q1366.9688,73.5469 1366.4688,74.2969 Q1365.9844,75.0469 1365.9844,76.0781 L1365.9844,77.1719 Q1365.9844,78.4063 1366.875,79.2344 Q1367.7656,80.0469 1369.3594,80.0469 Q1370.2969,80.0469 1370.9531,79.7969 Q1371.3438,79.6406 1371.7656,79.2031 Q1372.0313,78.9375 1372.1719,78.8594 Q1372.3281,78.7813 1372.5313,78.7813 Q1372.8594,78.7813 1373.1094,79.0469 Q1373.375,79.2969 1373.375,79.6406 Q1373.375,79.9844 1373.0313,80.3906 Q1372.5313,80.9688 1371.7344,81.2969 Q1370.6563,81.75 1369.3594,81.75 Q1367.8438,81.75 1366.6406,81.125 Q1365.6563,80.625 1364.9688,79.5625 Q1364.2813,78.4844 1364.2813,77.2031 L1364.2813,76.0469 Q1364.2813,74.7188 1364.8906,73.5781 Q1365.5156,72.4219 1366.6094,71.8125 Q1367.7031,71.1875 1368.9375,71.1875 Q1369.6719,71.1875 1370.3125,71.3594 Q1370.9688,71.5156 1371.5156,71.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="96" x="1389.25" y="81.7285">TokenManager</text><line style="stroke:#181818;stroke-width:0.5;" x1="1155.5" x2="1686.5" y1="92" y2="92"/><line style="stroke:#181818;stroke-width:0.5;" x1="1155.5" x2="1686.5" y1="100" y2="100"/><rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="1162.5" y="111.3047"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="277" x="1174.5" y="118.5332">GetPrincipal(token : string) : ClaimsPrincipal</text><rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="1162.5" y="128.9141"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="507" x="1174.5" y="136.1426">ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken</text></g><!--MD5=[24add822970012a00cd97a40cd79feff]
+class UserManager--><g id="elem_UserManager"><rect codeLine="42" fill="#F1F1F1" height="83.2188" id="UserManager" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="299" x="48.5" y="60"/><ellipse cx="151.25" cy="76" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M154.0156,71.875 Q154.1719,71.6563 154.3594,71.5469 Q154.5469,71.4375 154.7656,71.4375 Q155.1406,71.4375 155.375,71.7031 Q155.6094,71.9531 155.6094,72.5625 L155.6094,74.0156 Q155.6094,74.625 155.375,74.8906 Q155.1406,75.1563 154.7656,75.1563 Q154.4219,75.1563 154.2188,74.9531 Q154.0156,74.7656 153.9063,74.25 Q153.8594,73.8906 153.6719,73.7031 Q153.3438,73.3281 152.7344,73.1094 Q152.125,72.8906 151.5,72.8906 Q150.7344,72.8906 150.0938,73.2188 Q149.4688,73.5469 148.9688,74.2969 Q148.4844,75.0469 148.4844,76.0781 L148.4844,77.1719 Q148.4844,78.4063 149.375,79.2344 Q150.2656,80.0469 151.8594,80.0469 Q152.7969,80.0469 153.4531,79.7969 Q153.8438,79.6406 154.2656,79.2031 Q154.5313,78.9375 154.6719,78.8594 Q154.8281,78.7813 155.0313,78.7813 Q155.3594,78.7813 155.6094,79.0469 Q155.875,79.2969 155.875,79.6406 Q155.875,79.9844 155.5313,80.3906 Q155.0313,80.9688 154.2344,81.2969 Q153.1563,81.75 151.8594,81.75 Q150.3438,81.75 149.1406,81.125 Q148.1563,80.625 147.4688,79.5625 Q146.7813,78.4844 146.7813,77.2031 L146.7813,76.0469 Q146.7813,74.7188 147.3906,73.5781 Q148.0156,72.4219 149.1094,71.8125 Q150.2031,71.1875 151.4375,71.1875 Q152.1719,71.1875 152.8125,71.3594 Q153.4688,71.5156 154.0156,71.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="85" x="171.75" y="81.7285">UserManager</text><line style="stroke:#181818;stroke-width:0.5;" x1="49.5" x2="346.5" y1="92" y2="92"/><rect fill="none" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="56.5" y="103.3047"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="186" x="68.5" y="110.5332">_userProvider : IUserProvider</text><line style="stroke:#181818;stroke-width:0.5;" x1="49.5" x2="346.5" y1="117.6094" y2="117.6094"/><ellipse cx="59.5" cy="131.9141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="273" x="68.5" y="136.1426">UserManager(userProvider : IUserProvider)</text></g><!--MD5=[177726c6dccf199602c5c27bb05f2a1e]
+class UserCreate--><g id="elem_UserCreate"><rect codeLine="108" fill="#F1F1F1" height="65.6094" id="UserCreate" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="134" x="411" y="613"/><ellipse cx="439.5" cy="629" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M442.2656,624.875 Q442.4219,624.6563 442.6094,624.5469 Q442.7969,624.4375 443.0156,624.4375 Q443.3906,624.4375 443.625,624.7031 Q443.8594,624.9531 443.8594,625.5625 L443.8594,627.0156 Q443.8594,627.625 443.625,627.8906 Q443.3906,628.1563 443.0156,628.1563 Q442.6719,628.1563 442.4688,627.9531 Q442.2656,627.7656 442.1563,627.25 Q442.1094,626.8906 441.9219,626.7031 Q441.5938,626.3281 440.9844,626.1094 Q440.375,625.8906 439.75,625.8906 Q438.9844,625.8906 438.3438,626.2188 Q437.7188,626.5469 437.2188,627.2969 Q436.7344,628.0469 436.7344,629.0781 L436.7344,630.1719 Q436.7344,631.4063 437.625,632.2344 Q438.5156,633.0469 440.1094,633.0469 Q441.0469,633.0469 441.7031,632.7969 Q442.0938,632.6406 442.5156,632.2031 Q442.7813,631.9375 442.9219,631.8594 Q443.0781,631.7813 443.2813,631.7813 Q443.6094,631.7813 443.8594,632.0469 Q444.125,632.2969 444.125,632.6406 Q444.125,632.9844 443.7813,633.3906 Q443.2813,633.9688 442.4844,634.2969 Q441.4063,634.75 440.1094,634.75 Q438.5938,634.75 437.3906,634.125 Q436.4063,633.625 435.7188,632.5625 Q435.0313,631.4844 435.0313,630.2031 L435.0313,629.0469 Q435.0313,627.7188 435.6406,626.5781 Q436.2656,625.4219 437.3594,624.8125 Q438.4531,624.1875 439.6875,624.1875 Q440.4219,624.1875 441.0625,624.3594 Q441.7188,624.5156 442.2656,624.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="72" x="456.5" y="634.7285">UserCreate</text><line style="stroke:#181818;stroke-width:0.5;" x1="412" x2="544" y1="645" y2="645"/><ellipse cx="422" cy="659.3047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="431" y="663.5332">Password : string</text><line style="stroke:#181818;stroke-width:0.5;" x1="412" x2="544" y1="670.6094" y2="670.6094"/></g><!--MD5=[f8bd6c2ec23e906322bbeaf68b53bb4f]
+class UserLogin--><g id="elem_UserLogin"><rect codeLine="120" fill="#F1F1F1" height="83.2188" id="UserLogin" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="134" x="552" y="426"/><ellipse cx="584.1" cy="442" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M586.8656,437.875 Q587.0219,437.6563 587.2094,437.5469 Q587.3969,437.4375 587.6156,437.4375 Q587.9906,437.4375 588.225,437.7031 Q588.4594,437.9531 588.4594,438.5625 L588.4594,440.0156 Q588.4594,440.625 588.225,440.8906 Q587.9906,441.1563 587.6156,441.1563 Q587.2719,441.1563 587.0688,440.9531 Q586.8656,440.7656 586.7563,440.25 Q586.7094,439.8906 586.5219,439.7031 Q586.1938,439.3281 585.5844,439.1094 Q584.975,438.8906 584.35,438.8906 Q583.5844,438.8906 582.9438,439.2188 Q582.3188,439.5469 581.8188,440.2969 Q581.3344,441.0469 581.3344,442.0781 L581.3344,443.1719 Q581.3344,444.4063 582.225,445.2344 Q583.1156,446.0469 584.7094,446.0469 Q585.6469,446.0469 586.3031,445.7969 Q586.6938,445.6406 587.1156,445.2031 Q587.3813,444.9375 587.5219,444.8594 Q587.6781,444.7813 587.8813,444.7813 Q588.2094,444.7813 588.4594,445.0469 Q588.725,445.2969 588.725,445.6406 Q588.725,445.9844 588.3813,446.3906 Q587.8813,446.9688 587.0844,447.2969 Q586.0063,447.75 584.7094,447.75 Q583.1938,447.75 581.9906,447.125 Q581.0063,446.625 580.3188,445.5625 Q579.6313,444.4844 579.6313,443.2031 L579.6313,442.0469 Q579.6313,440.7188 580.2406,439.5781 Q580.8656,438.4219 581.9594,437.8125 Q583.0531,437.1875 584.2875,437.1875 Q585.0219,437.1875 585.6625,437.3594 Q586.3188,437.5156 586.8656,437.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="64" x="601.9" y="447.7285">UserLogin</text><line style="stroke:#181818;stroke-width:0.5;" x1="553" x2="685" y1="458" y2="458"/><ellipse cx="563" cy="472.3047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81" x="572" y="476.5332">Email : string</text><ellipse cx="563" cy="489.9141" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="108" x="572" y="494.1426">Password : string</text><line style="stroke:#181818;stroke-width:0.5;" x1="553" x2="685" y1="501.2188" y2="501.2188"/></g><!--MD5=[6ac818b5870897fde505b1069c30005c]
+class IUserProvider--><g id="elem_IUserProvider"><rect codeLine="60" fill="#F1F1F1" height="100.8281" id="IUserProvider" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="382" x="7" y="256"/><ellipse cx="150.75" cy="272" fill="#B4A7E5" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M151.7031,268.6406 L151.7031,275.2969 L153.4219,275.2969 Q154.0313,275.2969 154.2969,275.5313 Q154.5625,275.7656 154.5625,276.1563 Q154.5625,276.5313 154.2969,276.7656 Q154.0313,277 153.4219,277 L148.2813,277 Q147.6719,277 147.4063,276.7656 Q147.1406,276.5313 147.1406,276.1406 Q147.1406,275.7656 147.4063,275.5313 Q147.6719,275.2969 148.2813,275.2969 L150,275.2969 L150,268.6406 L148.2813,268.6406 Q147.6719,268.6406 147.4063,268.4063 Q147.1406,268.1719 147.1406,267.7813 Q147.1406,267.4063 147.4063,267.1719 Q147.6719,266.9375 148.2813,266.9375 L153.4219,266.9375 Q154.0313,266.9375 154.2969,267.1719 Q154.5625,267.4063 154.5625,267.7813 Q154.5625,268.1719 154.2969,268.4063 Q154.0313,268.6406 153.4219,268.6406 L151.7031,268.6406 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="86" x="171.25" y="277.7285">IUserProvider</text><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="388" y1="288" y2="288"/><line style="stroke:#181818;stroke-width:0.5;" x1="8" x2="388" y1="296" y2="296"/><ellipse cx="18" cy="310.3047" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="356" x="27" y="314.5332">CreateUserAsync(userCreate : DbUser) : Task&lt;DbUser&gt;</text><ellipse cx="18" cy="327.9141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="336" x="27" y="332.1426">GetUserByEmailAsync(email : string) : Task&lt;DbUser&gt;</text><ellipse cx="18" cy="345.5234" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="270" x="27" y="349.752">GetuserByIdAsync(id : int) : Task&lt;DbUser&gt;</text></g><!--MD5=[88f66da615ead437be96f70edff3214c]
+class UserToken--><g id="elem_UserToken"><rect codeLine="89" fill="#F1F1F1" height="100.8281" id="UserToken" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="113" x="1169.5" y="417"/><ellipse cx="1189.9" cy="433" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M1192.6656,428.875 Q1192.8219,428.6563 1193.0094,428.5469 Q1193.1969,428.4375 1193.4156,428.4375 Q1193.7906,428.4375 1194.025,428.7031 Q1194.2594,428.9531 1194.2594,429.5625 L1194.2594,431.0156 Q1194.2594,431.625 1194.025,431.8906 Q1193.7906,432.1563 1193.4156,432.1563 Q1193.0719,432.1563 1192.8688,431.9531 Q1192.6656,431.7656 1192.5563,431.25 Q1192.5094,430.8906 1192.3219,430.7031 Q1191.9938,430.3281 1191.3844,430.1094 Q1190.775,429.8906 1190.15,429.8906 Q1189.3844,429.8906 1188.7438,430.2188 Q1188.1188,430.5469 1187.6188,431.2969 Q1187.1344,432.0469 1187.1344,433.0781 L1187.1344,434.1719 Q1187.1344,435.4063 1188.025,436.2344 Q1188.9156,437.0469 1190.5094,437.0469 Q1191.4469,437.0469 1192.1031,436.7969 Q1192.4938,436.6406 1192.9156,436.2031 Q1193.1813,435.9375 1193.3219,435.8594 Q1193.4781,435.7813 1193.6813,435.7813 Q1194.0094,435.7813 1194.2594,436.0469 Q1194.525,436.2969 1194.525,436.6406 Q1194.525,436.9844 1194.1813,437.3906 Q1193.6813,437.9688 1192.8844,438.2969 Q1191.8063,438.75 1190.5094,438.75 Q1188.9938,438.75 1187.7906,438.125 Q1186.8063,437.625 1186.1188,436.5625 Q1185.4313,435.4844 1185.4313,434.2031 L1185.4313,433.0469 Q1185.4313,431.7188 1186.0406,430.5781 Q1186.6656,429.4219 1187.7594,428.8125 Q1188.8531,428.1875 1190.0875,428.1875 Q1190.8219,428.1875 1191.4625,428.3594 Q1192.1188,428.5156 1192.6656,428.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="69" x="1205.1" y="438.7285">UserToken</text><line style="stroke:#181818;stroke-width:0.5;" x1="1170.5" x2="1281.5" y1="449" y2="449"/><ellipse cx="1180.5" cy="463.3047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="69" x="1189.5" y="467.5332">UserID : int</text><ellipse cx="1180.5" cy="480.9141" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81" x="1189.5" y="485.1426">Email : string</text><ellipse cx="1180.5" cy="498.5234" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="87" x="1189.5" y="502.752">Token : string</text><line style="stroke:#181818;stroke-width:0.5;" x1="1170.5" x2="1281.5" y1="509.8281" y2="509.8281"/></g><!--MD5=[a2d8207c5488f269b0816fb28beca551]
+class DbUser--><g id="elem_DbUser"><rect codeLine="103" fill="#F1F1F1" height="83.2188" id="DbUser" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="182" x="115" y="426"/><ellipse cx="178.25" cy="442" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M181.0156,437.875 Q181.1719,437.6563 181.3594,437.5469 Q181.5469,437.4375 181.7656,437.4375 Q182.1406,437.4375 182.375,437.7031 Q182.6094,437.9531 182.6094,438.5625 L182.6094,440.0156 Q182.6094,440.625 182.375,440.8906 Q182.1406,441.1563 181.7656,441.1563 Q181.4219,441.1563 181.2188,440.9531 Q181.0156,440.7656 180.9063,440.25 Q180.8594,439.8906 180.6719,439.7031 Q180.3438,439.3281 179.7344,439.1094 Q179.125,438.8906 178.5,438.8906 Q177.7344,438.8906 177.0938,439.2188 Q176.4688,439.5469 175.9688,440.2969 Q175.4844,441.0469 175.4844,442.0781 L175.4844,443.1719 Q175.4844,444.4063 176.375,445.2344 Q177.2656,446.0469 178.8594,446.0469 Q179.7969,446.0469 180.4531,445.7969 Q180.8438,445.6406 181.2656,445.2031 Q181.5313,444.9375 181.6719,444.8594 Q181.8281,444.7813 182.0313,444.7813 Q182.3594,444.7813 182.6094,445.0469 Q182.875,445.2969 182.875,445.6406 Q182.875,445.9844 182.5313,446.3906 Q182.0313,446.9688 181.2344,447.2969 Q180.1563,447.75 178.8594,447.75 Q177.3438,447.75 176.1406,447.125 Q175.1563,446.625 174.4688,445.5625 Q173.7813,444.4844 173.7813,443.2031 L173.7813,442.0469 Q173.7813,440.7188 174.3906,439.5781 Q175.0156,438.4219 176.1094,437.8125 Q177.2031,437.1875 178.4375,437.1875 Q179.1719,437.1875 179.8125,437.3594 Q180.4688,437.5156 181.0156,437.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="47" x="198.75" y="447.7285">DbUser</text><line style="stroke:#181818;stroke-width:0.5;" x1="116" x2="296" y1="458" y2="458"/><ellipse cx="126" cy="472.3047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="156" x="135" y="476.5332">HashedPassword : string</text><ellipse cx="126" cy="489.9141" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="71" x="135" y="494.1426">Salt : string</text><line style="stroke:#181818;stroke-width:0.5;" x1="116" x2="296" y1="501.2188" y2="501.2188"/></g><!--MD5=[c40368751ea5476301fbcdc8cb25eba8]
+class Security--><g id="elem_Security"><rect codeLine="73" fill="#F1F1F1" height="100.8281" id="Security" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="480" x="1723" y="51"/><ellipse cx="1933.25" cy="67" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M1936.0156,62.875 Q1936.1719,62.6563 1936.3594,62.5469 Q1936.5469,62.4375 1936.7656,62.4375 Q1937.1406,62.4375 1937.375,62.7031 Q1937.6094,62.9531 1937.6094,63.5625 L1937.6094,65.0156 Q1937.6094,65.625 1937.375,65.8906 Q1937.1406,66.1563 1936.7656,66.1563 Q1936.4219,66.1563 1936.2188,65.9531 Q1936.0156,65.7656 1935.9063,65.25 Q1935.8594,64.8906 1935.6719,64.7031 Q1935.3438,64.3281 1934.7344,64.1094 Q1934.125,63.8906 1933.5,63.8906 Q1932.7344,63.8906 1932.0938,64.2188 Q1931.4688,64.5469 1930.9688,65.2969 Q1930.4844,66.0469 1930.4844,67.0781 L1930.4844,68.1719 Q1930.4844,69.4063 1931.375,70.2344 Q1932.2656,71.0469 1933.8594,71.0469 Q1934.7969,71.0469 1935.4531,70.7969 Q1935.8438,70.6406 1936.2656,70.2031 Q1936.5313,69.9375 1936.6719,69.8594 Q1936.8281,69.7813 1937.0313,69.7813 Q1937.3594,69.7813 1937.6094,70.0469 Q1937.875,70.2969 1937.875,70.6406 Q1937.875,70.9844 1937.5313,71.3906 Q1937.0313,71.9688 1936.2344,72.2969 Q1935.1563,72.75 1933.8594,72.75 Q1932.3438,72.75 1931.1406,72.125 Q1930.1563,71.625 1929.4688,70.5625 Q1928.7813,69.4844 1928.7813,68.2031 L1928.7813,67.0469 Q1928.7813,65.7188 1929.3906,64.5781 Q1930.0156,63.4219 1931.1094,62.8125 Q1932.2031,62.1875 1933.4375,62.1875 Q1934.1719,62.1875 1934.8125,62.3594 Q1935.4688,62.5156 1936.0156,62.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="51" x="1953.75" y="72.7285">Security</text><line style="stroke:#181818;stroke-width:0.5;" x1="1724" x2="2202" y1="83" y2="83"/><line style="stroke:#181818;stroke-width:0.5;" x1="1724" x2="2202" y1="91" y2="91"/><rect fill="#F24D5C" height="6" style="stroke:#C82930;stroke-width:1.0;" width="6" x="1731" y="102.3047"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="underline" textLength="312" x="1743" y="109.5332">GetEncryptedPassword(password : string) : string</text><ellipse cx="1734" cy="122.9141" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="underline" textLength="197" x="1743" y="127.1426">GetSalt(saltLength : int) : string</text><ellipse cx="1734" cy="140.5234" fill="#84BE84" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" text-decoration="underline" textLength="454" x="1743" y="144.752">GetEncryptedAndSaltedPassword(password : string, salt : string) : string</text></g><!--MD5=[3fd616f346a44cd59a91eb10b19e157c]
+class User--><g id="elem_User"><rect codeLine="95" fill="#F1F1F1" height="136.0469" id="User" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="168" x="179" y="578"/><ellipse cx="244.25" cy="594" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M247.0156,589.875 Q247.1719,589.6563 247.3594,589.5469 Q247.5469,589.4375 247.7656,589.4375 Q248.1406,589.4375 248.375,589.7031 Q248.6094,589.9531 248.6094,590.5625 L248.6094,592.0156 Q248.6094,592.625 248.375,592.8906 Q248.1406,593.1563 247.7656,593.1563 Q247.4219,593.1563 247.2188,592.9531 Q247.0156,592.7656 246.9063,592.25 Q246.8594,591.8906 246.6719,591.7031 Q246.3438,591.3281 245.7344,591.1094 Q245.125,590.8906 244.5,590.8906 Q243.7344,590.8906 243.0938,591.2188 Q242.4688,591.5469 241.9688,592.2969 Q241.4844,593.0469 241.4844,594.0781 L241.4844,595.1719 Q241.4844,596.4063 242.375,597.2344 Q243.2656,598.0469 244.8594,598.0469 Q245.7969,598.0469 246.4531,597.7969 Q246.8438,597.6406 247.2656,597.2031 Q247.5313,596.9375 247.6719,596.8594 Q247.8281,596.7813 248.0313,596.7813 Q248.3594,596.7813 248.6094,597.0469 Q248.875,597.2969 248.875,597.6406 Q248.875,597.9844 248.5313,598.3906 Q248.0313,598.9688 247.2344,599.2969 Q246.1563,599.75 244.8594,599.75 Q243.3438,599.75 242.1406,599.125 Q241.1563,598.625 240.4688,597.5625 Q239.7813,596.4844 239.7813,595.2031 L239.7813,594.0469 Q239.7813,592.7188 240.3906,591.5781 Q241.0156,590.4219 242.1094,589.8125 Q243.2031,589.1875 244.4375,589.1875 Q245.1719,589.1875 245.8125,589.3594 Q246.4688,589.5156 247.0156,589.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29" x="264.75" y="599.7285">User</text><line style="stroke:#181818;stroke-width:0.5;" x1="180" x2="346" y1="610" y2="610"/><ellipse cx="190" cy="624.3047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="40" x="199" y="628.5332">ID : int</text><ellipse cx="190" cy="641.9141" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="97" x="199" y="646.1426">IsVerified : bool</text><ellipse cx="190" cy="659.5234" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="95" x="199" y="663.752">IsLocked : bool</text><ellipse cx="190" cy="677.1328" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98" x="199" y="681.3613">FailedTries : int</text><ellipse cx="190" cy="694.7422" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="142" x="199" y="698.9707">LockedDate datetime?</text><line style="stroke:#181818;stroke-width:0.5;" x1="180" x2="346" y1="706.0469" y2="706.0469"/></g><!--MD5=[d72258e41e132b68712ed2a953e26009]
+class UserBase--><g id="elem_UserBase"><rect codeLine="112" fill="#F1F1F1" height="118.4375" id="UserBase" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="163" x="274.5" y="774"/><ellipse cx="321.25" cy="790" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M324.0156,785.875 Q324.1719,785.6563 324.3594,785.5469 Q324.5469,785.4375 324.7656,785.4375 Q325.1406,785.4375 325.375,785.7031 Q325.6094,785.9531 325.6094,786.5625 L325.6094,788.0156 Q325.6094,788.625 325.375,788.8906 Q325.1406,789.1563 324.7656,789.1563 Q324.4219,789.1563 324.2188,788.9531 Q324.0156,788.7656 323.9063,788.25 Q323.8594,787.8906 323.6719,787.7031 Q323.3438,787.3281 322.7344,787.1094 Q322.125,786.8906 321.5,786.8906 Q320.7344,786.8906 320.0938,787.2188 Q319.4688,787.5469 318.9688,788.2969 Q318.4844,789.0469 318.4844,790.0781 L318.4844,791.1719 Q318.4844,792.4063 319.375,793.2344 Q320.2656,794.0469 321.8594,794.0469 Q322.7969,794.0469 323.4531,793.7969 Q323.8438,793.6406 324.2656,793.2031 Q324.5313,792.9375 324.6719,792.8594 Q324.8281,792.7813 325.0313,792.7813 Q325.3594,792.7813 325.6094,793.0469 Q325.875,793.2969 325.875,793.6406 Q325.875,793.9844 325.5313,794.3906 Q325.0313,794.9688 324.2344,795.2969 Q323.1563,795.75 321.8594,795.75 Q320.3438,795.75 319.1406,795.125 Q318.1563,794.625 317.4688,793.5625 Q316.7813,792.4844 316.7813,791.2031 L316.7813,790.0469 Q316.7813,788.7188 317.3906,787.5781 Q318.0156,786.4219 319.1094,785.8125 Q320.2031,785.1875 321.4375,785.1875 Q322.1719,785.1875 322.8125,785.3594 Q323.4688,785.5156 324.0156,785.875 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="61" x="341.75" y="795.7285">UserBase</text><line style="stroke:#181818;stroke-width:0.5;" x1="275.5" x2="436.5" y1="806" y2="806"/><ellipse cx="285.5" cy="820.3047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="81" x="294.5" y="824.5332">Email : string</text><ellipse cx="285.5" cy="837.9141" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111" x="294.5" y="842.1426">FirstName : string</text><ellipse cx="285.5" cy="855.5234" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="110" x="294.5" y="859.752">LastName : string</text><ellipse cx="285.5" cy="873.1328" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="137" x="294.5" y="877.3613">PhoneNumber : string</text><line style="stroke:#181818;stroke-width:0.5;" x1="275.5" x2="436.5" y1="884.4375" y2="884.4375"/></g><!--MD5=[1a3d1e414f70b9a6597f64281cc6a626]
+class UserLocation--><g id="elem_UserLocation"><rect codeLine="125" fill="#F1F1F1" height="118.4375" id="UserLocation" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:0.5;" width="139" x="2238.5" y="42.5"/><ellipse cx="2264.3" cy="58.5" fill="#ADD1B2" rx="11" ry="11" style="stroke:#181818;stroke-width:1.0;"/><path d="M2267.0656,54.375 Q2267.2219,54.1563 2267.4094,54.0469 Q2267.5969,53.9375 2267.8156,53.9375 Q2268.1906,53.9375 2268.425,54.2031 Q2268.6594,54.4531 2268.6594,55.0625 L2268.6594,56.5156 Q2268.6594,57.125 2268.425,57.3906 Q2268.1906,57.6563 2267.8156,57.6563 Q2267.4719,57.6563 2267.2688,57.4531 Q2267.0656,57.2656 2266.9563,56.75 Q2266.9094,56.3906 2266.7219,56.2031 Q2266.3938,55.8281 2265.7844,55.6094 Q2265.175,55.3906 2264.55,55.3906 Q2263.7844,55.3906 2263.1438,55.7188 Q2262.5188,56.0469 2262.0188,56.7969 Q2261.5344,57.5469 2261.5344,58.5781 L2261.5344,59.6719 Q2261.5344,60.9063 2262.425,61.7344 Q2263.3156,62.5469 2264.9094,62.5469 Q2265.8469,62.5469 2266.5031,62.2969 Q2266.8938,62.1406 2267.3156,61.7031 Q2267.5813,61.4375 2267.7219,61.3594 Q2267.8781,61.2813 2268.0813,61.2813 Q2268.4094,61.2813 2268.6594,61.5469 Q2268.925,61.7969 2268.925,62.1406 Q2268.925,62.4844 2268.5813,62.8906 Q2268.0813,63.4688 2267.2844,63.7969 Q2266.2063,64.25 2264.9094,64.25 Q2263.3938,64.25 2262.1906,63.625 Q2261.2063,63.125 2260.5188,62.0625 Q2259.8313,60.9844 2259.8313,59.7031 L2259.8313,58.5469 Q2259.8313,57.2188 2260.4406,56.0781 Q2261.0656,54.9219 2262.1594,54.3125 Q2263.2531,53.6875 2264.4875,53.6875 Q2265.2219,53.6875 2265.8625,53.8594 Q2266.5188,54.0156 2267.0656,54.375 Z " fill="#000000"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="83" x="2280.7" y="64.2285">UserLocation</text><line style="stroke:#181818;stroke-width:0.5;" x1="2239.5" x2="2376.5" y1="74.5" y2="74.5"/><ellipse cx="2249.5" cy="88.8047" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="40" x="2258.5" y="93.0332">ID : int</text><ellipse cx="2249.5" cy="106.4141" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="69" x="2258.5" y="110.6426">UserID : int</text><ellipse cx="2249.5" cy="124.0234" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="59" x="2258.5" y="128.252">IP : byte[]</text><ellipse cx="2249.5" cy="141.6328" fill="none" rx="3" ry="3" style="stroke:#038048;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="113" x="2258.5" y="145.8613">UserAgent : string</text><line style="stroke:#181818;stroke-width:0.5;" x1="2239.5" x2="2376.5" y1="152.9375" y2="152.9375"/></g><!--MD5=[1dfc107116a4b0bc1198698a4e609bfa]
+reverse link UserController to IUserManager--><g id="link_UserController_IUserManager"><path codeLine="20" d="M682.8,207.38 C671.8,224.29 660.89,241.08 651.28,255.85 " fill="none" id="UserController-backto-IUserManager" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="690.02,196.28,683.3962,199.1304,683.4797,206.341,690.1035,203.4906,690.02,196.28" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[548e9c59867ce01a8de3c5e8efb076c9]
+reverse link UserController to ITokenManager--><g id="link_UserController_ITokenManager"><path codeLine="21" d="M982.26,201.33 C1026.6,220.28 1071.23,239.36 1109.97,255.91 " fill="none" id="UserController-backto-ITokenManager" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="970.08,196.13,974.0235,202.1673,981.1131,200.8491,977.1696,194.8118,970.08,196.13" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[d4b0c0978a527e7d73578f3b8ff1d639]
+link IUserManager to UserCreate--><g id="link_IUserManager_UserCreate"><path codeLine="49" d="M573.35,357.16 C558.98,374.96 544.22,395.88 534,417 C503.5,480.07 488.71,561.22 482.29,607.75 " fill="none" id="IUserManager-to-UserCreate" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="481.58,612.97,486.755,604.5903,482.253,608.0155,478.8278,603.5135,481.58,612.97" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[b144519fb167e24c357139cc31a61e5d]
+link IUserManager to UserLogin--><g id="link_IUserManager_UserLogin"><path codeLine="50" d="M619,357.37 C619,377.6 619,400.82 619,420.63 " fill="none" id="IUserManager-to-UserLogin" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="619,425.85,623,416.85,619,420.85,615,416.85,619,425.85" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[5d0d21d87f609d36e9bd211d6cdf12f6]
+link UserManager to IUserManager--><g id="link_UserManager_IUserManager"><path codeLine="51" d="M266.61,143.02 C296.46,160.1 332.08,179.74 365,196 C401.28,213.92 441.2,231.9 478.42,247.97 " fill="none" id="UserManager-to-IUserManager" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="481.4,241.63,497.03,255.94,475.89,254.5,481.4,241.63" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[1231944e95ebfb91f3104517f7260a55]
+reverse link UserManager to IUserProvider--><g id="link_UserManager_IUserProvider"><path codeLine="52" d="M198,156.22 C198,187.05 198,225.49 198,255.64 " fill="none" id="UserManager-backto-IUserProvider" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="198,143.09,194,149.09,198,155.09,202,149.09,198,143.09" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f4b9cc5a9edb981f7418b8fcf7de3067]
+link TokenManager to ITokenManager--><g id="link_TokenManager_ITokenManager"><path codeLine="54" d="M1382.01,143.09 C1355.14,171.06 1318.87,208.82 1288.06,240.89 " fill="none" id="TokenManager-to-ITokenManager" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="none" points="1292.8,246.06,1273.9,255.64,1282.7,236.36,1292.8,246.06" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[8f9038f41d1a9fcfa0da510f3a7dcbcc]
+reverse link ITokenManager to UserToken--><g id="link_ITokenManager_UserToken"><path codeLine="55" d="M1226,370.59 C1226,385.95 1226,402.17 1226,416.8 " fill="none" id="ITokenManager-backto-UserToken" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="1226,357.37,1222,363.37,1226,369.37,1230,363.37,1226,357.37" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[ebed19925dbee498eddafde4c2e5889a]
+reverse link IUserProvider to DbUser--><g id="link_IUserProvider_DbUser"><path codeLine="68" d="M201.16,370.36 C202.1,389.03 203.11,408.99 203.95,425.85 " fill="none" id="IUserProvider-backto-DbUser" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="200.51,357.37,196.8116,363.5604,201.1033,369.3553,204.8018,363.1649,200.51,357.37" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2e2cd1f126b2a0e0fb6dd8bdb0da396b]
+link User to UserBase--><g id="link_User_UserBase"><path codeLine="82" d="M296.71,714.05 C303.46,727.49 310.61,741.7 317.51,755.43 " fill="none" id="User-to-UserBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="323.98,752.72,326.71,773.74,311.47,759.01,323.98,752.72" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[96a28894da16093fd8a9c441876c8015]
+link UserCreate to UserBase--><g id="link_UserCreate_UserBase"><path codeLine="83" d="M456.75,679.22 C442.63,700.64 423.47,729.69 405.65,756.71 " fill="none" id="UserCreate-to-UserBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="411.35,760.79,394.49,773.63,399.66,753.08,411.35,760.79" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[64c091ef33e37a15c4a5aacf767b2a5f]
+link DbUser to User--><g id="link_DbUser_User"><path codeLine="85" d="M219.22,509.44 C223.98,524.16 229.54,541.38 235.07,558.51 " fill="none" id="DbUser-to-User" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="241.77,556.49,241.26,577.67,228.45,560.79,241.77,556.49" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[b2ea02eb52a24559fbe6eb12794d31e7]
+@startuml API class diagram
+
+
+top to bottom direction
+
+'Controllers'
+
+class UserController{
+    -_logger{readonly} : ILogger<UserController>
+    -_userManager{readonly} : IUserManager
+    -_tokenManager : ITokenManager
+    +UserController(logger : ILogger<UserController>, userManager : IUserManager, tokenManager : ITokenManager)
+    
+    +Create(userCreate : UserCreate) : Task<ActionResult<UserToken>>
+    +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
+    +GetUserFromToken() : Task<ActionResult<User>>
+}
+
+'Controllers mappings' 
+
+UserController o- - IUserManager
+UserController o- - ITokenManager
+
+'Managers'
+
+interface IUserManager{
+    +CreateUserAsync(userCreate : UserCreate) : Task<User>
+    +LoginAsync(userLogin : UserLogin) : Task<User>
+    +GetUserByIDAsync(id : int) : Task<User>
+}
+
+interface ITokenManager{
+    +GenerateUserToken(user : User) : UserToken
+    +ValidateToken(token : string) : bool
+    +GetUserTokenFromToken(token : string) : UserToken
+}
+
+class TokenManager{
+    -GetPrincipal(token : string) : ClaimsPrincipal
+    -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
+}
+
+class UserManager{
+    -_userProvider : IUserProvider
+    +UserManager(userProvider : IUserProvider)
+}
+
+'Managers mappings'
+
+IUserManager - -> UserCreate
+IUserManager - -> UserLogin
+UserManager .-|> IUserManager
+UserManager o- - IUserProvider
+
+TokenManager .-|> ITokenManager
+ITokenManager *- - UserToken
+
+
+'Providers'
+
+interface IUserProvider{
+    +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
+    +GetUserByEmailAsync(email : string) : Task<DbUser>
+    +GetuserByIdAsync(id : int) : Task<DbUser>
+}
+
+'Providers mappings'
+
+IUserProvider *- - DbUser
+
+
+'Utility'
+
+class Security{
+    {static}-GetEncryptedPassword(password : string) : string
+    {static}+GetSalt(saltLength : int) : string
+    {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
+}
+
+
+'Users mappings'
+
+User - -|> UserBase
+UserCreate - -|> UserBase
+
+DbUser - -|> User
+
+'User models' 
+
+class UserToken{
+    +UserID : int
+    +Email : string
+    +Token : string
+}
+
+class User{
+    +ID : int 
+    +IsVerified : bool
+    +IsLocked : bool
+    +FailedTries : int
+    +LockedDate datetime?
+}
+
+class DbUser{
+    +HashedPassword : string
+    +Salt : string
+}
+
+class UserCreate {
+    +Password : string
+}
+
+class UserBase{
+    +Email : string
+    +FirstName : string
+    +LastName : string
+    +PhoneNumber : string
+}
+
+
+class UserLogin{
+    +Email : string
+    +Password : string 
+}
+
+class UserLocation{
+    +ID : int
+    +UserID : int
+    +IP : byte[]
+    +UserAgent : string
+}
+
+
+@enduml
+
+@startuml API class diagram
+
+
+top to bottom direction
+
+
+class UserController{
+    -_logger{readonly} : ILogger<UserController>
+    -_userManager{readonly} : IUserManager
+    -_tokenManager : ITokenManager
+    +UserController(logger : ILogger<UserController>, userManager : IUserManager, tokenManager : ITokenManager)
+    
+    +Create(userCreate : UserCreate) : Task<ActionResult<UserToken>>
+    +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
+    +GetUserFromToken() : Task<ActionResult<User>>
+}
+
+
+UserController o- - IUserManager
+UserController o- - ITokenManager
+
+
+interface IUserManager{
+    +CreateUserAsync(userCreate : UserCreate) : Task<User>
+    +LoginAsync(userLogin : UserLogin) : Task<User>
+    +GetUserByIDAsync(id : int) : Task<User>
+}
+
+interface ITokenManager{
+    +GenerateUserToken(user : User) : UserToken
+    +ValidateToken(token : string) : bool
+    +GetUserTokenFromToken(token : string) : UserToken
+}
+
+class TokenManager{
+    -GetPrincipal(token : string) : ClaimsPrincipal
+    -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
+}
+
+class UserManager{
+    -_userProvider : IUserProvider
+    +UserManager(userProvider : IUserProvider)
+}
+
+
+IUserManager - -> UserCreate
+IUserManager - -> UserLogin
+UserManager .-|> IUserManager
+UserManager o- - IUserProvider
+
+TokenManager .-|> ITokenManager
+ITokenManager *- - UserToken
+
+
+
+interface IUserProvider{
+    +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
+    +GetUserByEmailAsync(email : string) : Task<DbUser>
+    +GetuserByIdAsync(id : int) : Task<DbUser>
+}
+
+
+IUserProvider *- - DbUser
+
+
+
+class Security{
+    {static}-GetEncryptedPassword(password : string) : string
+    {static}+GetSalt(saltLength : int) : string
+    {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
+}
+
+
+
+User - -|> UserBase
+UserCreate - -|> UserBase
+
+DbUser - -|> User
+
+
+class UserToken{
+    +UserID : int
+    +Email : string
+    +Token : string
+}
+
+class User{
+    +ID : int 
+    +IsVerified : bool
+    +IsLocked : bool
+    +FailedTries : int
+    +LockedDate datetime?
+}
+
+class DbUser{
+    +HashedPassword : string
+    +Salt : string
+}
+
+class UserCreate {
+    +Password : string
+}
+
+class UserBase{
+    +Email : string
+    +FirstName : string
+    +LastName : string
+    +PhoneNumber : string
+}
+
+
+class UserLogin{
+    +Email : string
+    +Password : string 
+}
+
+class UserLocation{
+    +ID : int
+    +UserID : int
+    +IP : byte[]
+    +UserAgent : string
+}
+
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: OpenJDK Runtime Environment
+JVM: OpenJDK 64-Bit Server VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>
