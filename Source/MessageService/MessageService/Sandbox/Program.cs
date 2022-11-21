@@ -8,7 +8,6 @@ Config config = new Config
     EnableSSL = true,
     Host = "smtp.gmail.com",
     Port = 587,
-    Password = "ifprlpahhgvdrbqo",
     UserName = "renelorentzen96@gmail.com",
     SenderAddress = "renelorentzen96@gmail.com",
     SenderDisplayName = "Trust Us",
