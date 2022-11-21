@@ -85,7 +85,7 @@ namespace IdentityApi.Controllers
                 if (user == null)
                     return NoContent();
 
-                return Ok(_tokenManager.GenerateUserToken(user));
+                return Ok(user);
             }
             catch (Exception e)
             {

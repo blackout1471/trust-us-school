@@ -14,10 +14,13 @@ entity Users {
     --
     Email varchar(100)
     HashedVerification varchar(200)
-    IsVerified boolean
+    IsVerified bit
     FirstName varchar(50)
     LastName varchar(50)
     PhoneNumber varcher(20)
+    FailedTries int
+    IsLocked bit
+    LockedDate datetime
 }
 entity "VerifiedUserLocations" as vul {
     ID int (PK)
