@@ -15,8 +15,10 @@ namespace IdentityApi.Managers
 
         public async Task<User> CreateUser(UserCreate userCreate)
         {
+            // check if user exists
             var existingUser = await _userProvider.GetUserByEmail(userCreate.Email);
 
+            // User already in use 
             if(existingUser != null)
             {
                 // TODO: log
@@ -52,6 +54,7 @@ namespace IdentityApi.Managers
 
         public async Task<User> Login(UserLogin userLogin)
         {
+            // checjs uf yser exuts
             var existingUser = await _userProvider.GetUserByEmail(userLogin.Email);
 
             if(existingUser == null)
@@ -59,6 +62,7 @@ namespace IdentityApi.Managers
                 return null;
             }
 
+            // check if given password matches with the hashedpassword of the user
             if(existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
             {
                 // login success 

@@ -48,12 +48,14 @@ namespace IdentityApi.Managers
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_secret));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            // Fills token with user information
             var claims = new[]
             {
                 new Claim("id", user.ID.ToString()),
                 new Claim("email", user.Email)
             };
 
+            // Configuries the token
             var token = new JwtSecurityToken(
                 _configuration["Jwt:Issuer"],
                 _configuration["Jwt:Audience"],
@@ -125,6 +127,11 @@ namespace IdentityApi.Managers
                 throw e;
             }
         }
+
+        /// <summary>
+        /// Maps token fields to user token
+        /// </summary>
+        /// <returns>User token with values provided in the token</returns>
         private UserToken ClaimsIdentityToUserToken(ClaimsIdentity identity, string token)
         {
             var userToken = new UserToken();
