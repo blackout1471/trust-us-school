@@ -17,7 +17,8 @@ namespace IdentityApiIntegrationTest
             .WithDatabase(new MsSqlTestcontainerConfiguration
             {
                 Database = "TrustUS",
-                Password = "Pass1234"
+                Password = "Pass1234",
+
             })
             .Build();
 
@@ -25,6 +26,9 @@ namespace IdentityApiIntegrationTest
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
+            _dbContainer.ExecScriptAsync(@"C:\\repos\\trust-us-school\\Scripts\\DbScheme.sql")
+                .Wait();
+
             builder.ConfigureAppConfiguration(config =>
             {
                 var integrationConfig = new ConfigurationBuilder()

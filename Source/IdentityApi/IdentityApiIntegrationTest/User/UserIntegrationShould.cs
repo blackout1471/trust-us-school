@@ -15,6 +15,17 @@ namespace IdentityApiIntegrationTest.User
         [Fact]
         public async void ExpectStatusCode200_When_UserLogin()
         {
+            // Setup data
+            var newUser = new UserCreate
+            {
+                Email = "test",
+                Password = "test",
+                FirstName = "test",
+                LastName = "test",
+                PhoneNumber = "45454545"
+            };
+            var create = await _client.PostAsJsonAsync("api/user/Register", newUser);
+
             // Arrange
             var customerLogin = new UserLogin
             {
