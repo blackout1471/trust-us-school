@@ -13,10 +13,11 @@ namespace IdentityApi.Managers
             _userProvider = userProvider;
         }
 
-        public async Task<User> CreateUser(UserCreate userCreate)
+        /// <inheritdoc/>
+        public async Task<User> CreateUserAsync(UserCreate userCreate)
         {
             // check if user exists
-            var existingUser = await _userProvider.GetUserByEmail(userCreate.Email);
+            var existingUser = await _userProvider.GetUserByEmailAsync(userCreate.Email);
 
             // User already in use 
             if(existingUser != null)
@@ -40,7 +41,7 @@ namespace IdentityApi.Managers
             toCreateDbUser.Salt = Security.GetSalt(50);
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
 
-            var createdUser = await _userProvider.CreateUser(toCreateDbUser);
+            var createdUser = await _userProvider.CreateUserAsync(toCreateDbUser);
 
             return new User()
             {
@@ -52,10 +53,37 @@ namespace IdentityApi.Managers
             };
         }
 
-        public async Task<User> Login(UserLogin userLogin)
+        public async Task<User> GetUserByIDAsync(int ID)
         {
-            // checjs uf yser exuts
-            var existingUser = await _userProvider.GetUserByEmail(userLogin.Email);
+            try
+            {
+                var dbUser = await _userProvider.GetUserByIDAsync(ID);
+
+                if (dbUser == null)
+                    return null;
+
+                // TODO: Add mapper
+
+                return new User()
+                {
+                    ID = dbUser.ID,
+                    Email = dbUser.Email,
+                    FirstName = dbUser.FirstName
+                };
+
+            }catch(Exception e)
+            {
+                // TODO: Add log
+
+                throw e;
+            }
+        }
+
+        /// <inheritdoc/>
+        public async Task<User> LoginAsync(UserLogin userLogin)
+        {
+            // checks if user exists
+            var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
 
             if(existingUser == null)
             {

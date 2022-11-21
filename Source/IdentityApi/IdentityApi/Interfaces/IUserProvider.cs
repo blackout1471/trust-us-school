@@ -9,16 +9,16 @@ namespace IdentityApi.Interfaces
         /// Creates user
         /// </summary>
         /// <returns>Created user</returns>
-        Task<DbUser> CreateUser(DbUser userCreate);
+        Task<DbUser> CreateUserAsync(DbUser userCreate);
 
         /// <summary>
         /// Retrieves user based on email
         /// </summary>
-        Task<DbUser> GetUserByEmail(string email);
+        Task<DbUser> GetUserByEmailAsync(string email);
 
         /// <summary>
         /// Retrieves user based on id 
         /// </summary>
-        Task<DbUser> GetUserByID(int userID);
+        Task<DbUser> GetUserByIDAsync(int userID);
     }
 }
