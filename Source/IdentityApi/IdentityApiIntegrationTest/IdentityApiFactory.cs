@@ -6,6 +6,7 @@ using IdentityApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace IdentityApiIntegrationTest
 {
@@ -53,8 +54,7 @@ namespace IdentityApiIntegrationTest
         {
             await _dbContainer.StartAsync();
 
-            // TODO: find relative path
-            var content = await File.ReadAllTextAsync(@"C:\\repos\\trust-us-school\\Scripts\\DbScheme.sql");
+            var content = await File.ReadAllTextAsync("DbScheme.sql");
             await _dbContainer.ExecScriptAsync(content);
 
             HttpClient = CreateClient();
