@@ -1,0 +1,38 @@
+@startuml Login SD
+
+actor User
+participant UserController
+participant UserManager
+participant UserProvider
+participant TokenManager
+participant Security
+
+User->UserController: Login (email, password)
+UserController->UserManager: Login (email, password)
+UserManager->UserProvider: Get user by email(email)
+UserProvider->UserManager: Return User
+
+alt User not found
+
+UserManager->UserController: Login failed
+UserController->User: Login failed
+
+end
+
+UserManager->Security: Hash password (password, salt)
+UserManager->UserManager: Check if salted password matches user password
+
+alt Password does not match
+
+UserManager->UserController: Login failed
+UserController->User: Login failed
+
+end
+
+UserManager->UserController: Returns User
+UserController->TokenManager: Get token for user (User)
+TokenManager->UserController: Returns Token
+
+UserController->User: Return token
+
+@enduml
