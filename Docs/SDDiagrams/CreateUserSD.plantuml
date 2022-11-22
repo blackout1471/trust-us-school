@@ -22,7 +22,7 @@ end
 
 
 UserManager->Security: Get salt
-Security->User: Return salt
+Security->UserManager: Return salt
 
 UserManager->Security: Salt password (password, salt)
 Security->UserManager: Return salted password
