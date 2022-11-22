@@ -91,12 +91,18 @@ namespace IdentityApi
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(policyBuilder =>
+            {
+                policyBuilder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+
             app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            // TODO: Set up corse here
 
             app.MapControllers();
 
