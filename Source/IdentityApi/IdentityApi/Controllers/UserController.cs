@@ -22,7 +22,7 @@ namespace IdentityApi.Controllers
         /// </summary>
         /// <returns>User token for newly created user</returns>
         [HttpPost]
-        [Route("Create")]
+        [Route("create")]
         public async Task<ActionResult<UserToken>> Create(UserCreate userCreate)
         {
             try
@@ -44,7 +44,7 @@ namespace IdentityApi.Controllers
         /// </summary>
         /// <returns>User Token</returns>
         [HttpPost]
-        [Route("Login")]
+        [Route("login")]
         public async Task<ActionResult<UserToken>> Login(UserLogin userLogin)
         {
             try
@@ -70,7 +70,7 @@ namespace IdentityApi.Controllers
         /// <returns>User Token</returns>
         [Authorize]
         [HttpGet]
-        [Route("GetUserByToken")]
+        [Route("getuserbytoken")]
         public async Task<ActionResult<User>> GetUserByToken()
         {
             try

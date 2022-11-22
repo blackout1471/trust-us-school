@@ -11,7 +11,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +27,7 @@ jobs:
       run: |
         cd Source/IdentityApi/IdentityApi
         dotnet build --no-restore
-   - name: Running webapi unit tests
-        run: |
-            cd Source/IdentityApi/IdentityApiTest
-            dotnet test    
+    - name: Running webapi unit tests
+      run: |
+        cd Source/IdentityApi/IdentityApiTest
+        dotnet test    
