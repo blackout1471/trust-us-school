@@ -78,12 +78,15 @@ go
 CREATE PROCEDURE SP_Createuser 
 @Email varchar(100),
 @HashedPassword varchar(200),
-@Salt varchar(200)
+@Salt varchar(200),
+@FirstName varchar(50) = null,
+@LastName varchar(50) = null,
+@PhoneNUmber varchar(50) = null
 AS
 
 -- Insert user information into database
--- TODO: Add the rest of information
-insert into Users (Email) values (@Email)
+insert into Users (Email, FirstName, LastName, PhoneNumber) 
+values (@Email, @FirstName, @LastName, @PhoneNUmber)
 
 -- Get newly inserted user id
 declare @CreatedUserID int

@@ -22,6 +22,10 @@ namespace IdentityApi.Providers
                     new SpElement("Email", userCreate.Email, SqlDbType.VarChar),
                     new SpElement("HashedPassword", userCreate.HashedPassword, SqlDbType.VarChar),
                     new SpElement("Salt", userCreate.Salt, SqlDbType.VarChar),
+                    new SpElement("FirstName", userCreate.FirstName, SqlDbType.VarChar),
+                    new SpElement("LastName", userCreate.LastName, SqlDbType.VarChar),
+                    new SpElement("PhoneNumber", userCreate.PhoneNumber, SqlDbType.VarChar),
+
                 };
 
                 var userTable = await RunSpAsync("SP_CreateUser", spElements);
@@ -51,7 +55,7 @@ namespace IdentityApi.Providers
 
                 return DRToUser(userTable.Rows[0]);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw e;
             }
@@ -62,7 +66,7 @@ namespace IdentityApi.Providers
         {
             try
             {
-                var userTable = await RunSpAsync("SP_CreateUser", new SpElement("Email", userEmail, SqlDbType.VarChar));
+                var userTable = await RunSpAsync("SP_UserExists", new SpElement("Email", userEmail, SqlDbType.VarChar));
 
                 if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
                     return null;
