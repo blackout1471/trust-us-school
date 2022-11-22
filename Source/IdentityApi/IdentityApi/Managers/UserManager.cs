@@ -8,14 +8,19 @@ namespace IdentityApi.Managers
     public class UserManager : IUserManager
     {
         private readonly IUserProvider _userProvider;
-        public UserManager(IUserProvider userProvider)
+        private readonly IUserLocationManager _userLocationManager;
+        public UserManager(IUserProvider userProvider, IUserLocationManager userLocationManager)
         {
             _userProvider = userProvider;
+            _userLocationManager = userLocationManager;
         }
 
         /// <inheritdoc/>
         public async Task<User> CreateUserAsync(UserCreate userCreate)
         {
+            if (await _userLocationManager.IsIPLocked("provide ip"))
+                throw new Exception("login failed");
+
             // check if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userCreate.Email);
 
@@ -42,6 +47,8 @@ namespace IdentityApi.Managers
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
 
             var createdUser = await _userProvider.CreateUserAsync(toCreateDbUser);
+
+            //_userLocationManager.LogLocation(/*Log with user id*/);
 
             return new User()
             {
@@ -83,6 +90,9 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<User> LoginAsync(UserLogin userLogin)
         {
+            if (await _userLocationManager.IsIPLocked("provide ip"))
+                throw new Exception("login failed");
+
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
 
@@ -99,29 +109,33 @@ namespace IdentityApi.Managers
             }
 
 
-
             // check if given password matches with the hashedpassword of the user
             if (existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
             {
-                // TODO: Add check for ip adresse here
-                // if user was not logged in with this ip adress
-                // Send 2FA here, then
-                // throw error here with "Check email", 
+                // if user was not logged in from this location before
+                if (!await _userLocationManager.UserWasLoggedInFromLocation(/*provide location*/new UserLocation()))
+                {
+                    // send 2fa here
 
-                // else
+                    throw new Exception("forbidden");
+                }
+                else
+                {
+                    // login success 
+                    existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
 
-                // login success 
-                existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
 
+                    // TODO: Update 
 
-                // TODO: Update 
-
+                }
                 return existingUser;
             }
             else
             {
                 // TODO: log
                 // login failed
+
+                //await _userLocationManager.LogLocation()
 
                 existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
 

@@ -59,6 +59,8 @@ namespace IdentityApi
             builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<IUserProvider, UserProvider>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
+            builder.Services.AddScoped<IUserLocationManager, UserLocationManager>();
+            builder.Services.AddScoped<IUserLocationProvider, UserLocationProvider>();
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
