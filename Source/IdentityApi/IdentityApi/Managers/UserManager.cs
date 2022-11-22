@@ -90,18 +90,35 @@ namespace IdentityApi.Managers
                 return null;
             }
 
+            // User is locked, no need for further checks
+            if (existingUser.IsLocked)
+            {
+                // TODO: log
+                throw new Exception("Login failed, Account locked");
+            }
+
             // check if given password matches with the hashedpassword of the user
-            if(existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
+            if (existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
             {
                 // login success 
+                existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+
+
+                // TODO: Update 
 
                 return existingUser;
             }
             else
             {
-                // login failed
-
                 // TODO: log
+                // login failed
+                                
+                existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
+
+                if (existingUser.IsLocked)
+                {
+                    throw new Exception("Login failed, Account locked");
+                }
 
                 // update tries, if tries >= 3 lock account  <- consider moving both to sp and returning dbuser
                 throw new Exception("Login failed, username or password is incorrect");

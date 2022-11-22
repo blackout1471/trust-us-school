@@ -28,6 +28,7 @@ namespace IdentityApi.Providers
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
 
+                        // TODO: Add other fields
                         cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = userCreate.Email;
                         cmd.Parameters.Add("@HashedPassword", SqlDbType.VarChar).Value = userCreate.HashedPassword;
                         cmd.Parameters.Add("@Salt", SqlDbType.VarChar).Value = userCreate.Salt;
@@ -54,12 +55,12 @@ namespace IdentityApi.Providers
         }
 
         /// <inheritdoc/>
-        public async Task<DbUser> GetUserByIDAsync(int id)
+        public async Task<DbUser> GetUserByIDAsync(int userID)
         {
             using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
             {
                 // no need for sp since input is an integer therefore sql injection is not possible
-                using (SqlCommand cmd = new SqlCommand($"select top(1)* from Users  where ID = {id}", con))
+                using (SqlCommand cmd = new SqlCommand($"select top(1)* from Users  where ID = {userID}", con))
                 {
                     con.Open();
                     var dataReader = await cmd.ExecuteReaderAsync();
@@ -100,6 +101,76 @@ namespace IdentityApi.Providers
             }
         }
 
+        public async Task<DbUser> UpdateUserFailedTries(int userID)
+        {
+            try
+            {
+                // TODO: Make this usings into a nice method
+                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SP_UpdateUserFailedTries", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+
+                        con.Open();
+                        var dataReader = await cmd.ExecuteReaderAsync();
+
+                        var dataTable = new DataTable();
+                        dataTable.Load(dataReader);
+
+                        if (dataTable.Rows.Count == 0)
+                            return null;
+
+                        return DRToUser(dataTable.Rows[0]);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // TODO: log here
+
+                throw e; // TODO: Change to better error
+            }
+        }
+
+
+        public async Task<DbUser> UpdateUserLoginSuccess(int userID)
+        {
+            try
+            {
+                // TODO: Make this usings into a nice method
+                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+                {
+                    using (SqlCommand cmd = new SqlCommand("SP_UserLoggedIn", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+
+                        con.Open();
+                        var dataReader = await cmd.ExecuteReaderAsync();
+
+                        var dataTable = new DataTable();
+                        dataTable.Load(dataReader);
+
+                        if (dataTable.Rows.Count == 0)
+                            return null;
+
+                        return DRToUser(dataTable.Rows[0]);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                // TODO: log here
+
+                throw e; // TODO: Change to better error
+            }
+        }
+
+
         /// <summary>
         /// Maps datarow to db user
         /// </summary>
@@ -136,6 +207,5 @@ namespace IdentityApi.Providers
                 throw e;
             }
         }
-
     }
 }
