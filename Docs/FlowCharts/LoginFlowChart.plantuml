@@ -1,0 +1,17 @@
+@startuml Login Flowchart
+
+(*) --> "Recieve login data"
+if "Email exists" then
+    if "Password matches" then
+        -->[true] "Generate token"
+        --> "Return token"
+        --> (*)
+    else
+        -->[false] "Throw Login failed"
+    end if
+else
+  -->[false] "Throw Login failed"
+
+end if 
+
+@enduml
