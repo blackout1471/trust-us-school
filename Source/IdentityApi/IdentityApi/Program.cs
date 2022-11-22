@@ -1,3 +1,6 @@
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+using System.Reflection;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Providers;
@@ -22,6 +25,34 @@ namespace IdentityApi
             builder.Services.AddSwaggerGen();
             builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
             AddJwtConfiguration(builder);
+
+            // Read configurations file
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile(
+                    $"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
+                    optional: true)
+                .Build();
+
+            // Add serilog for logging
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithEnvironmentName()
+                .WriteTo.Console()
+                .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+                {
+                    AutoRegisterTemplate = true,
+                    IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{builder.Environment.EnvironmentName?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}",
+                    NumberOfReplicas = 0,
+                    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv7,
+                    ModifyConnectionSettings = x => x.BasicAuthentication(configuration["ElasticConfiguration:Username"], configuration["ElasticConfiguration:Password"])
+                                                        .ServerCertificateValidationCallback((o, certificate, arg3, arg4) => { return true; }), // TODO: Add not self signed certificate for elasticsearch
+                    TypeName = null
+                })
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<IUserProvider, UserProvider>();
