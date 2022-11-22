@@ -35,7 +35,6 @@ namespace IdentityApi.Providers
 
                     con.Open();
                     var dataReader = await cmd.ExecuteReaderAsync();
-
                     var dataTable = new DataTable();
                     dataTable.Load(dataReader);
 

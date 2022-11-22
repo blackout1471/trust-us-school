@@ -101,8 +101,7 @@ namespace IdentityApi.Managers
 
                 // login success 
                 existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
-
-
+                _logger.LogInformation($"User has logged in {userLogin.Email}");
                 // TODO: Update 
                 return existingUser;
             }
