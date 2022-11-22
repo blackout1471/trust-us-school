@@ -21,7 +21,6 @@ namespace MessageService.MessageServices
         /// </summary>
         /// <param name="recipient"> Recipient of message </param>
         /// <param name="message"> Message to be sent</param>
-        /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task SendMessageAsync(IRecipient recipient, IMessage message)
         {
@@ -37,7 +36,7 @@ namespace MessageService.MessageServices
         /// </summary>
         /// <param name="message"> The message that is to be sent </param>
         /// <param name="to"> The recipient of the mail </param>
-        /// <returns></returns>
+        /// <returns>A new MailMessage object</returns>
         private MailMessage CreateMailMessage(string message, string to)
         {
             MailMessage mail = new MailMessage
