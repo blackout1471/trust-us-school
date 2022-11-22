@@ -24,8 +24,7 @@ namespace IdentityApi.Providers
                     new SpElement("Salt", userCreate.Salt, SqlDbType.VarChar),
                     new SpElement("FirstName", userCreate.FirstName, SqlDbType.VarChar),
                     new SpElement("LastName", userCreate.LastName, SqlDbType.VarChar),
-                    new SpElement("PhoneNumber", userCreate.PhoneNumber, SqlDbType.VarChar),
-
+                    new SpElement("PhoneNumber", userCreate.PhoneNumber, SqlDbType.VarChar)
                 };
 
                 var userTable = await RunSpAsync("SP_CreateUser", spElements);
