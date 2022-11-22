@@ -16,11 +16,7 @@ namespace MessageService.MessageServices
             this.SetupSmtpClient();
         }
 
-        /// <summary>
-        /// Sends a message async
-        /// </summary>
-        /// <param name="recipient"> Recipient of message </param>
-        /// <param name="message"> Message to be sent</param>
+        /// <inheritdoc/>
         /// <exception cref="ArgumentNullException"></exception>
         public async Task SendMessageAsync(IRecipient recipient, IMessage message)
         {
