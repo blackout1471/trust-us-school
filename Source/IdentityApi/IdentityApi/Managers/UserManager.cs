@@ -86,7 +86,7 @@ namespace IdentityApi.Managers
             if (existingUser.IsLocked)
             {
                 _logger.LogWarning($"Login attempt for locked user {userLogin.Email}");
-                throw new UserAlreadyExistsException();
+                throw new AccountLockedException();
             }
 
             // check if given password matches with the hashedpassword of the user

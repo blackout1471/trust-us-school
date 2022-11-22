@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace IdentityApiIntegrationTest.User
+namespace IdentityApiIntegrationTest.UserApi
 {
     public class UserIntegrationShould : IClassFixture<IdentityApiFactory>
     {
