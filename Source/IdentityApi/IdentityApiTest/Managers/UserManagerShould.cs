@@ -18,7 +18,8 @@ namespace IdentityApiUnitTest.Managers
 
             var userProvider = A.Fake<IUserProvider>();
             A.CallTo(() => userProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-
+            A.CallTo(() => userProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
+            
             // Act
             var userManager = new UserManager(userProvider);
             var actual =  userManager.LoginAsync(userLogin).Result;
