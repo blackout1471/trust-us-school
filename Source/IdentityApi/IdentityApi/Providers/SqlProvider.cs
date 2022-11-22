@@ -20,36 +20,27 @@ namespace IdentityApi.Providers
         /// <returns>Datatable with results</returns>
         protected virtual async Task<DataTable> RunSpAsync(string spName, params SpElement[] spElements)
         {
-            try
+            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
             {
-                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+                using (SqlCommand cmd = new SqlCommand(spName, con))
                 {
-                    using (SqlCommand cmd = new SqlCommand(spName, con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                        if (spElements != null)
-                            for (int i = 0; i < spElements.Length; i++)
-                            {
-                                cmd.Parameters.Add($"@{spElements[i].Key}", spElements[i].ValueType).Value = spElements[i].Value;
-                            }
+                    if (spElements != null)
+                        for (int i = 0; i < spElements.Length; i++)
+                        {
+                            cmd.Parameters.Add($"@{spElements[i].Key}", spElements[i].ValueType).Value = spElements[i].Value;
+                        }
 
 
-                        con.Open();
-                        var dataReader = await cmd.ExecuteReaderAsync();
+                    con.Open();
+                    var dataReader = await cmd.ExecuteReaderAsync();
 
-                        var dataTable = new DataTable();
-                        dataTable.Load(dataReader);
+                    var dataTable = new DataTable();
+                    dataTable.Load(dataReader);
 
-                        return dataTable;
-                    }
+                    return dataTable;
                 }
-            }
-            catch (Exception e)
-            {
-                // TODO: log here
-
-                throw e; // TODO: Change to better error
             }
         }
 
@@ -59,27 +50,18 @@ namespace IdentityApi.Providers
         /// <returns>Datatable with results</returns>
         protected virtual async Task<DataTable> RunQueryAsync(string query)
         {
-            try
+            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
             {
-                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+                using (SqlCommand cmd = new SqlCommand(query, con))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, con))
-                    {
-                        con.Open();
-                        var dataReader = await cmd.ExecuteReaderAsync();
+                    con.Open();
+                    var dataReader = await cmd.ExecuteReaderAsync();
 
-                        var dataTable = new DataTable();
-                        dataTable.Load(dataReader);
+                    var dataTable = new DataTable();
+                    dataTable.Load(dataReader);
 
-                        return dataTable;
-                    }
+                    return dataTable;
                 }
-            }
-            catch (Exception e)
-            {
-                // TODO: log here
-
-                throw e; // TODO: Change to better error
             }
         }
     }

@@ -3,6 +3,7 @@ using IdentityApi.DbModels;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
+using Microsoft.Extensions.Logging;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -17,11 +18,12 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLogin();
 
             var userProvider = A.Fake<IUserProvider>();
+            var fakeLogger = A.Fake<ILogger<UserManager>>();
             A.CallTo(() => userProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
             A.CallTo(() => userProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
             
             // Act
-            var userManager = new UserManager(userProvider);
+            var userManager = new UserManager(userProvider, fakeLogger);
             var actual =  userManager.LoginAsync(userLogin).Result;
 
             // Assert
@@ -38,10 +40,11 @@ namespace IdentityApiUnitTest.Managers
             userLogin.Password = "PasswordThatIsWrong";
 
             var userProvider = A.Fake<IUserProvider>();
+            var fakeLogger = A.Fake<ILogger<UserManager>>();
             A.CallTo(() => userProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
 
             // Act
-            var userManager = new UserManager(userProvider);
+            var userManager = new UserManager(userProvider, fakeLogger);
             
 
             // Assert
@@ -56,10 +59,11 @@ namespace IdentityApiUnitTest.Managers
             var userCreate = GetUserCreate();
 
             var userProvider = A.Fake<IUserProvider>();
+            var fakeLogger = A.Fake<ILogger<UserManager>>();
             A.CallTo(() => userProvider.CreateUserAsync(A<DbUser>.Ignored)).Returns(GetDbUser());
 
             // Act
-            var userManager = new UserManager(userProvider);
+            var userManager = new UserManager(userProvider, fakeLogger);
 
             // Assert
             Assert.ThrowsAny<Exception>(() => userManager.CreateUserAsync(userCreate).Result);

@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System;
 using Microsoft.AspNetCore.HttpOverrides;
+using IdentityApi.Filters;
 
 namespace IdentityApi
 {
@@ -25,7 +26,12 @@ namespace IdentityApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+            builder.Services.AddControllers(options => 
+            {
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                options.Filters.Add<ExceptionFilter>();
+            });
+
             AddJwtConfiguration(builder);
 
             // Read configurations file

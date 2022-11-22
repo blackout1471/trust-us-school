@@ -11,6 +11,7 @@ namespace IdentityApi.Controllers
     {
         private readonly IUserManager _userManager;
         private readonly ITokenManager _tokenManager;
+
         public UserController(IUserManager userManager, ITokenManager tokenManager)
         {
             _userManager = userManager;
@@ -25,18 +26,8 @@ namespace IdentityApi.Controllers
         [Route("create")]
         public async Task<ActionResult<UserToken>> Create(UserCreate userCreate)
         {
-            try
-            {
-                var createdUser = await _userManager.CreateUserAsync(userCreate);
-
-                return Ok(_tokenManager.GenerateUserToken(createdUser));
-            }
-            catch (Exception e)
-            {
-                // TODO: Log
-
-                return Problem("E");
-            }
+            var createdUser = await _userManager.CreateUserAsync(userCreate);
+            return Ok(_tokenManager.GenerateUserToken(createdUser));
         }
 
         /// <summary>
@@ -47,21 +38,12 @@ namespace IdentityApi.Controllers
         [Route("login")]
         public async Task<ActionResult<UserToken>> Login(UserLogin userLogin)
         {
-            try
-            {
-                var user = await _userManager.LoginAsync(userLogin);
+            var user = await _userManager.LoginAsync(userLogin);
 
-                if (user == null)
-                    return NoContent();
+            if (user == null)
+                return NoContent();
 
-                return Ok(_tokenManager.GenerateUserToken(user));
-            }
-            catch (Exception e)
-            {
-                // TODO: log
-
-                return Problem("E");
-            }
+            return Ok(_tokenManager.GenerateUserToken(user));
         }
 
         /// <summary>
@@ -73,26 +55,17 @@ namespace IdentityApi.Controllers
         [Route("getuserbytoken")]
         public async Task<ActionResult<User>> GetUserByToken()
         {
-            try
-            {
-                var tokenUser = _tokenManager.GetUserTokenFromToken(Request.Headers["Authorization"].ToString().Replace("Bearer ", "").Replace("bearer ", ""));
+            var tokenUser = _tokenManager.GetUserTokenFromToken(Request.Headers["Authorization"].ToString().Replace("Bearer ", "").Replace("bearer ", ""));
 
-                if (tokenUser == null)
-                    return Problem("E");
+            if (tokenUser == null)
+                return NoContent();
 
-                var user = await _userManager.GetUserByIDAsync(tokenUser.UserID);
+            var user = await _userManager.GetUserByIDAsync(tokenUser.UserID);
 
-                if (user == null)
-                    return NoContent();
+            if (user == null)
+                return NoContent();
 
-                return Ok(user);
-            }
-            catch (Exception e)
-            {
-                // TODO: log
-
-                return Problem("E");
-            }
+            return Ok(user);
         }
     }
 }
