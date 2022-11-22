@@ -1,5 +1,6 @@
 ﻿using FakeItEasy;
 using IdentityApi.Controllers;
+using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -22,19 +23,16 @@ namespace IdentityApiUnitTest.Controllers
         }
 
         [Fact]
-        public async Task ExpectNoContent_WhenUserIsNull_Login()
+        public async Task ThrowUserIncorrectLoginException_WhenUserIsNull_Login()
         {
             // Arrange
-            ActionResult actual;
-
             A.CallTo(() => _fakeUserManager.LoginAsync(null)).Returns(Task.FromResult<User>(null));
 
             // Act
-            var response = await _userController.Login(null);
-            actual = response.Result;
+            var func = async () => await _userController.Login(null);
 
             // Assert
-            Assert.IsType<NoContentResult>(actual);
+            await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
         }
 
         [Fact]

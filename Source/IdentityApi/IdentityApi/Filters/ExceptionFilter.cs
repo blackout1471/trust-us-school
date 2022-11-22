@@ -5,6 +5,9 @@ using System.Net;
 
 namespace IdentityApi.Filters
 {
+    /// <summary>
+    /// Exception filter to convert a exception into a http error response.
+    /// </summary>
     public class ExceptionFilter : ExceptionFilterAttribute
     {
         private readonly ILogger<ExceptionFilter> _logger;
@@ -30,7 +33,7 @@ namespace IdentityApi.Filters
                     context.ExceptionHandled = true;
                     break;
                 case UserIncorrectLoginException:
-                    context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.NotFound);
+                    context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Forbidden);
                     context.ExceptionHandled = true;
                     break;
                 default:

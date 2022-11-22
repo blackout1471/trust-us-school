@@ -11,6 +11,7 @@ using System.Text;
 using System;
 using Microsoft.AspNetCore.HttpOverrides;
 using IdentityApi.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityApi
 {
@@ -30,6 +31,11 @@ namespace IdentityApi
             {
                 options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
                 options.Filters.Add<ExceptionFilter>();
+                options.Filters.Add<ModelStateFilter>();
+            });
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
             });
 
             AddJwtConfiguration(builder);

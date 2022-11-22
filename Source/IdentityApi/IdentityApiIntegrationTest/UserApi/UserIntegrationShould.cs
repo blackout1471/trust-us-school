@@ -51,10 +51,10 @@ namespace IdentityApiIntegrationTest.UserApi
 
 
         [Fact]
-        public async void ExpectStatusCode204_WhenUserNotExists_Login()
+        public async void ExpectStatusCode403_WhenUserNotExists_Login()
         {
             // Arrange
-            var expected = HttpStatusCode.NoContent;
+            var expected = HttpStatusCode.Forbidden;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
             var customerLoginRequest = new UserLogin
             {

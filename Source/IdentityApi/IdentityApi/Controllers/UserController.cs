@@ -1,4 +1,5 @@
-﻿using IdentityApi.Interfaces;
+﻿using IdentityApi.Exceptions;
+using IdentityApi.Interfaces;
 using IdentityApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,7 @@ namespace IdentityApi.Controllers
             var user = await _userManager.LoginAsync(userLogin);
 
             if (user == null)
-                return NoContent();
+                throw new UserIncorrectLoginException();
 
             return Ok(_tokenManager.GenerateUserToken(user));
         }
