@@ -53,6 +53,5 @@ namespace IdentityApiUnitTest.Controllers
             // Assert
             Assert.IsType<OkObjectResult>(actual);
         }
-
     }
 }

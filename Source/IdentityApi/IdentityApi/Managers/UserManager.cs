@@ -26,7 +26,7 @@ namespace IdentityApi.Managers
             // User already in use 
             if (existingUser != null)
             {
-                _logger.LogWarning($"User cannot be created for already existing email {userCreate.Email}");
+                _logger.LogWarning($"User cannot be created because they already exists {userCreate.Email}");
                 throw new UserAlreadyExistsException();
             }
 
