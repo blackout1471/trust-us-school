@@ -1,0 +1,14 @@
+@startuml Create User Flowchart
+
+(*) --> "Recieve create user data"
+if "Email exists" then
+  -->[true] "Throw Email already in use"
+else 
+  -->[false] "Hash password"
+  --> "Save user in database"
+  --> "Generate token for user"
+  --> "Return token"
+  --> (*)
+end if 
+
+@enduml
