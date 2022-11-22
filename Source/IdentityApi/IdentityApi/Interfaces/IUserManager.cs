@@ -16,7 +16,7 @@ namespace IdentityApi.Interfaces
         Task<User> LoginAsync(UserLogin userLogin);
 
         /// <summary>
-        /// Gets user based on it 
+        /// Gets user based on id
         /// </summary>
         /// <param name="ID">ID of the requested user</param>
         /// <returns>User with matching ID</returns>

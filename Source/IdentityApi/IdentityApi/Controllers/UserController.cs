@@ -16,11 +16,6 @@ namespace IdentityApi.Controllers
         {
             _userManager = userManager;
             _tokenManager = tokenManager;
-            userLocation = new UserLocation() // pars it to calls
-            {
-                UserAgent = Request.Headers["User-Agent"].ToString(),
-            };
-            userLocation.SetIPFromString(Request?.HttpContext?.Connection?.RemoteIpAddress?.MapToIPv4()?.ToString());
         }
 
         ///<summary>

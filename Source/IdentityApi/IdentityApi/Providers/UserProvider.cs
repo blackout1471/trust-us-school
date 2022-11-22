@@ -7,13 +7,11 @@ using System.Data.Common;
 
 namespace IdentityApi.Providers
 {
-    public class UserProvider : IUserProvider
+    public class UserProvider : SqlProvider, IUserProvider
     {
-        private readonly IConfiguration _configuration;
-
-        public UserProvider(IConfiguration configuration)
+        public UserProvider(IConfiguration configuration) : base(configuration)
         {
-            _configuration = configuration;
+
         }
 
         /// <inheritdoc/>
@@ -21,30 +19,19 @@ namespace IdentityApi.Providers
         {
             try
             {
-                // TODO: Make this usings into a nice method
-                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+                var spElements = new SpElement[]
                 {
-                    using (SqlCommand cmd = new SqlCommand("SP_CreateUser", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
+                    new SpElement("Email", userCreate.Email, SqlDbType.VarChar),
+                    new SpElement("HashedPassword", userCreate.HashedPassword, SqlDbType.VarChar),
+                    new SpElement("Salt", userCreate.Salt, SqlDbType.VarChar),
+                };
 
-                        // TODO: Add other fields
-                        cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = userCreate.Email;
-                        cmd.Parameters.Add("@HashedPassword", SqlDbType.VarChar).Value = userCreate.HashedPassword;
-                        cmd.Parameters.Add("@Salt", SqlDbType.VarChar).Value = userCreate.Salt;
+                var userTable = await RunSpAsync("SP_CreateUser", spElements);
 
-                        con.Open();
-                        var dataReader = await cmd.ExecuteReaderAsync();
+                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                    return null;
 
-                        var dataTable = new DataTable();
-                        dataTable.Load(dataReader);
-
-                        if (dataTable.Rows.Count == 0)
-                            return null;
-
-                        return DRToUser(dataTable.Rows[0]);
-                    }
-                }
+                return DRToUser(userTable.Rows[0]);
             }
             catch (Exception e)
             {
@@ -57,47 +44,38 @@ namespace IdentityApi.Providers
         /// <inheritdoc/>
         public async Task<DbUser> GetUserByIDAsync(int userID)
         {
-            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+            try
             {
-                // no need for sp since input is an integer therefore sql injection is not possible
-                using (SqlCommand cmd = new SqlCommand($"select top(1)* from Users  where ID = {userID}", con))
-                {
-                    con.Open();
-                    var dataReader = await cmd.ExecuteReaderAsync();
+                var userTable = await RunQueryAsync($"select top(1)* from Users  where ID = {userID}");
 
-                    var dataTable = new DataTable();
-                    dataTable.Load(dataReader);
+                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                    return null;
 
-                    if (dataTable.Rows.Count == 0)
-                        return null;
-
-                    return DRToUser(dataTable.Rows[0]);
-                }
+                return DRToUser(userTable.Rows[0]);
+            }
+            catch(Exception e)
+            {
+                throw e;
             }
         }
 
         /// <inheritdoc/>
         public async Task<DbUser> GetUserByEmailAsync(string userEmail)
         {
-            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand("SP_UserExists", con))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
+                var userTable = await RunSpAsync("SP_CreateUser", new SpElement("Email", userEmail, SqlDbType.VarChar));
 
-                    cmd.Parameters.Add("@Email", SqlDbType.VarChar).Value = userEmail;
+                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                    return null;
 
-                    con.Open();
-                    var dataReader = await cmd.ExecuteReaderAsync();
+                return DRToUser(userTable.Rows[0]);
+            }
+            catch (Exception e)
+            {
+                // TODO: log here
 
-                    var dataTable = new DataTable();
-                    dataTable.Load(dataReader);
-
-                    if (dataTable.Rows.Count == 0)
-                        return null;
-
-                    return DRToUser(dataTable.Rows[0]);
-                }
+                throw e; // TODO: Change to better error
             }
         }
 
@@ -105,27 +83,12 @@ namespace IdentityApi.Providers
         {
             try
             {
-                // TODO: Make this usings into a nice method
-                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_UpdateUserFailedTries", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
+                var userTable = await RunSpAsync("SP_UpdateUserFailedTries", new SpElement("UserID", userID, SqlDbType.Int));
 
-                        cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                    return null;
 
-                        con.Open();
-                        var dataReader = await cmd.ExecuteReaderAsync();
-
-                        var dataTable = new DataTable();
-                        dataTable.Load(dataReader);
-
-                        if (dataTable.Rows.Count == 0)
-                            return null;
-
-                        return DRToUser(dataTable.Rows[0]);
-                    }
-                }
+                return DRToUser(userTable.Rows[0]);
             }
             catch (Exception e)
             {
@@ -140,27 +103,12 @@ namespace IdentityApi.Providers
         {
             try
             {
-                // TODO: Make this usings into a nice method
-                using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
-                {
-                    using (SqlCommand cmd = new SqlCommand("SP_UserLoggedIn", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
+                var userTable = await RunSpAsync("SP_UserLoggedIn", new SpElement("UserID", userID, SqlDbType.Int));
 
-                        cmd.Parameters.Add("@UserID", SqlDbType.Int).Value = userID;
+                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                    return null;
 
-                        con.Open();
-                        var dataReader = await cmd.ExecuteReaderAsync();
-
-                        var dataTable = new DataTable();
-                        dataTable.Load(dataReader);
-
-                        if (dataTable.Rows.Count == 0)
-                            return null;
-
-                        return DRToUser(dataTable.Rows[0]);
-                    }
-                }
+                return DRToUser(userTable.Rows[0]);
             }
             catch (Exception e)
             {
@@ -169,7 +117,6 @@ namespace IdentityApi.Providers
                 throw e; // TODO: Change to better error
             }
         }
-
 
         /// <summary>
         /// Maps datarow to db user
@@ -193,7 +140,7 @@ namespace IdentityApi.Providers
                 dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
                 dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
-                if(dr.Table.Columns.Contains("HashedPassword"))
+                if (dr.Table.Columns.Contains("HashedPassword"))
                     dbUser.HashedPassword = dr["HashedPassword"]?.ToString();
 
                 if (dr.Table.Columns.Contains("Salt"))
