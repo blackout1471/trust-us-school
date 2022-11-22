@@ -54,7 +54,7 @@ namespace IdentityApiIntegrationTest
         {
             await _dbContainer.StartAsync();
 
-            var content = await File.ReadAllTextAsync("DbScheme.sql");
+            var content = await File.ReadAllTextAsync(@"..\..\..\..\..\..\Scripts\DbScheme.sql");
             await _dbContainer.ExecScriptAsync(content);
 
             HttpClient = CreateClient();
