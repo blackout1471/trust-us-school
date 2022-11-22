@@ -70,6 +70,28 @@ namespace IdentityApiIntegrationTest.UserApi
             Assert.Equal(expected, actual);
         }
 
+        [Theory]
+        [InlineData(null, "")]
+        [InlineData("", null)]
+        public async void ExpectStatusCode400_WhenUserMissingRequiredData_Login(string username, string password)
+        {
+            // Arrange
+            var expected = HttpStatusCode.BadRequest;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var customerLoginRequest = new UserLogin
+            {
+                Email = username,
+                Password = password
+            };
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Login", customerLoginRequest);
+            actual = response.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
         [Fact]
         public async void ExpectStatusCode200_WhenUserIsRegistered_Register()
         {
@@ -82,6 +104,33 @@ namespace IdentityApiIntegrationTest.UserApi
                 Password = "test2",
                 FirstName = "test2",
                 LastName = "test2",
+                PhoneNumber = "454545452"
+            };
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actual = response.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(null, "", "", "")]
+        [InlineData("", null, "", "")]
+        [InlineData("", "", null, "")]
+        [InlineData("", "", "", null)]
+        public async void ExpectStatusCode400_WhenMissingRequiredData_Register(string email, string pass, string first, string last)
+        {
+            // Arrange
+            var expected = HttpStatusCode.BadRequest;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = new UserCreate
+            {
+                Email = email,
+                Password = pass,
+                FirstName = first,
+                LastName = last,
                 PhoneNumber = "454545452"
             };
 
