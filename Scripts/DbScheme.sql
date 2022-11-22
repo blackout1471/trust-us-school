@@ -13,16 +13,22 @@ GO
 use TrustUS;
 go
 
--- Drop pre exisitng tables if they exist
+/*
+-- if there were any changes in tables run this 3 lines
 DROP TABLE IF EXISTS [dbo].UserLocation;
 DROP TABLE IF EXISTS [dbo].UserPasswords;
 DROP TABLE IF EXISTS [dbo].Users;
+*/
+
 
 /*
 *
 * Create tables
 *
 */
+
+-- Check if table exists, U is for user defined table
+IF OBJECT_ID(N'[dbo].UserLocation', N'U') IS NULL
 create table Users(
   ID int IDENTITY(1,1) PRIMARY KEY,
   Email varchar(100),
@@ -35,7 +41,10 @@ create table Users(
   IsLocked bit default(0),
   LockedDate datetime
 )
+GO
 
+-- Check if table exists, U is for user defined table
+IF OBJECT_ID(N'[dbo].UserPasswords', N'U') IS NULL
 create table UserPasswords( /*Consider doing it in new namespace*/
       ID int IDENTITY(1,1) PRIMARY KEY,
       UserID int,
@@ -43,6 +52,8 @@ create table UserPasswords( /*Consider doing it in new namespace*/
       Salt varchar(200)
 )
 
+-- Check if table exists, U is for user defined table
+IF OBJECT_ID(N'[dbo].UserLocation', N'U') IS NULL
 create table UserLocation(
       ID int IDENTITY(1,1) PRIMARY KEY,
       UserID int,
