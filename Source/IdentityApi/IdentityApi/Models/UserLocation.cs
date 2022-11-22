@@ -8,6 +8,7 @@
         public string UserAgent { get; set; }
 
 
+        // Convert ip as string to userlocation ip
         public void SetIPFromString(string ip)
         {
             if (string.IsNullOrWhiteSpace(ip))
@@ -15,7 +16,6 @@
 
             var ipParts = ip.Split(".");
 
-            // -1 ?
             IP = new byte[ipParts.Length];
 
             for (int i = 0; i < ipParts.Length; i++)

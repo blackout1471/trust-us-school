@@ -18,7 +18,6 @@ namespace IdentityApi.Providers
         {
             try
             {
-                // TODO: Make this usings into a nice method
                 using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
                 {
                     using (SqlCommand cmd = new SqlCommand(spName, con))
@@ -54,7 +53,6 @@ namespace IdentityApi.Providers
         {
             try
             {
-                // TODO: Make this usings into a nice method
                 using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
                 {
                     using (SqlCommand cmd = new SqlCommand(query, con))

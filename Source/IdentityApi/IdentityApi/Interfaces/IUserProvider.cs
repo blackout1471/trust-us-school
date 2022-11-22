@@ -29,7 +29,7 @@ namespace IdentityApi.Interfaces
         Task<DbUser> UpdateUserFailedTries(int userID);
 
         /// <summary>
-        /// Updates user sucessfull login
+        /// Updates user successful login
         /// Removes any failed tries if there were any
         /// </summary>
         /// <returns>Updated user</returns>
