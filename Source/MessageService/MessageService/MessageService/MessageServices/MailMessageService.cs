@@ -1,13 +1,8 @@
 ﻿using MessageService.Configurations;
 using MessageService.Messages;
 using MessageService.Recipients;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Mail;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MessageService.MessageServices
 {
@@ -18,20 +13,31 @@ namespace MessageService.MessageServices
         public MailMessageService(ISMTPConfigModel configurations)
         {
             this.configuration = configurations;
-            this.Setup();
+            this.SetupSmtpClient();
         }
+
+        /// <summary>
+        /// Sends a message async
+        /// </summary>
+        /// <param name="recipient"> Recipient of message </param>
+        /// <param name="message"> Message to be sent</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public async Task SendMessageAsync(IRecipient recipient, IMessage message)
         {
-            if (recipient == null)
-                throw new SmtpFailedRecipientException();
+            if (string.IsNullOrEmpty(recipient.To))
+                throw new ArgumentNullException();
 
             MailMessage mail = CreateMailMessage(message.Message, recipient.To);
 
-
             await smtpClient.SendMailAsync(mail);
-
         }
-
+        /// <summary>
+        /// Creates a MailMessage object
+        /// </summary>
+        /// <param name="message"> The message that is to be sent </param>
+        /// <param name="to"> The recipient of the mail </param>
+        /// <returns></returns>
         private MailMessage CreateMailMessage(string message, string to)
         {
             MailMessage mail = new MailMessage
@@ -44,17 +50,31 @@ namespace MessageService.MessageServices
 
             return mail;
         }
-        private void Setup()
+
+        /// <summary>
+        /// Sets up smtp client from local configuration
+        /// </summary>
+        /// <exception cref="ArgumentException"></exception>
+        private void SetupSmtpClient()
         {
-            this.smtpClient = new SmtpClient
+            try
             {
-                Host = configuration.Host,
-                EnableSsl = configuration.EnableSSL,
-                Port = configuration.Port,
-                UseDefaultCredentials = configuration.UseDefaultCredentials,
-                Credentials = new NetworkCredential(configuration.UserName, configuration.Password),
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-            };
+                this.smtpClient = new SmtpClient
+                {
+                    Host = configuration.Host,
+                    EnableSsl = configuration.EnableSSL,
+                    Port = configuration.Port,
+                    UseDefaultCredentials = configuration.UseDefaultCredentials,
+                    Credentials = new NetworkCredential(configuration.UserName, configuration.Password),
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                };
+
+            }
+            catch (Exception)
+            {
+
+                throw new ArgumentException();
+            }
         }
 
     }

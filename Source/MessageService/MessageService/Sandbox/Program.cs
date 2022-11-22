@@ -8,13 +8,14 @@ Config config = new Config
     EnableSSL = true,
     Host = "smtp.gmail.com",
     Port = 587,
-    UserName = "renelorentzen96@gmail.com",
-    SenderAddress = "renelorentzen96@gmail.com",
+    UserName = "test@gmail.com",
+    Password= "password",
+    SenderAddress = "test@gmail.com",
     SenderDisplayName = "Trust Us",
     UseDefaultCredentials = false
 };
 MailMessageService a = new MailMessageService(config);
 EmailRecipient emailRecipient = new EmailRecipient { To = "renelorentzen@hotmail.com" };
 EmailMessage emailMessage = new EmailMessage { Message = "Hello there" };
-await a.SendMessageAsync(emailRecipient, emailMessage);
+a.SendMessageAsync(emailRecipient, emailMessage);
 Console.WriteLine("Hello there");

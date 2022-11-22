@@ -8,6 +8,6 @@ namespace MessageService.Recipients
 {
     public interface IRecipient
     {
-        string To { get; }
+        string To { get; set; }
     }
 }
