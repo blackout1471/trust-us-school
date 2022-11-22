@@ -11,7 +11,6 @@ namespace IdentityApi.Controllers
     {
         private readonly IUserManager _userManager;
         private readonly ITokenManager _tokenManager;
-        UserLocation userLocation = null;
         public UserController(IUserManager userManager, ITokenManager tokenManager)
         {
             _userManager = userManager;
