@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using System;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace IdentityApi
 {
@@ -74,7 +76,13 @@ namespace IdentityApi
             });
 
 
-           var app = builder.Build();
+            var app = builder.Build();
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                ForwardedHeaders.XForwardedProto
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -107,10 +115,10 @@ namespace IdentityApi
                         Scheme = "Bearer", //The name of the HTTP Authorization scheme to be used in the Authorization header. In this case "bearer".
                         In = ParameterLocation.Header
                     });
-                    c.AddSecurityRequirement(
-                        new OpenApiSecurityRequirement()
-                        {
-                            
+                c.AddSecurityRequirement(
+                    new OpenApiSecurityRequirement()
+                    {
+
                             {
                                 new OpenApiSecurityScheme
                                 {
@@ -122,7 +130,7 @@ namespace IdentityApi
                                 },
                                 new string[] { }
                             }
-                        });
+                    });
             });
 
         }

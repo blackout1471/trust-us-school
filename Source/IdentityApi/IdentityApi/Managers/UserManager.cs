@@ -20,7 +20,7 @@ namespace IdentityApi.Managers
             var existingUser = await _userProvider.GetUserByEmailAsync(userCreate.Email);
 
             // User already in use 
-            if(existingUser != null)
+            if (existingUser != null)
             {
                 // TODO: log
 
@@ -47,7 +47,7 @@ namespace IdentityApi.Managers
             {
                 ID = createdUser.ID,
                 Email = createdUser.Email,
-                FirstName = createdUser.FirstName,  
+                FirstName = createdUser.FirstName,
                 LastName = createdUser.LastName,
                 PhoneNumber = createdUser.PhoneNumber
             };
@@ -71,7 +71,8 @@ namespace IdentityApi.Managers
                     FirstName = dbUser.FirstName
                 };
 
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 // TODO: Add log
 
@@ -85,23 +86,49 @@ namespace IdentityApi.Managers
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
 
-            if(existingUser == null)
+            if (existingUser == null)
             {
                 return null;
             }
 
-            // check if given password matches with the hashedpassword of the user
-            if(existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
+            // User is locked, no need for further checks
+            if (existingUser.IsLocked)
             {
+                // TODO: log
+                throw new Exception("Login failed, Account locked");
+            }
+
+
+
+            // check if given password matches with the hashedpassword of the user
+            if (existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
+            {
+                // TODO: Add check for ip adresse here
+                // if user was not logged in with this ip adress
+                // Send 2FA here, then
+                // throw error here with "Check email", 
+
+                // else
+
                 // login success 
+                existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+
+
+                // TODO: Update 
 
                 return existingUser;
             }
             else
             {
+                // TODO: log
                 // login failed
 
-                // TODO: log
+                existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
+
+                if (existingUser.IsLocked)
+                {
+                    throw new Exception("Login failed, Account locked");
+                }
 
                 // update tries, if tries >= 3 lock account  <- consider moving both to sp and returning dbuser
                 throw new Exception("Login failed, username or password is incorrect");
