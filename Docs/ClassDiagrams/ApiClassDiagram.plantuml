@@ -61,7 +61,7 @@ ITokenManager *-- UserToken
 interface IUserProvider{
     +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
     +GetUserByEmailAsync(email : string) : Task<DbUser>
-    +GetuserByIdAsync(id : int) : Task<DbUser>
+    +GetUserByIdAsync(id : int) : Task<DbUser>
 }
 
 'Providers mappings'

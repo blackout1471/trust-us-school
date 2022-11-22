@@ -1,9 +1,7 @@
 ﻿using IdentityApi.Interfaces;
-using IdentityApi.Models;
 using System.Data.SqlClient;
 using System.Data;
 using IdentityApi.DbModels;
-using System.Data.Common;
 
 namespace IdentityApi.Providers
 {

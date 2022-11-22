@@ -3,13 +3,6 @@ using IdentityApi.DbModels;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -17,7 +10,7 @@ namespace IdentityApiUnitTest.Managers
     {
         
         [Fact]
-        public void UserDetails_IsNotNull_WhenLogin()
+        public void ExpectUserDetails_WhenLoggingIn_Login()
         {
             // Arrange 
             var expected = GetUser();
@@ -36,7 +29,7 @@ namespace IdentityApiUnitTest.Managers
         }
 
         [Fact]
-        public void Throws_WhenPasswordIsWrong_WhenLogin()
+        public void ThrowsException_WhenPasswordIsWrong_Login()
         {
             // Arrange
             var expected = GetUser();
@@ -55,7 +48,7 @@ namespace IdentityApiUnitTest.Managers
         }
 
         [Fact]
-        public void Throws_WhenUserExists_WhenRegister()
+        public void ThrowsException_WhenUserExists_Register()
         {
             // Arrange
             var expected = GetUser();
