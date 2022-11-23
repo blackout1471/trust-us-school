@@ -34,10 +34,9 @@ class UserIntegration {
         .then(response => {
             if (response.status == 200)
                 return response.json();
-            else if (response.status == 204)
-                this.#callOnErrorEvent("Email/password is wrong!", 204);  
-            else
-                this.#callOnErrorEvent("Unexpected error occurred", 500);
+            
+            // Error handling
+            response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
         }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500));
     };
 
@@ -48,10 +47,9 @@ class UserIntegration {
         return await this.#createFetch(bodyRequest, 'POST', 'create').then(response => {
             if (response.status == 200)
                 return response.json();
-            else if (response.status == 500)
-                this.#callOnErrorEvent("User already exists!", 500);  
-            else
-                this.#callOnErrorEvent("Unexpected error occurred", 500);
+            
+            // Error handling
+            response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
         }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500));
     };
 

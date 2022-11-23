@@ -1,4 +1,5 @@
 ﻿using IdentityApi.DbModels;
+using IdentityApi.Exceptions;
 using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
@@ -8,9 +9,12 @@ namespace IdentityApi.Managers
     public class UserManager : IUserManager
     {
         private readonly IUserProvider _userProvider;
-        public UserManager(IUserProvider userProvider)
+        private readonly ILogger<UserManager> _logger;
+
+        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger)
         {
             _userProvider = userProvider;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -22,9 +26,8 @@ namespace IdentityApi.Managers
             // User already in use 
             if (existingUser != null)
             {
-                // TODO: log
-
-                throw new Exception("Email already in use");
+                _logger.LogWarning($"User cannot be created because they already exists {userCreate.Email}");
+                throw new UserAlreadyExistsException();
             }
 
 
@@ -55,29 +58,19 @@ namespace IdentityApi.Managers
 
         public async Task<User> GetUserByIDAsync(int ID)
         {
-            try
+            var dbUser = await _userProvider.GetUserByIDAsync(ID);
+
+            if (dbUser == null)
+                return null;
+
+            // TODO: Add mapper
+
+            return new User()
             {
-                var dbUser = await _userProvider.GetUserByIDAsync(ID);
-
-                if (dbUser == null)
-                    return null;
-
-                // TODO: Add mapper
-
-                return new User()
-                {
-                    ID = dbUser.ID,
-                    Email = dbUser.Email,
-                    FirstName = dbUser.FirstName
-                };
-
-            }
-            catch (Exception e)
-            {
-                // TODO: Add log
-
-                throw e;
-            }
+                ID = dbUser.ID,
+                Email = dbUser.Email,
+                FirstName = dbUser.FirstName
+            };
         }
 
         /// <inheritdoc/>
@@ -87,18 +80,14 @@ namespace IdentityApi.Managers
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
 
             if (existingUser == null)
-            {
                 return null;
-            }
 
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
-                // TODO: log
-                throw new Exception("Login failed, Account locked");
+                _logger.LogWarning($"Login attempt for locked user {userLogin.Email}");
+                throw new AccountLockedException();
             }
-
-
 
             // check if given password matches with the hashedpassword of the user
             if (existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
@@ -112,26 +101,16 @@ namespace IdentityApi.Managers
 
                 // login success 
                 existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
-
-
+                _logger.LogInformation($"User has logged in {userLogin.Email}");
                 // TODO: Update 
-
                 return existingUser;
             }
             else
             {
-                // TODO: log
                 // login failed
-
-                existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
-
-                if (existingUser.IsLocked)
-                {
-                    throw new Exception("Login failed, Account locked");
-                }
-
-                // update tries, if tries >= 3 lock account  <- consider moving both to sp and returning dbuser
-                throw new Exception("Login failed, username or password is incorrect");
+                _logger.LogWarning($"Login failed for user email {userLogin.Email}");
+                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                throw new UserIncorrectLoginException();
             }
         }
     }

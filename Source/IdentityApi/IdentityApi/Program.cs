@@ -10,6 +10,8 @@ using Microsoft.OpenApi.Models;
 using System.Text;
 using System;
 using Microsoft.AspNetCore.HttpOverrides;
+using IdentityApi.Filters;
+using Microsoft.AspNetCore.Mvc;
 
 namespace IdentityApi
 {
@@ -25,7 +27,19 @@ namespace IdentityApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+            builder.Services.AddControllers(options => 
+            {
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                options.Filters.Add<ExceptionFilter>();
+                options.Filters.Add<ModelStateFilter>();
+            });
+
+            // Turn off default model state invalid filter.
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             AddJwtConfiguration(builder);
 
             // Read configurations file
@@ -52,6 +66,7 @@ namespace IdentityApi
                                                         .ServerCertificateValidationCallback((o, certificate, arg3, arg4) => { return true; }), // TODO: Add not self signed certificate for elasticsearch
                     TypeName = null
                 })
+                .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
             builder.Host.UseSerilog();
