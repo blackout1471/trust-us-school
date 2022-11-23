@@ -63,6 +63,8 @@ namespace IdentityApi.Managers
             userToken.UserID = user.ID;
             userToken.Email = user.Email;
 
+            _logger.LogInformation($"User[{user.Email}] has created a new token");
+
             return userToken;
         }
 
@@ -79,6 +81,7 @@ namespace IdentityApi.Managers
                 ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
 
                 var userToken = ClaimsIdentityToUserToken(identity, token);
+                _logger.LogInformation($"{token} has been validated");
 
                 return userToken == null ? false : true;
             }
