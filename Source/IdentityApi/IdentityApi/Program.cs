@@ -33,6 +33,8 @@ namespace IdentityApi
                 options.Filters.Add<ExceptionFilter>();
                 options.Filters.Add<ModelStateFilter>();
             });
+
+            // Turn off default model state invalid filter.
             builder.Services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
