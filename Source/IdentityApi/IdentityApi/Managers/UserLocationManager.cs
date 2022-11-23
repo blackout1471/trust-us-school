@@ -20,20 +20,42 @@ namespace IdentityApi.Managers
 
         public Task<UserLocation> LogLocation(UserLocation location)
         {
-            var match = Regex.Match(location.UserAgent, "(?i)(firefox|msie|chrome|safari)[/\\s]([\\d.]+)");
-
-            if (match.Success)
-            {
-                // Try removing the browser version
-                var browser = match.Captures.First().Value.Split('/')[0];
-                location.UserAgent = location.UserAgent.Replace(match.Captures.First().Value, browser);
-            }
+            location.UserAgent = TryToGetBrowserWithoutVersion(location.UserAgent);
 
             return _userLocationProvider.LogLocation(location);
         }
 
+        public string TryToGetBrowserWithoutVersion(string userAgent)
+        {
+            try
+            {
+                //var match = Regex.Match(userAgent, "(?i)(firefox|msie|chrome|safari)[/\\s]([\\d.]+)");
+                Match match = null;
+
+                // removes all versions
+                while ((match = Regex.Match(userAgent, "(?i)(firefox|msie|chrome|safari)[/\\s]([\\d.]+)"))?.Success ?? false)
+                {
+                    foreach (Capture capture in match.Captures)
+                    {
+                        // Try removing the browser version
+                        var browser = capture.Value.Split('/')[0];
+                        userAgent = userAgent.Replace(capture.Value, browser);
+                    }
+
+                }
+                return userAgent;
+            }
+            catch (Exception e)
+            {
+                // Todo: log
+            }
+            return userAgent;
+        }
+
         public Task<bool> UserWasLoggedInFromLocation(UserLocation userLocation)
         {
+            userLocation.UserAgent = TryToGetBrowserWithoutVersion(userLocation.UserAgent);
+
             return _userLocationProvider.UserWasLoggedInFromLocation(userLocation);
         }
     }

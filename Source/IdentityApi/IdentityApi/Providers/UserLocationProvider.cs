@@ -20,8 +20,8 @@ namespace IdentityApi.Providers
             if (table?.Rows?.Count == 0 || table?.Rows == null)
                 return false;
 
-            // If user logged in from the location 0 times return false
-            return !(Convert.ToInt32(table?.Rows[0]["UnSuccessfulIPCount"]?.ToString()) == 0);
+            // If ip adress tried to call api unsuccessfully more then threshhold returns 1 else 0
+            return (Convert.ToInt32(table?.Rows[0]["IsIPLocked"]?.ToString()) == 1);
         }
 
         public async Task<UserLocation> LogLocation(UserLocation userLocation)
@@ -61,7 +61,7 @@ namespace IdentityApi.Providers
                 return false;
 
             // If user logged in from the location 0 times return false
-            return !(Convert.ToInt32(table?.Rows[0]["LoggedInCount"]?.ToString()) == 0);
+            return (Convert.ToInt32(table?.Rows[0]["LoggedInCount"]?.ToString()) > 0);
         }
 
         private UserLocation DrToUserLocation(DataRow dr)

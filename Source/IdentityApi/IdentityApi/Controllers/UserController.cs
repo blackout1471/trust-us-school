@@ -27,7 +27,7 @@ namespace IdentityApi.Controllers
         {
             try
             {
-                var createdUser = await _userManager.CreateUserAsync(userCreate);
+                var createdUser = await _userManager.CreateUserAsync(userCreate, GetUserLocation());
 
                 return Ok(_tokenManager.GenerateUserToken(createdUser));
             }
@@ -49,7 +49,7 @@ namespace IdentityApi.Controllers
         {
             try
             {
-                var user = await _userManager.LoginAsync(userLogin);
+                var user = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
                 if (user == null)
                     return NoContent();
@@ -93,6 +93,17 @@ namespace IdentityApi.Controllers
 
                 return Problem("E");
             }
+        }
+
+        private UserLocation GetUserLocation()
+        {
+            var userLocation = new UserLocation();
+            var ip = Request.HttpContext.Connection.RemoteIpAddress;
+
+            userLocation.IP = ip.ToString();
+            userLocation.UserAgent = Request.Headers["User-Agent"].ToString();
+
+            return userLocation;
         }
     }
 }
