@@ -153,6 +153,9 @@ namespace IdentityApi.Providers
                 if (dr.Table.Columns.Contains("Counter"))
                     dbUser.Counter = Convert.ToInt64(dr["Counter"]);
 
+                if (dr.Table.Columns.Contains("LastRequestDate"))
+                    dbUser.LastRequestDate = dr["LastRequestDate"] == null ? (DateTime?)dr["LastRequestDate"] : null;
+
 
                 return dbUser;
             }
