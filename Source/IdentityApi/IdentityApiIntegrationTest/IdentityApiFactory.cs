@@ -31,16 +31,17 @@ namespace IdentityApiIntegrationTest
         /// <inheritdoc />
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.ConfigureAppConfiguration(config =>
-            {
-                var integrationConfig = new ConfigurationBuilder()
-                    .AddInMemoryCollection(new Dictionary<string, string>{{ "ConnectionStrings:SQLserver",  _dbContainer.ConnectionString}})
-                    .Build();
+             builder.ConfigureAppConfiguration(config =>
+             {
+                 var integrationConfig = new ConfigurationBuilder()
+                     .AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:SQLserver", _dbContainer.ConnectionString } })
+                     .Build();
 
-                config.AddConfiguration(integrationConfig);
+                 config.AddConfiguration(integrationConfig);
 
-            });
+             });
         }
+
 
         /// <inheritdoc />
         public new async Task DisposeAsync()
@@ -55,8 +56,16 @@ namespace IdentityApiIntegrationTest
 
             var content = await File.ReadAllTextAsync(@"..\..\..\..\..\..\Scripts\DbScheme.sql");
             await _dbContainer.ExecScriptAsync(content);
-
+            
             HttpClient = CreateClient();
+        }
+
+        /// <summary>
+        /// Runs the given sql query in the test integration database.
+        /// </summary>
+        public async Task<ExecResult> RunSqlQuery(string query)
+        {
+            return await _dbContainer.ExecScriptAsync(query);
         }
     }
 }
