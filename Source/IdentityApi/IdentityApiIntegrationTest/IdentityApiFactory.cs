@@ -6,7 +6,6 @@ using IdentityApi;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
-using System.Reflection;
 
 namespace IdentityApiIntegrationTest
 {
@@ -54,7 +53,7 @@ namespace IdentityApiIntegrationTest
         {
             await _dbContainer.StartAsync();
 
-            var content = await File.ReadAllTextAsync("DbScheme.sql");
+            var content = await File.ReadAllTextAsync(@"..\..\..\..\..\..\Scripts\DbScheme.sql");
             await _dbContainer.ExecScriptAsync(content);
 
             HttpClient = CreateClient();

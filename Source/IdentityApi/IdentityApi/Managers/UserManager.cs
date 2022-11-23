@@ -1,4 +1,5 @@
 ﻿using IdentityApi.DbModels;
+using IdentityApi.Exceptions;
 using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
@@ -9,10 +10,11 @@ namespace IdentityApi.Managers
     {
         private readonly IUserProvider _userProvider;
         private readonly IUserLocationManager _userLocationManager;
-        public UserManager(IUserProvider userProvider, IUserLocationManager userLocationManager)
+        private readonly ILogger<UserManager> _logger;
+        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager)
         {
             _userProvider = userProvider;
-            _userLocationManager = userLocationManager;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -27,10 +29,8 @@ namespace IdentityApi.Managers
             // User already in use 
             if (existingUser != null)
             {
-                // TODO: log
-                await _userLocationManager.LogLocationAsync(userLocation);
-
-                throw new Exception("Email already in use");
+                _logger.LogWarning($"User[{userCreate.Email}] cannot be created because they already exists");
+                throw new UserAlreadyExistsException();
             }
 
 
@@ -48,6 +48,7 @@ namespace IdentityApi.Managers
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
 
             var createdUser = await _userProvider.CreateUserAsync(toCreateDbUser);
+            _logger.LogInformation($"User[{userCreate.Email}] has been created");
 
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
@@ -65,29 +66,19 @@ namespace IdentityApi.Managers
 
         public async Task<User> GetUserByIDAsync(int ID)
         {
-            try
+            var dbUser = await _userProvider.GetUserByIDAsync(ID);
+
+            if (dbUser == null)
+                return null;
+
+            // TODO: Add mapper
+
+            return new User()
             {
-                var dbUser = await _userProvider.GetUserByIDAsync(ID);
-
-                if (dbUser == null)
-                    return null;
-
-                // TODO: Add mapper
-
-                return new User()
-                {
-                    ID = dbUser.ID,
-                    Email = dbUser.Email,
-                    FirstName = dbUser.FirstName
-                };
-
-            }
-            catch (Exception e)
-            {
-                // TODO: Add log
-
-                throw e;
-            }
+                ID = dbUser.ID,
+                Email = dbUser.Email,
+                FirstName = dbUser.FirstName
+            };
         }
 
         /// <inheritdoc/>
@@ -112,9 +103,8 @@ namespace IdentityApi.Managers
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
-                await _userLocationManager.LogLocationAsync(userLocation);
-                // TODO: log
-                throw new Exception("Login failed, Account locked");
+                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
+                throw new AccountLockedException();
             }
 
 
@@ -132,6 +122,7 @@ namespace IdentityApi.Managers
                 {
                     // login success 
                     existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+                    _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
                 }
                 return existingUser;
             }
@@ -139,16 +130,11 @@ namespace IdentityApi.Managers
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
+                            
 
-                existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
-
-                if (existingUser.IsLocked)
-                {
-                    throw new Exception("Login failed, Account locked");
-                }
-
-                // update tries, if tries >= 3 lock account  <- consider moving both to sp and returning dbuser
-                throw new Exception("Login failed, username or password is incorrect");
+                _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
+                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                throw new UserIncorrectLoginException();
             }
         }
     }

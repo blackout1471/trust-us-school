@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
-namespace IdentityApiIntegrationTest.User
+namespace IdentityApiIntegrationTest.UserApi
 {
     public class UserIntegrationShould : IClassFixture<IdentityApiFactory>
     {
@@ -51,15 +51,37 @@ namespace IdentityApiIntegrationTest.User
 
 
         [Fact]
-        public async void ExpectStatusCode204_WhenUserNotExists_Login()
+        public async void ExpectStatusCode403_WhenUserNotExists_Login()
         {
             // Arrange
-            var expected = HttpStatusCode.NoContent;
+            var expected = HttpStatusCode.Forbidden;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
             var customerLoginRequest = new UserLogin
             {
                 Email = "notexists@notexists.dk",
                 Password = "notexists"
+            };
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Login", customerLoginRequest);
+            actual = response.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(null, "")]
+        [InlineData("", null)]
+        public async void ExpectStatusCode400_WhenUserMissingRequiredData_Login(string username, string password)
+        {
+            // Arrange
+            var expected = HttpStatusCode.BadRequest;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var customerLoginRequest = new UserLogin
+            {
+                Email = username,
+                Password = password
             };
 
             // Act
@@ -82,6 +104,33 @@ namespace IdentityApiIntegrationTest.User
                 Password = "test2",
                 FirstName = "test2",
                 LastName = "test2",
+                PhoneNumber = "454545452"
+            };
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actual = response.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Theory]
+        [InlineData(null, "", "", "")]
+        [InlineData("", null, "", "")]
+        [InlineData("", "", null, "")]
+        [InlineData("", "", "", null)]
+        public async void ExpectStatusCode400_WhenMissingRequiredData_Register(string email, string pass, string first, string last)
+        {
+            // Arrange
+            var expected = HttpStatusCode.BadRequest;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = new UserCreate
+            {
+                Email = email,
+                Password = pass,
+                FirstName = first,
+                LastName = last,
                 PhoneNumber = "454545452"
             };
 
