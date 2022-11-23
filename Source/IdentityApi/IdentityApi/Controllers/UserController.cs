@@ -72,10 +72,10 @@ namespace IdentityApi.Controllers
         private UserLocation GetUserLocation()
         {
             var userLocation = new UserLocation();
-            var ip = Request.HttpContext.Connection.RemoteIpAddress;
+            var ip = "123.123.123.123";
 
             userLocation.IP = ip.ToString();
-            userLocation.UserAgent = Request.Headers["User-Agent"].ToString();
+            userLocation.UserAgent = "Firefox";
 
             return userLocation;
         }

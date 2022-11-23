@@ -1,10 +1,13 @@
 ﻿using FakeItEasy;
+using FakeItEasy.Configuration;
 using IdentityApi.DbModels;
 using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -12,14 +15,16 @@ namespace IdentityApiUnitTest.Managers
     {
         private readonly ILogger<UserManager> _fakeLogger;
         private readonly IUserProvider _fakeUserProvider;
+        private readonly IUserLocationManager _fakeLocationManager;
         private readonly UserManager _userManager;
 
         public UserManagerShould()
         {
             _fakeLogger = A.Fake<ILogger<UserManager>>();
             _fakeUserProvider = A.Fake<IUserProvider>();
+            _fakeLocationManager = A.Fake<IUserLocationManager>();
 
-            _userManager = new UserManager(_fakeUserProvider, _fakeLogger);
+            _userManager = new UserManager(_fakeUserProvider, _fakeLogger, _fakeLocationManager);
         }
 
         [Fact]
@@ -31,10 +36,10 @@ namespace IdentityApiUnitTest.Managers
             
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
-            A.CallTo(() => userLocation.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
+            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
 
             // Act
-            var actual = await _userManager.LoginAsync(userLogin);
+            var actual = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
             Assert.Equal(expected.Email, actual.Email);
@@ -48,12 +53,12 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLogin();
             userLogin.Password = "PasswordThatIsWrong";
             var dbUser = GetDbUser();
+
             var userLocation = A.Fake<IUserLocationManager>();
-            A.CallTo(() => userProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
 
             // Act
-            var func = async () => await _userManager.LoginAsync(userLogin);
+            var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
             await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
@@ -70,7 +75,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(dbUser);
 
             // Act
-            var func = async () => await _userManager.LoginAsync(userLogin);
+            var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
             await Assert.ThrowsAsync<AccountLockedException>(func);
@@ -85,68 +90,66 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeUserProvider.CreateUserAsync(A<DbUser>.Ignored)).Returns(GetDbUser());
 
             // Act
-            var userManager = new UserManager(userProvider, userLocation);
+
+            var func = async () => await _userManager.CreateUserAsync(userCreate, GetUserLocation());
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => userManager.CreateUserAsync(userCreate, GetUserLocation()).Result);
+            await Assert.ThrowsAsync<UserAlreadyExistsException>(func);
         }
 
 
         [Fact]
-        public void ThrowsException_WhenIPBlocked_Register()
+        public async void ThrowsIpBlockedException_WhenIPBlocked_Register()
         {
             // Arrange
             var userCreate = GetUserCreate();
 
             var userProvider = A.Fake<IUserProvider>();
-            var userLocation = A.Fake<IUserLocationManager>();
             A.CallTo(() => userProvider.CreateUserAsync(A<DbUser>.Ignored)).Returns(GetDbUser());
-            A.CallTo(() => userLocation.IsIPLockedAsync(A<string>.Ignored)).Returns(true);            
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
 
             // Act
-            var userManager = new UserManager(userProvider, userLocation);
+            var func = async () => await _userManager.CreateUserAsync(userCreate, GetUserLocation());
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => userManager.CreateUserAsync(userCreate, GetUserLocation()).Result);
+            await Assert.ThrowsAnyAsync<IpBlockedException>(func);
         }
 
         [Fact]
-        public void ThrowsException_WhenIPBlocked_Login()
+        public async void ThrowsIpBlockedException_WhenIPBlocked_Login()
         {
             // Arrange
             var expected = GetUser();
             var userLogin = GetUserLogin();
 
             var userProvider = A.Fake<IUserProvider>();
-            var userLocation = A.Fake<IUserLocationManager>();
 
-            A.CallTo(() => userLocation.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
 
             // Act
-            var userManager = new UserManager(userProvider, userLocation);
+            var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
-            Assert.ThrowsAny<Exception>(() => userManager.LoginAsync(userLogin, GetUserLocation()).Result);
+            await Assert.ThrowsAnyAsync<IpBlockedException>(func);
         }
 
         [Fact]
-        public void ThrowsException_WhenUserNotLoggedInLoctaion_Login()
+        public async void ThrowsException_WhenUserNotLoggedInLoctaion_Login()
         {
             // Arrange
             var expected = GetUser();
             var userLogin = GetUserLogin();
 
             var userProvider = A.Fake<IUserProvider>();
-            var userLocation = A.Fake<IUserLocationManager>();
 
-            A.CallTo(() => userLocation.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
-            A.CallTo(() => userLocation.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
-
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
             // Act
-            var userManager = new UserManager(userProvider, userLocation);
+            var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
-            await Assert.ThrowsAsync<UserAlreadyExistsException>(func);
+            await Assert.ThrowsAsync<Exception>(func);
         }
 
 
