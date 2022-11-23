@@ -296,12 +296,4 @@ where
 UserLocation.IP = @IP 
 and
 UserLocation.Successful = 0
-
--- Select all user information
--- together with hashedpassword and salt
-select * from Users
-join UserPasswords
-on UserPasswords.UserID = Users.ID
-where Users.ID = @UserID
-
 go

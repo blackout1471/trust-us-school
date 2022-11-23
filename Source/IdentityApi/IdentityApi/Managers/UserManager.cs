@@ -22,7 +22,7 @@ namespace IdentityApi.Managers
         public async Task<User> CreateUserAsync(UserCreate userCreate, UserLocation userLocation)
         {
             if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
-                throw new Exception("login failed");
+                throw new IpBlockedException();
 
             // check if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userCreate.Email);
@@ -30,6 +30,7 @@ namespace IdentityApi.Managers
             // User already in use 
             if (existingUser != null)
             {
+                await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userCreate.Email}] cannot be created because they already exists");
                 throw new UserAlreadyExistsException();
             }
@@ -88,7 +89,7 @@ namespace IdentityApi.Managers
         public async Task<User> LoginAsync(UserLogin userLogin, UserLocation userLocation)
         {
             if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
-                throw new Exception("login failed");
+                throw new IpBlockedException();
 
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
@@ -106,6 +107,7 @@ namespace IdentityApi.Managers
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
+                await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] has been locked");
                 throw new AccountLockedException();
             }

@@ -14,8 +14,8 @@ UserManager->UserLocationManager: Check if ip is blocked (ipadress)
 UserLocationManager-->UserManager: Returns whether ip is block
 
 alt Ip blocked
-UserManager-->UserController: Forbidden
-UserController-->User: Forbidden
+UserManager-->UserController: Return status forbidden
+UserController-->User: Return status forbidden
 end
 
 UserManager->UserProvider: Get user by email(email)
@@ -31,8 +31,8 @@ end
 
 alt User is locked
 
-UserManager-->UserController: Account locked
-UserController-->User: Account locked
+UserManager-->UserController: Return status forbidden, Account locked
+UserController-->User: Return status forbidden
 
 end
 
@@ -52,8 +52,8 @@ UserLocationManager-->UserManager: Returns whether user has been logged in from 
 
 alt Has not been logged in
 
-UserManager-->UserController: Forbidden
-UserController-->User: Forbidden
+UserManager-->UserController: Return status forbidden
+UserController-->User: Return status forbidden
 
 end
 
