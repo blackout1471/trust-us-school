@@ -13,11 +13,13 @@ namespace IdentityApi.Managers
             _userLocationProvider = userLocationProvider;
         }
 
+        /// <inheritdoc/>
         public Task<bool> IsIPLockedAsync(string ipAddress)
         {
             return _userLocationProvider.IsIPLockedAsync(ipAddress);
         }
 
+        /// <inheritdoc/>
         public Task<UserLocation> LogLocationAsync(UserLocation location)
         {
             location.UserAgent = RegexHelper.TryToGetBrowserWithoutVersion(location.UserAgent);
@@ -25,6 +27,7 @@ namespace IdentityApi.Managers
             return _userLocationProvider.LogLocationAsync(location);
         }
 
+        /// <inheritdoc/>
         public Task<bool> UserWasLoggedInFromLocationAsync(UserLocation userLocation)
         {
             userLocation.UserAgent = RegexHelper.TryToGetBrowserWithoutVersion(userLocation.UserAgent);

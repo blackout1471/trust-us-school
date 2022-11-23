@@ -11,6 +11,7 @@ namespace IdentityApi.Providers
         {
         }
 
+        /// <inheritdoc/>
         public async Task<bool> IsIPLockedAsync(string ipAddress)
         {
             // Return amount of times the user has logged in from this location
@@ -24,6 +25,7 @@ namespace IdentityApi.Providers
             return (Convert.ToInt32(table?.Rows[0]["IsIPLocked"]?.ToString()) == 1);
         }
 
+        /// <inheritdoc/>
         public async Task<UserLocation> LogLocationAsync(UserLocation userLocation)
         {
             var spElements = new SpElement[]
@@ -44,6 +46,7 @@ namespace IdentityApi.Providers
             return DrToUserLocation(table.Rows[0]);
         }
 
+        /// <inheritdoc/>
         public async Task<bool> UserWasLoggedInFromLocationAsync(UserLocation userLocation)
         {
             var spElements = new SpElement[]
@@ -63,7 +66,9 @@ namespace IdentityApi.Providers
             // If user logged in from the location 0 times return false
             return (Convert.ToInt32(table?.Rows[0]["LoggedInCount"]?.ToString()) > 0);
         }
-
+        /// <summary>
+        /// Maps datarow to user location
+        /// </summary>
         private UserLocation DrToUserLocation(DataRow dr)
         {
             if (dr == null)

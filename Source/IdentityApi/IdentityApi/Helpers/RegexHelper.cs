@@ -4,6 +4,11 @@ namespace IdentityApi.Helpers
 {
     public static class RegexHelper
     {
+        /// <summary>
+        /// Tries to remove browser version from browser user agent
+        /// </summary>
+        /// <param name="browser"></param>
+        /// <returns></returns>
         public static string TryToGetBrowserWithoutVersion(string browser)
         {
             try
@@ -19,7 +24,6 @@ namespace IdentityApi.Helpers
                         var spltBrowser = capture.Value.Split('/')[0];
                         browser = browser.Replace(capture.Value, spltBrowser);
                     }
-
                 }
                 return browser;
             }
