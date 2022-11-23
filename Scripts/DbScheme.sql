@@ -72,9 +72,6 @@ create table UserLocation(
 ALTER TABLE UserPasswords
 ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
 
-ALTER TABLE UserLocation
-ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
-
 go
 
 /*
@@ -231,7 +228,7 @@ go
 create procedure dbo.SP_UserLoggedInLocations
 @UserID int,
 @IP varchar(50),
-@UserAgent varchar(50) = null
+@UserAgent varchar(256) = null
 as
 
 select 
@@ -247,8 +244,6 @@ and
 UserLocation.Successful = 1
 go
 
-
-
 DROP PROCEDURE IF EXISTS dbo.SP_AddLocation;
 go
 
@@ -256,7 +251,7 @@ go
 create procedure dbo.SP_AddLocation
 @UserID int = 0,
 @IP varchar(50),
-@UserAgent varchar(250),
+@UserAgent varchar(256),
 @SuccessFul bit
 as
 
@@ -266,6 +261,19 @@ values (@UserID, @IP, @UserAgent, @SuccessFul)
 -- get the latest generated id for the query
 declare @LocationID int = (SELECT SCOPE_IDENTITY())
 
+-- reset previous attemps with that ip adress and user agent
+if @SuccessFul = 1
+begin
+ update UserLocation
+ set UserLocation.Successful = 1
+ where
+ UserLocation.IP = @IP
+ and 
+ UserLocation.UserAgent = @UserAgent
+ and 
+ UserLocation.UserID = @UserID
+end
+
 select * from UserLocation
 where UserLocation.ID = @LocationID
 
@@ -274,12 +282,16 @@ go
 DROP PROCEDURE IF EXISTS dbo.SP_IsIPLocked;
 go
 
-
 create procedure dbo.SP_IsIPLocked
 @IP varchar(50)
 as
 
-select count(*) as UnSuccessfulIPCount from UserLocation 
+select 
+case 
+when count(*) < 20 then '0' -- check if there was less then 20 attempts with that ip address, return 0
+else '1' -- if there was more then 20 return 1
+end as IsIPLocked
+from UserLocation 
 where
 UserLocation.IP = @IP 
 and
