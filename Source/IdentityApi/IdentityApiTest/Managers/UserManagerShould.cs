@@ -93,6 +93,21 @@ namespace IdentityApiUnitTest.Managers
             await Assert.ThrowsAsync<UserAlreadyExistsException>(func);
         }
 
+        [Fact]
+        public async Task ThrowPasswordLeakedException_WhenPasswordHasBeenLeaked_Register()
+        {
+            // Arrange
+            var userCreate = GetUserCreate();
+
+            A.CallTo(() => _fakeLeakedPasswordProvider.GetIsPasswordLeakedAsync(A<string>.Ignored)).Returns(true);
+
+            // Act
+            var func = async () => await _userManager.CreateUserAsync(userCreate);
+
+            // Assert
+            await Assert.ThrowsAsync<PasswordLeakedException>(func);
+        }
+
         private User GetUser()
         {
             return new User()
