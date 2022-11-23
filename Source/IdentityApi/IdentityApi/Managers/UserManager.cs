@@ -122,7 +122,7 @@ namespace IdentityApi.Managers
                 if (hotp != null)
                 {
                     var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
-
+                    //Figure out where the counter should go up
                     _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
                 }
                 // throw error here with "Check email", 
@@ -155,7 +155,7 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<User> LoginOtpAsync(UserLogin userLogin)
+        public async Task<User> Login2FaAsync(UserLogin userLogin)
         {
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);

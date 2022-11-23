@@ -63,6 +63,30 @@ namespace IdentityApi.Controllers
                 return Problem("E");
             }
         }
+        /// <summary>
+        /// Logs user in with onetime password, if exists
+        /// </summary>
+        /// <returns>User Token</returns>
+        [HttpPost]
+        [Route("login2f")]
+        public async Task<ActionResult<UserToken>> Login2Factor(UserLogin userLogin)
+        {
+            try
+            {
+                var user = await _userManager.Login2FaAsync(userLogin);
+
+                if (user == null)
+                    return NoContent();
+
+                return Ok(_tokenManager.GenerateUserToken(user));
+            }
+            catch (Exception e)
+            {
+                // TODO: log
+
+                return Problem("E");
+            }
+        }
 
         /// <summary>
         /// Logs user in, if exists

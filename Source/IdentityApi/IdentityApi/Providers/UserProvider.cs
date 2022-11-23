@@ -146,6 +146,14 @@ namespace IdentityApi.Providers
 
                 if (dr.Table.Columns.Contains("Salt"))
                     dbUser.Salt = dr["Salt"]?.ToString();
+
+                if (dr.Table.Columns.Contains("SecretKey"))
+                    dbUser.SecretKey = dr["SecretKey"]?.ToString();
+
+                if (dr.Table.Columns.Contains("Counter"))
+                    dbUser.Counter = Convert.ToInt64(dr["Counter"]);
+
+
                 return dbUser;
             }
             catch (Exception e)
@@ -154,6 +162,11 @@ namespace IdentityApi.Providers
 
                 throw e;
             }
+        }
+
+        public Task<DbUser> UpdateUserLoginNewLocation(int userID)
+        {
+            throw new NotImplementedException();
         }
     }
 }

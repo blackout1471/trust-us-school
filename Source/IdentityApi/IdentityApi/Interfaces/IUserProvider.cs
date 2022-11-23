@@ -40,7 +40,7 @@ namespace IdentityApi.Interfaces
         /// Updates the last request date
         /// </summary>
         /// <returns>Updated user</returns>
-        Task<DbUser> UpdateUserLoginSuccessNewLocation(int userID);
+        Task<DbUser> UpdateUserLoginNewLocation(int userID);
 
     }
 }

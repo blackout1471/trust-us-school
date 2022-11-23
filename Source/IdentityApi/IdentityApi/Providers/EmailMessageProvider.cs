@@ -10,8 +10,8 @@ namespace IdentityApi.Providers
         /// <inheritdoc/>
         public IMessage GetLoginAttemptMessage(string to, string otp)
         {
-            var message = "There has been a login attempt from a new location, this is your one-time password for this login: " + otp
-            + " \n If this was not you, consider changing your password.";
+            var message = "There has been a login attempt from a new location, this is your one-time password for this login:\n" + otp
+            + "\n If this was not you, consider changing your password.";
 
             return new EmailMessage()
             {
