@@ -64,6 +64,7 @@ namespace IdentityApi
                                                         .ServerCertificateValidationCallback((o, certificate, arg3, arg4) => { return true; }), // TODO: Add not self signed certificate for elasticsearch
                     TypeName = null
                 })
+                .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
             builder.Host.UseSerilog();
