@@ -11,11 +11,11 @@ participant Security
 User->UserController: Login (email, password)
 UserController->UserManager: Login (email, password)
 UserManager->UserLocationManager: Check if ip is blocked (ipadress)
-UserLocationManager->UserManager: Returns whether ip is block
+UserLocationManager-->UserManager: Returns whether ip is block
 
 alt Ip blocked
-UserManager->UserController: Forbidden
-UserController->User: Forbidden
+UserManager-->UserController: Forbidden
+UserController-->User: Forbidden
 end
 
 UserManager->UserProvider: Get user by email(email)
@@ -31,8 +31,8 @@ end
 
 alt User is locked
 
-UserManager->UserController: Account locked
-UserController->User: Account locked
+UserManager-->UserController: Account locked
+UserController-->User: Account locked
 
 end
 
@@ -48,12 +48,12 @@ end
 
 
 UserManager->UserLocationManager: Check if user has been logged in from ip (ip, userid)
-UserLocationManager->UserManager: Returns whether user has been logged in from ip
+UserLocationManager-->UserManager: Returns whether user has been logged in from ip
 
 alt Has not been logged in
 
-UserManager->UserController: Forbidden
-UserController->User: Forbidden
+UserManager-->UserController: Forbidden
+UserController-->User: Forbidden
 
 end
 
