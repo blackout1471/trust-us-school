@@ -41,9 +41,4 @@ jobs:
       run: |
         cd Source/MessageService/MessageService/MessageServiceUnitTest
         dotnet test
-        
-    - name: Running webapi integration tests
-      run: |
-        cd Source/IdentityApi/IdentityApiIntegrationTest
-        dotnet test
     
