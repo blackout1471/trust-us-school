@@ -40,4 +40,10 @@ jobs:
     - name: Running messageservice unit tests
       run: |
         cd Source/MessageService/MessageService/MessageServiceUnitTest
-        dotnet test    
+        dotnet test
+        
+    - name: Running webapi integration tests
+      run: |
+        cd Source/IdentityApi/IdentityApiIntegrationTest
+        dotnet test
+    
