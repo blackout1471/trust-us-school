@@ -1,4 +1,8 @@
+using IdentityApi.Exceptions;
 using IdentityApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -171,6 +175,160 @@ namespace IdentityApiIntegrationTest.UserApi
 
             // Assert
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void ExpectStatusCode403_WhenAccountIsLockedWrongPassword_Login()
+        {
+            // Arrange
+            AccountLockedException accountLockedException = new AccountLockedException();
+
+            var expected = accountLockedException.Message;
+            string actual = null;
+
+            var newUserRequest = new UserCreate
+            {
+                Email = "verygoodemail2",
+                Password = "test3",
+                FirstName = "test3",
+                LastName = "test3",
+                PhoneNumber = "454545452"
+            };
+
+            var userLogin = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = "Incorrect password"
+            };
+
+
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+
+            // act 
+            int tries = 6;
+
+            for (int i = 0; i < tries; i++)
+            {
+                var response = await _client.PostAsJsonAsync(_baseUrl + "Login", userLogin);
+                actual = await response.Content.ReadAsStringAsync();
+            }
+
+            JToken jObject = JsonConvert.DeserializeObject<JToken>(actual);
+
+            // Assert
+            Assert.Equal(expected, jObject.Value<string>("error"));
+        }
+
+
+        [Fact]
+        public async void ExpectStatusCode403_WhenIPBlocked_Register()
+        {
+            // Arrange
+            var expected = HttpStatusCode.Forbidden;
+            HttpStatusCode actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = new UserCreate
+            {
+                Email = "test3",
+                Password = "test3",
+                FirstName = "test3",
+                LastName = "test3",
+                PhoneNumber = "454545452"
+            };
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+
+            // act 
+            int tries = 30;
+
+            for (int i = 0; i < tries; i++)
+            {
+                var response = await _client.PostAsJsonAsync(_baseUrl + "create", newUserRequest);
+                actual = response.StatusCode;
+            }          
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void ExpectStatusCode403_WhenIPBlockedWithWrongPassword_Login()
+        {
+            // Arrange
+            IpBlockedException ipBlockedException = new IpBlockedException();
+            var expected = ipBlockedException.Message;
+            string actual = null;
+
+            var newUserRequest = new UserCreate
+            {
+                Email = "verygoodemail",
+                Password = "test3",
+                FirstName = "test3",
+                LastName = "test3",
+                PhoneNumber = "454545452"
+            };
+
+            var userLogin = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = "Incorrect password"
+            };
+
+            
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+
+            // act 
+            int tries = 30;
+
+            for (int i = 0; i < tries; i++)
+            {
+                var response = await _client.PostAsJsonAsync(_baseUrl + "Login", userLogin);
+                actual = await response.Content.ReadAsStringAsync();
+            }
+
+            JToken jObject = JsonConvert.DeserializeObject<JToken>(actual);
+
+            // Assert
+            Assert.Equal(expected, jObject.Value<string>("error"));
+        }
+
+        [Fact]
+        public async void ExpectStatusCode403_WhenIPBlockedWithWrongEmail_Login()
+        {
+            // Arrange
+            IpBlockedException ipBlockedException = new IpBlockedException();
+            var expected = ipBlockedException.Message;
+            string actual = null;
+
+            var newUserRequest = new UserCreate
+            {
+                Email = "verygoodemail",
+                Password = "test3",
+                FirstName = "test3",
+                LastName = "test3",
+                PhoneNumber = "454545452"
+            };
+
+            var userLogin = new UserLogin
+            {
+                Email = "Very bad email",
+                Password = newUserRequest.Password
+            };
+
+
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+
+            // act 
+            int tries = 30;
+
+            for (int i = 0; i < tries; i++)
+            {
+                var response = await _client.PostAsJsonAsync(_baseUrl + "Login", userLogin);
+                actual = await response.Content.ReadAsStringAsync();
+            }
+
+            JToken jObject = JsonConvert.DeserializeObject<JToken>(actual);
+
+            // Assert
+            Assert.Equal(expected, jObject.Value<string>("error"));
         }
     }
 }
