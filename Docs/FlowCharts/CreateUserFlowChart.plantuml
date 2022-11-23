@@ -2,13 +2,16 @@
 
 (*) --> "Recieve create user data"
 if "Email exists" then
-  -->[true] "Throw Email already in use"
+  -->[true] "Throw Email already in use exception"
 else 
-  -->[false] "Hash password"
-  --> "Save user in database"
-  --> "Generate token for user"
-  --> "Return token"
-  --> (*)
+  if "User password exists in leaked database" then
+    -->[True]"Throw password leaked exception"
+  else
+    -->[false] "Hash password"
+    --> "Save user in database"
+    --> "Generate token for user"
+    --> "Return token"
+    --> (*)
 end if 
 
 @enduml
