@@ -32,6 +32,7 @@ namespace IdentityApi.Filters
                     context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Conflict);
                     context.ExceptionHandled = true;
                     break;
+                case PasswordLeakedException:
                 case UserIncorrectLoginException:
                     context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Forbidden);
                     context.ExceptionHandled = true;

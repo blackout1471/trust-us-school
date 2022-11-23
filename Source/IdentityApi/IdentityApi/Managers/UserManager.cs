@@ -3,28 +3,35 @@ using IdentityApi.Exceptions;
 using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace IdentityApi.Managers
 {
     public class UserManager : IUserManager
     {
         private readonly IUserProvider _userProvider;
+        private readonly ILeakedPasswordProvider _leakedPasswordProvider;
         private readonly ILogger<UserManager> _logger;
 
-        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger)
+        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger, ILeakedPasswordProvider leakedPasswordProvider)
         {
             _userProvider = userProvider;
+            _leakedPasswordProvider = leakedPasswordProvider;
             _logger = logger;
         }
 
         /// <inheritdoc/>
         public async Task<User> CreateUserAsync(UserCreate userCreate)
         {
-            // check if user exists
-            var existingUser = await _userProvider.GetUserByEmailAsync(userCreate.Email);
+            if (await CheckPasswordLeakedForUser(userCreate.Password))
+            {
+                _logger.LogWarning($"User[{userCreate.Email}] tried to register leaked password");
+                throw new PasswordLeakedException();
+            }
 
-            // User already in use 
-            if (existingUser != null)
+            // check if user exists
+            if (await _userProvider.GetUserByEmailAsync(userCreate.Email) != null)
             {
                 _logger.LogWarning($"User cannot be created because they already exists {userCreate.Email}");
                 throw new UserAlreadyExistsException();
@@ -112,6 +119,22 @@ namespace IdentityApi.Managers
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
+        }
+
+        /// <summary>
+        /// Checks whether the given password has been breached,
+        /// by calling the leakedpassword provider.
+        /// </summary>
+        /// <param name="password">The password to check is breached</param>
+        /// <returns>True if breached, false otherwise</returns>
+        private async Task<bool> CheckPasswordLeakedForUser(string password)
+        {
+            var stringBytes = Encoding.UTF8.GetBytes(password);
+            var hashedBytes = SHA1.HashData(stringBytes);
+            var hashedPassword = Convert.ToHexString(hashedBytes);
+
+            // Check if password has been leaked
+            return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
         }
     }
 }

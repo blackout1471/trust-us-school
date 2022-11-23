@@ -4,7 +4,9 @@ using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
+using IdentityApi.Providers;
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -12,14 +14,16 @@ namespace IdentityApiUnitTest.Managers
     {
         private readonly ILogger<UserManager> _fakeLogger;
         private readonly IUserProvider _fakeUserProvider;
+        private readonly ILeakedPasswordProvider _fakeLeakedPasswordProvider;
         private readonly UserManager _userManager;
 
         public UserManagerShould()
         {
             _fakeLogger = A.Fake<ILogger<UserManager>>();
             _fakeUserProvider = A.Fake<IUserProvider>();
+            _fakeLeakedPasswordProvider = A.Fake<ILeakedPasswordProvider>();
 
-            _userManager = new UserManager(_fakeUserProvider, _fakeLogger);
+            _userManager = new UserManager(_fakeUserProvider, _fakeLogger, _fakeLeakedPasswordProvider);
         }
 
         [Fact]
@@ -88,7 +92,6 @@ namespace IdentityApiUnitTest.Managers
             // Assert
             await Assert.ThrowsAsync<UserAlreadyExistsException>(func);
         }
-
 
         private User GetUser()
         {
