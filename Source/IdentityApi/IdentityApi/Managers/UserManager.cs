@@ -63,6 +63,7 @@ namespace IdentityApi.Managers
             };
         }
 
+        /// <inheritdoc/>
         public async Task<User> GetUserByIDAsync(int ID)
         {
             var dbUser = await _userProvider.GetUserByIDAsync(ID);

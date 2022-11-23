@@ -45,6 +45,7 @@ class UserManager{
     -_leakedPasswordProvider : ILeakedPasswordProvider;
     --
     +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider)
+    -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
 
 'Managers mappings'
