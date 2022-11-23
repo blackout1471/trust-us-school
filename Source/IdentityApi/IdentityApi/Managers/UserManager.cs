@@ -26,7 +26,7 @@ namespace IdentityApi.Managers
             // User already in use 
             if (existingUser != null)
             {
-                _logger.LogWarning($"User cannot be created because they already exists {userCreate.Email}");
+                _logger.LogWarning($"User[{userCreate.Email}] cannot be created because they already exists");
                 throw new UserAlreadyExistsException();
             }
 
@@ -45,6 +45,7 @@ namespace IdentityApi.Managers
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
 
             var createdUser = await _userProvider.CreateUserAsync(toCreateDbUser);
+            _logger.LogInformation($"User[{userCreate.Email}] has been created");
 
             return new User()
             {
@@ -85,7 +86,7 @@ namespace IdentityApi.Managers
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
-                _logger.LogWarning($"Login attempt for locked user {userLogin.Email}");
+                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
                 throw new AccountLockedException();
             }
 
@@ -101,14 +102,14 @@ namespace IdentityApi.Managers
 
                 // login success 
                 existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
-                _logger.LogInformation($"User has logged in {userLogin.Email}");
+                _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
                 // TODO: Update 
                 return existingUser;
             }
             else
             {
                 // login failed
-                _logger.LogWarning($"Login failed for user email {userLogin.Email}");
+                _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
