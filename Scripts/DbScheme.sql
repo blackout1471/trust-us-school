@@ -296,4 +296,6 @@ where
 UserLocation.IP = @IP 
 and
 UserLocation.Successful = 0
+and
+DATEADD(minute, 10, UserLocation.CreateDate) > getdate() -- in the last 10 minutes
 go
