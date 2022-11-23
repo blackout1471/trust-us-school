@@ -42,7 +42,7 @@ namespace IdentityApiUnitTest.Controllers
             ActionResult actual;
             var fakeUser = A.Fake<User>();
 
-            A.CallTo(() => _fakeUserManager.LoginAsync(null, null)).Returns(Task.FromResult(fakeUser));
+            A.CallTo(() => _fakeUserManager.LoginAsync(A<UserLogin>.Ignored, A<UserLocation>.Ignored)).Returns(Task.FromResult(fakeUser));
 
             // Act
             var response = await _userController.Login(null);

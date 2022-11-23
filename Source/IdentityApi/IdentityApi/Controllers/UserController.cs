@@ -69,13 +69,15 @@ namespace IdentityApi.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Retrieves the user location data from the request context
+        /// </summary>
         private UserLocation GetUserLocation()
         {
             var userLocation = new UserLocation();
-            var ip = "123.123.123.123";
+            userLocation.IP = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "Unknown";
 
-            userLocation.IP = ip.ToString();
-            userLocation.UserAgent = "Firefox";
+            userLocation.UserAgent = Request?.Headers["User-Agent"].ToString() ?? "Unknown";
 
             return userLocation;
         }
