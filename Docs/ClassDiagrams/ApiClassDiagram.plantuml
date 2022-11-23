@@ -42,7 +42,9 @@ class TokenManager{
 
 class UserManager{
     -_userProvider : IUserProvider
-    +UserManager(userProvider : IUserProvider)
+    -_leakedPasswordProvider : ILeakedPasswordProvider;
+    --
+    +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider)
 }
 
 'Managers mappings'
@@ -50,7 +52,9 @@ class UserManager{
 IUserManager --> UserCreate
 IUserManager --> UserLogin
 UserManager .-|> IUserManager
+
 UserManager o-- IUserProvider
+UserManager o-- ILeakedPasswordProvider
 
 TokenManager .-|> ITokenManager
 ITokenManager *-- UserToken
@@ -62,12 +66,43 @@ interface IUserProvider{
     +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
     +GetUserByEmailAsync(email : string) : Task<DbUser>
     +GetUserByIdAsync(id : int) : Task<DbUser>
+    +UpdateUserFailedTries(userId : int) : Task<DbUser>
+    +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
 }
+
+interface ILeakedPasswordProvider {
+    +GetIsPasswordLeakedAsync(password : string) : Task<bool>
+}
+
+class SqlProvider {
+    +SqlProvider(connection : string)
+
+    {abstract}#RunSpAsync(storedProcedureName : string, storedProcedureElements : SpElements[]) : Task<DataTable>
+    {abstract}#RunQueryAsync(query : string) : Task<DataTable>
+}
+
+class LeakedPasswordProvider {
+    +LeakedPasswordProvider(configuration : IConfiguration)
+    --
+}
+
+class UserProvider {
+    +UserProvider(configuration : IConfiguration)
+    --
+    -DRToUser(dr : DataRow) : DbUser
+}
+
+
 
 'Providers mappings'
 
 IUserProvider *-- DbUser
 
+LeakedPasswordProvider .-|> ILeakedPasswordProvider
+LeakedPasswordProvider --|> SqlProvider
+
+UserProvider .-|> IUserProvider
+UserProvider --|> SqlProvider
 
 'Utility'
 
