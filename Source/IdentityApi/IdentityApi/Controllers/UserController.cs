@@ -27,7 +27,7 @@ namespace IdentityApi.Controllers
         [Route("create")]
         public async Task<ActionResult<UserToken>> Create(UserCreate userCreate)
         {
-            var createdUser = await _userManager.CreateUserAsync(userCreate);
+            var createdUser = await _userManager.CreateUserAsync(userCreate, GetUserLocation());
             return Ok(_tokenManager.GenerateUserToken(createdUser));
         }
 
@@ -39,7 +39,7 @@ namespace IdentityApi.Controllers
         [Route("login")]
         public async Task<ActionResult<UserToken>> Login(UserLogin userLogin)
         {
-            var user = await _userManager.LoginAsync(userLogin);
+            var user = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             if (user == null)
                 throw new UserIncorrectLoginException();
@@ -66,24 +66,19 @@ namespace IdentityApi.Controllers
             if (user == null)
                 return NoContent();
 
-                return Ok(user);
-            }
-            catch (Exception e)
-            {
-                // TODO: log
+            return Ok(user);
+        }
 
-                return Problem("E");
-            }
-            private UserLocation GetUserLocation()
-            {
-                var userLocation = new UserLocation();
-                var ip = Request.HttpContext.Connection.RemoteIpAddress;
+        private UserLocation GetUserLocation()
+        {
+            var userLocation = new UserLocation();
+            var ip = Request.HttpContext.Connection.RemoteIpAddress;
 
-                userLocation.IP = ip.ToString();
-                userLocation.UserAgent = Request.Headers["User-Agent"].ToString();
+            userLocation.IP = ip.ToString();
+            userLocation.UserAgent = Request.Headers["User-Agent"].ToString();
 
-                return userLocation;
-            }
+            return userLocation;
         }
     }
 }
+

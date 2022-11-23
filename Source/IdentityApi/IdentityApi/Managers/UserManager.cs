@@ -14,6 +14,7 @@ namespace IdentityApi.Managers
         public UserManager(IUserProvider userProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager)
         {
             _userProvider = userProvider;
+            _userLocationManager = userLocationManager;
             _logger = logger;
         }
 
@@ -77,7 +78,9 @@ namespace IdentityApi.Managers
             {
                 ID = dbUser.ID,
                 Email = dbUser.Email,
-                FirstName = dbUser.FirstName
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                PhoneNumber = dbUser.PhoneNumber
             };
         }
 
