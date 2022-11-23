@@ -18,7 +18,7 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<User> CreateUserAsync(UserCreate userCreate, UserLocation userLocation)
         {
-            if (await _userLocationManager.IsIPLocked(userLocation.IP))
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
                 throw new Exception("login failed");
 
             // check if user exists
@@ -28,7 +28,7 @@ namespace IdentityApi.Managers
             if (existingUser != null)
             {
                 // TODO: log
-                await _userLocationManager.LogLocation(userLocation);
+                await _userLocationManager.LogLocationAsync(userLocation);
 
                 throw new Exception("Email already in use");
             }
@@ -51,7 +51,7 @@ namespace IdentityApi.Managers
 
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
-            await _userLocationManager.LogLocation(userLocation);
+            await _userLocationManager.LogLocationAsync(userLocation);
 
             return new User()
             {
@@ -93,7 +93,7 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<User> LoginAsync(UserLogin userLogin, UserLocation userLocation)
         {
-            if (await _userLocationManager.IsIPLocked(userLocation.IP))
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
                 throw new Exception("login failed");
 
             // checks if user exists
@@ -101,7 +101,7 @@ namespace IdentityApi.Managers
 
             if (existingUser == null)
             {
-                await _userLocationManager.LogLocation(userLocation);
+                await _userLocationManager.LogLocationAsync(userLocation);
 
                 return null;
             }
@@ -112,7 +112,7 @@ namespace IdentityApi.Managers
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
-                await _userLocationManager.LogLocation(userLocation);
+                await _userLocationManager.LogLocationAsync(userLocation);
                 // TODO: log
                 throw new Exception("Login failed, Account locked");
             }
@@ -122,10 +122,10 @@ namespace IdentityApi.Managers
             if (existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
             {
                 // if user was not logged in from this location before
-                if (!await _userLocationManager.UserWasLoggedInFromLocation(userLocation))
+                if (!await _userLocationManager.UserWasLoggedInFromLocationAsync(userLocation))
                 {
                     // send 2fa here
-                    await _userLocationManager.LogLocation(userLocation);
+                    await _userLocationManager.LogLocationAsync(userLocation);
                     throw new Exception("forbidden");
                 }
                 else
@@ -138,7 +138,7 @@ namespace IdentityApi.Managers
             else
             {
                 // login failed
-                await _userLocationManager.LogLocation(userLocation);
+                await _userLocationManager.LogLocationAsync(userLocation);
 
                 existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
 

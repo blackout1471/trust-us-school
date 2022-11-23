@@ -1,17 +1,25 @@
 @startuml Login Flowchart
 
 (*) --> "Recieve login data"
-if "Email exists" then
-    if "Password matches" then
-        -->[true] "Generate token"
-        --> "Return token"
-        --> (*)
+
+if "Ip not blocked " then
+    if "Email exists" then
+        if "Password matches" then
+            if "User has logged in before from ip" then
+                -->[true] "Generate token"
+                --> "Return token"
+                --> (*)
+            else
+                -->[false] 2FA
+            end if 
+        else
+            -->[false] "Throw Login failed"
+        end if
     else
-        -->[false] "Throw Login failed"
-    end if
-else
-  -->[false] "Throw Login failed"
+      -->[false] "Throw Login failed"
 
-end if 
-
+    end if 
+else 
+ --> "Throw Forbidden"
+end if
 @enduml

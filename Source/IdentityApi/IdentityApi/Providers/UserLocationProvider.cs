@@ -11,7 +11,7 @@ namespace IdentityApi.Providers
         {
         }
 
-        public async Task<bool> IsIPLocked(string ipAddress)
+        public async Task<bool> IsIPLockedAsync(string ipAddress)
         {
             // Return amount of times the user has logged in from this location
             var table = await RunSpAsync("SP_IsIPLocked", new SpElement("IP", ipAddress, SqlDbType.VarChar));
@@ -24,7 +24,7 @@ namespace IdentityApi.Providers
             return (Convert.ToInt32(table?.Rows[0]["IsIPLocked"]?.ToString()) == 1);
         }
 
-        public async Task<UserLocation> LogLocation(UserLocation userLocation)
+        public async Task<UserLocation> LogLocationAsync(UserLocation userLocation)
         {
             var spElements = new SpElement[]
             {
@@ -44,7 +44,7 @@ namespace IdentityApi.Providers
             return DrToUserLocation(table.Rows[0]);
         }
 
-        public async Task<bool> UserWasLoggedInFromLocation(UserLocation userLocation)
+        public async Task<bool> UserWasLoggedInFromLocationAsync(UserLocation userLocation)
         {
             var spElements = new SpElement[]
             {
