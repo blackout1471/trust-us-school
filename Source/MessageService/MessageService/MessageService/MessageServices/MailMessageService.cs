@@ -1,6 +1,5 @@
 ﻿using MessageService.Configurations;
 using MessageService.Messages;
-using MessageService.Recipients;
 using System.Net;
 using System.Net.Mail;
 
@@ -18,12 +17,12 @@ namespace MessageService.MessageServices
 
         /// <inheritdoc/>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task SendMessageAsync(IRecipient recipient, IMessage message)
+        public async Task SendMessageAsync(IMessage message)
         {
-            if (string.IsNullOrEmpty(recipient.To))
+            if (string.IsNullOrEmpty(message.To))
                 throw new ArgumentNullException();
 
-            MailMessage mail = CreateMailMessage(message.Message, recipient.To);
+            MailMessage mail = CreateMailMessage(message.Message, message.To);
 
             await smtpClient.SendMailAsync(mail);
         }

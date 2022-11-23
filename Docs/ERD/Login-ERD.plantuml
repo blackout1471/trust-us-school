@@ -9,11 +9,18 @@ entity "UserPasswords" as up{
     Salt varchar(200)
 }
 
+entity "SecretKeyCounter" as sk {
+    ID int (PK)
+    UsersID int (FK)
+    --
+    SecretKey varchar(200)
+    Counter BIGINT
+}
+
 entity Users {
     ID int (PK)
     --
     Email varchar(100)
-    HashedVerification varchar(200)
     IsVerified bit
     FirstName varchar(50)
     LastName varchar(50)
@@ -34,6 +41,8 @@ entity "VerifiedUserLocations" as vul {
 Users::ID"      1" -- "*"vul::UsersID
 
 up::UserID"1" -- "1"Users::ID
+
+sk::UserID"1" -- "1"Users::ID
 
 
 @enduml

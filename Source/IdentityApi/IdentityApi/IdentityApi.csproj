@@ -14,7 +14,11 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.5" />
-	<InternalsVisibleTo Include="IdentityApiIntegrationTest"/>
+	<InternalsVisibleTo Include="IdentityApiIntegrationTest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\MessageService\MessageService\MessageService\MessageService.csproj" />
   </ItemGroup>
 
 </Project>

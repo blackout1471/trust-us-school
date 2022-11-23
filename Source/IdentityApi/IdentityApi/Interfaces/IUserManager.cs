@@ -16,6 +16,12 @@ namespace IdentityApi.Interfaces
         Task<User> LoginAsync(UserLogin userLogin);
 
         /// <summary>
+        /// Logs user in with otp
+        /// </summary>
+        /// <returns>Logged in user</returns>
+        Task<User> LoginOtpAsync(UserLogin userLogin);
+
+        /// <summary>
         /// Gets user based on id
         /// </summary>
         /// <param name="ID">ID of the requested user</param>

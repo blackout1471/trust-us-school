@@ -34,6 +34,14 @@ create table UserPasswords( /*Consider doing it in new namespace*/
       Salt varchar(200)
 )
 
+create table SecretKeyCounter(
+      ID int IDENTITY(1,1) PRIMARY KEY,
+      UserID int,
+      SecretKey varchar(200),
+      Counter BIGINT,
+      LastRequestDate datetime
+)
+
 create table UserLocation(
       ID int IDENTITY(1,1) PRIMARY KEY,
       UserID int,
@@ -47,6 +55,9 @@ ALTER TABLE UserPasswords
 ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
 
 ALTER TABLE UserLocation
+ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
+
+ALTER TABLE SecretKeyCounter
 ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
 
 go
