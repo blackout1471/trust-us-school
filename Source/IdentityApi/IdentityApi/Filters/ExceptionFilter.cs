@@ -23,6 +23,7 @@ namespace IdentityApi.Filters
 
             switch (context.Exception)
             {
+                case Required2FAException:
                 case IpBlockedException:
                 case UserIncorrectLoginException:
                 case AccountLockedException:

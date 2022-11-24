@@ -121,7 +121,7 @@ namespace IdentityApi.Managers
                 {
                     // send 2fa here
                     await _userLocationManager.LogLocationAsync(userLocation);
-                    throw new Exception("forbidden");
+                    throw new Required2FAException();
                 }
                 else
                 {

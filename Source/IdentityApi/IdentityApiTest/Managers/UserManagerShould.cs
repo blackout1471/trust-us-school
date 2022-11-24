@@ -149,7 +149,7 @@ namespace IdentityApiUnitTest.Managers
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
-            await Assert.ThrowsAsync<Exception>(func);
+            await Assert.ThrowsAsync<Required2FAException>(func);
         }
 
 

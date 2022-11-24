@@ -23,6 +23,7 @@ namespace IdentityApiIntegrationTest.UserApi
         {
             _client = factory.HttpClient;
             _baseUrl = "api/user/";
+            _sqlQuery = factory.RunSqlQuery;
         }
 
         [Fact]
@@ -221,7 +222,86 @@ namespace IdentityApiIntegrationTest.UserApi
         }
 
 
+        [Fact]
+        public async void ExpectStatusCode403_WhenLoginFromDiffrentIP_Login()
+        {
+            // Arrange
+            var exception = new Required2FAException();
 
+            var expected = exception.Message; 
+            string actual = null;
+
+            var newUserRequest = new UserCreate
+            {
+                Email = "test5",
+                Password = "test5",
+                FirstName = "test5",
+                LastName = "test",
+                PhoneNumber = "454545452"
+            };
+
+            var userLogin = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = newUserRequest.Password
+            };
+
+
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+
+            // update the ip adress of newly created user
+            await _sqlQuery($"use trustus; update UserLocation set IP = 'UserIP' where UserID = (select id from Users where Email = '{newUserRequest.Email}')");
+
+            // act 
+
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Login", userLogin);
+            actual = await response.Content.ReadAsStringAsync();
+
+            JToken jObject = JsonConvert.DeserializeObject<JToken>(actual);
+
+            // Assert
+            Assert.Equal(expected, jObject.Value<string>("error"));
+        }
+
+        [Fact]
+        public async void ExpectStatusCode403_WhenLoginFromWithDiffrentBrowser_Login()
+        {
+            // Arrange
+            var exception = new Required2FAException();
+            var expected = exception.Message; 
+            string actual = null;
+
+            var newUserRequest = new UserCreate
+            {
+                Email = "test6",
+                Password = "test6",
+                FirstName = "test6",
+                LastName = "test",
+                PhoneNumber = "454545452"
+            };
+
+            var userLogin = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = newUserRequest.Password
+            };
+
+
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+
+            // update the user agent of newly created user
+            await _sqlQuery($"use trustus; update UserLocation set UserAgent = 'User FireFox Browser' where UserID = (select id from Users where Email = '{newUserRequest.Email}')");
+
+            // act 
+
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Login", userLogin);
+            actual = await response.Content.ReadAsStringAsync();
+
+            JToken jObject = JsonConvert.DeserializeObject<JToken>(actual);
+
+            // Assert
+            Assert.Equal(expected, jObject.Value<string>("error"));
+        }
 
     }
 }
