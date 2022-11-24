@@ -1,5 +1,6 @@
 ﻿using MessageService.Configurations;
 using MessageService.Messages;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
@@ -7,11 +8,11 @@ namespace MessageService.MessageServices
 {
     public class MailMessageService : IMessageService
     {
-        ISMTPConfigModel configuration;
+        SMTPConfigModel configuration;
         SmtpClient smtpClient;
-        public MailMessageService(ISMTPConfigModel configurations)
+        public MailMessageService(IOptions<SMTPConfigModel> configurations)
         {
-            this.configuration = configurations;
+            this.configuration = configurations.Value;
             this.SetupSmtpClient();
         }
 

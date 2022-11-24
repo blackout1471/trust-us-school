@@ -179,7 +179,7 @@ namespace IdentityApi.Managers
             }
 
             // check if given otp password matches what is expected
-            if (Security.GetHotp(existingUser.SecretKey, existingUser.Counter) == userLogin.Password)
+            if (userLogin.Password == Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
             {
 
                 // login success 

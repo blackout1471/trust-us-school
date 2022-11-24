@@ -1,15 +1,16 @@
-using Serilog;
-using Serilog.Sinks.Elasticsearch;
-using System.Reflection;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Providers;
+using MessageService.Configurations;
+using MessageService.MessageServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
+using System.Reflection;
 using System.Text;
-using System;
-using Microsoft.AspNetCore.HttpOverrides;
 
 namespace IdentityApi
 {
@@ -36,6 +37,9 @@ namespace IdentityApi
                     optional: true)
                 .Build();
 
+            //Configures SMTP
+            builder.Services.Configure<SMTPConfigModel>(configuration.GetSection("SMTPConfiguration"));
+
             // Add serilog for logging
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
@@ -55,11 +59,11 @@ namespace IdentityApi
                 .CreateLogger();
 
             builder.Host.UseSerilog();
-
             builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<IUserProvider, UserProvider>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
-
+            builder.Services.AddScoped<IMessageService, MailMessageService>();
+            builder.Services.AddScoped<IMessageProvider, EmailMessageProvider>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {

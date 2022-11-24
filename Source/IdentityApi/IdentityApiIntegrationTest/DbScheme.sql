@@ -70,7 +70,9 @@ go
 CREATE PROCEDURE SP_Createuser 
 @Email varchar(100),
 @HashedPassword varchar(200),
-@Salt varchar(200)
+@Salt varchar(200),
+@SecretKey varchar(200),
+@Counter BIGINT
 AS
 insert into Users (Email) values (@Email)
 
@@ -81,9 +83,14 @@ set @CreatedUserID = (select top(1)ID from Users where Email = @Email)
 insert into UserPasswords (UserID, HashedPassword, Salt)
 values (@CreatedUserID, @HashedPassword, @Salt)
 
+insert into SecretKeyCounter (UserID, SecretKey, Counter)
+values (@CreatedUserID, @SecretKey, @Counter)
+
 select * from Users
 join UserPasswords
 on UserPasswords.UserID = Users.ID
+join SecretKeyCounter
+on SecretKeyCounter.UserID = Users.ID
 where Users.Email = @Email
 
 GO
@@ -97,5 +104,36 @@ as
 select * from Users
 join UserPasswords
 on UserPasswords.UserID = Users.ID
+where Users.Email = @Email
+go
+
+DROP PROCEDURE IF EXISTS dbo.SP_UpdateCounter;
+go
+
+CREATE PROCEDURE SP_UpdateCounter 
+@Email varchar(100),
+@Counter BIGINT
+as 
+Update SecretKeyCounter
+Set Counter = @Counter
+
+select * from Users
+join SecretKeyCounter
+on SecretKeyCounter.UserID = Users.ID
+where Users.Email = @Email
+go
+
+DROP PROCEDURE IF EXISTS dbo.SP_UpdateLastRequest;
+go
+
+CREATE PROCEDURE SP_UpdateLastRequest 
+@Email varchar(100)
+as 
+Update SecretKeyCounter
+Set LastRequestDate = GETDate()
+
+select * from Users
+join SecretKeyCounter
+on SecretKeyCounter.UserID = Users.ID
 where Users.Email = @Email
 go
