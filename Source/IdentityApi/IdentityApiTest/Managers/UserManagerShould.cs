@@ -5,9 +5,9 @@ using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
-using Microsoft.AspNetCore.Identity;
+using IdentityApi.Providers;
 using Microsoft.Extensions.Logging;
-using System;
+using System.Text;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -15,6 +15,7 @@ namespace IdentityApiUnitTest.Managers
     {
         private readonly ILogger<UserManager> _fakeLogger;
         private readonly IUserProvider _fakeUserProvider;
+        private readonly ILeakedPasswordProvider _fakeLeakedPasswordProvider;
         private readonly IUserLocationManager _fakeLocationManager;
         private readonly UserManager _userManager;
 
@@ -22,9 +23,15 @@ namespace IdentityApiUnitTest.Managers
         {
             _fakeLogger = A.Fake<ILogger<UserManager>>();
             _fakeUserProvider = A.Fake<IUserProvider>();
+            _fakeLeakedPasswordProvider = A.Fake<ILeakedPasswordProvider>();
             _fakeLocationManager = A.Fake<IUserLocationManager>();
 
-            _userManager = new UserManager(_fakeUserProvider, _fakeLogger, _fakeLocationManager);
+            _userManager = new UserManager(
+                _fakeUserProvider, 
+                _fakeLogger,
+                _fakeLocationManager, 
+                _fakeLeakedPasswordProvider
+            );
         }
 
         [Fact]
@@ -97,6 +104,20 @@ namespace IdentityApiUnitTest.Managers
             await Assert.ThrowsAsync<UserAlreadyExistsException>(func);
         }
 
+        [Fact]
+        public async Task ThrowPasswordLeakedException_WhenPasswordHasBeenLeaked_Register()
+        {
+            // Arrange
+            var userCreate = GetUserCreate();
+
+            A.CallTo(() => _fakeLeakedPasswordProvider.GetIsPasswordLeakedAsync(A<string>.Ignored)).Returns(true);
+
+            // Act
+            var func = async () => await _userManager.CreateUserAsync(userCreate, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<PasswordLeakedException>(func);
+        }
 
         [Fact]
         public async void ThrowsIpBlockedException_WhenIPBlocked_Register()

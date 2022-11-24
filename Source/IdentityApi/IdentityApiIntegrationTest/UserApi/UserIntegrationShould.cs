@@ -6,6 +6,8 @@ using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace IdentityApiIntegrationTest.UserApi
 {
@@ -184,6 +186,38 @@ namespace IdentityApiIntegrationTest.UserApi
         }
 
         [Fact]
+        public async Task ExpectStatusCode403_WhenPasswordIsLeaked_Register()
+        {
+            // Arrange
+            var expected = HttpStatusCode.Forbidden;
+            var actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = new UserCreate
+            {
+                Email = "test4",
+                Password = "breachedpassword",
+                FirstName = "test4",
+                LastName = "test4",
+                PhoneNumber = "454545452"
+            };
+
+            // setup sql data
+            var stringBytes = Encoding.UTF8.GetBytes(newUserRequest.Password);
+            var hashedBytes = SHA1.HashData(stringBytes);
+            var hashedPassword = Convert.ToHexString(hashedBytes);
+
+            var sql = $"use StoredPasswords; insert into dbo.LeakedPasswords values ('{hashedPassword}', {0})";
+            await _sqlQuery(sql);
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actual = response.StatusCode;
+
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public async void ExpectStatusCode403_WhenAccountIsLockedWrongPassword_Login()
         {
             // Arrange
@@ -202,7 +236,7 @@ namespace IdentityApiIntegrationTest.UserApi
 
 
             var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
-
+            var message = createUserResponse.Content.ReadAsStringAsync();
             // act 
             int tries = 6;
 

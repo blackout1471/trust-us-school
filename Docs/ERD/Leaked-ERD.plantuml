@@ -1,9 +1,9 @@
 @startuml LeakedPasswords
 
-entity "LeakedPasswords" as lp {
-    lp : HashedPassword nvchar(60) (PK)
+entity "LeakedPasswords" as lp{
+    HashedPassword varchar(80) (PK)
     --
-    lp : PwnCount int
+    PwnCount int
 }
 
 @enduml
