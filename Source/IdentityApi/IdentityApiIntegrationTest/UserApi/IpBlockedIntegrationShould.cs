@@ -35,14 +35,7 @@ namespace IdentityApiIntegrationTest.UserApi
             // Arrange
             var expected = HttpStatusCode.Forbidden;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
-            var newUserRequest = new UserCreate
-            {
-                Email = "test5",
-                Password = "test51231",
-                FirstName = "test5",
-                LastName = "test5",
-                PhoneNumber = "454545452"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
 
             // act
             var response = await _client.PostAsJsonAsync(_baseUrl + "create", newUserRequest);
