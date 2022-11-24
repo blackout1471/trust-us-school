@@ -7,8 +7,6 @@ namespace IdentityApi.Helpers
         /// <summary>
         /// Tries to remove browser version from browser user agent
         /// </summary>
-        /// <param name="browser"></param>
-        /// <returns></returns>
         public static string TryToGetBrowserWithoutVersion(string browser)
         {
             try

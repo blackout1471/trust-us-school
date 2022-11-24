@@ -17,7 +17,7 @@ UserManager->UserLocationManager: Check if ip is blocked (ipadress)
 UserLocationManager-->UserManager: Returns whether ip is block
 
 alt Ip blocked
-UserManager-->UserController: Return status forbidden
+UserManager-->UserController: Throw IPBlocked exception
 UserController-->User: Return status forbidden
 end
 

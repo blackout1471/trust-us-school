@@ -13,13 +13,6 @@ GO
 use TrustUS;
 go
 
-/*
--- if there were any changes in tables run this 3 lines
-DROP TABLE IF EXISTS [dbo].UserLocation;
-DROP TABLE IF EXISTS [dbo].UserPasswords;
-DROP TABLE IF EXISTS [dbo].Users;
-*/
-
 
 /*
 *

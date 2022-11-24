@@ -14,25 +14,25 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public Task<bool> IsIPLockedAsync(string ipAddress)
+        public async Task<bool> IsIPLockedAsync(string ipAddress)
         {
-            return _userLocationProvider.IsIPLockedAsync(ipAddress);
+            return await _userLocationProvider.IsIPLockedAsync(ipAddress);
         }
 
         /// <inheritdoc/>
-        public Task<UserLocation> LogLocationAsync(UserLocation location)
+        public async Task<UserLocation> LogLocationAsync(UserLocation location)
         {
             location.UserAgent = RegexHelper.TryToGetBrowserWithoutVersion(location.UserAgent);
 
-            return _userLocationProvider.LogLocationAsync(location);
+            return await _userLocationProvider.LogLocationAsync(location);
         }
 
         /// <inheritdoc/>
-        public Task<bool> UserWasLoggedInFromLocationAsync(UserLocation userLocation)
+        public async Task<bool> UserWasLoggedInFromLocationAsync(UserLocation userLocation)
         {
             userLocation.UserAgent = RegexHelper.TryToGetBrowserWithoutVersion(userLocation.UserAgent);
 
-            return _userLocationProvider.UserWasLoggedInFromLocationAsync(userLocation);
+            return await _userLocationProvider.UserWasLoggedInFromLocationAsync(userLocation);
         }
     }
 }
