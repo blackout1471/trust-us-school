@@ -6,13 +6,12 @@ namespace IdentityApi.Providers
 {
     public class SqlProvider
     {
-        protected readonly IConfiguration _configuration;
+        private readonly string _databaseConnection;
 
-        protected SqlProvider(IConfiguration configuration)
+        protected SqlProvider(string databaseConnection)
         {
-            _configuration = configuration;
+            _databaseConnection = databaseConnection;
         }
-
 
         /// <summary>
         /// Executes stored procedure, with <paramref name="spElements"/> as sql parameters
@@ -20,7 +19,7 @@ namespace IdentityApi.Providers
         /// <returns>Datatable with results</returns>
         protected virtual async Task<DataTable> RunSpAsync(string spName, params SpElement[] spElements)
         {
-            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+            using (SqlConnection con = new SqlConnection(_databaseConnection))
             {
                 using (SqlCommand cmd = new SqlCommand(spName, con))
                 {
@@ -49,7 +48,7 @@ namespace IdentityApi.Providers
         /// <returns>Datatable with results</returns>
         protected virtual async Task<DataTable> RunQueryAsync(string query)
         {
-            using (SqlConnection con = new SqlConnection(_configuration.GetConnectionString("SQLserver")))
+            using (SqlConnection con = new SqlConnection(_databaseConnection))
             {
                 using (SqlCommand cmd = new SqlCommand(query, con))
                 {

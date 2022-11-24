@@ -70,9 +70,13 @@ namespace IdentityApi
                 .CreateLogger();
 
             builder.Host.UseSerilog();
-
-            builder.Services.AddScoped<IUserManager, UserManager>();
+            
+            // Providers
             builder.Services.AddScoped<IUserProvider, UserProvider>();
+            builder.Services.AddScoped<ILeakedPasswordProvider, LeakedPasswordProvider>();
+
+            // Managers
+            builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
             builder.Services.AddScoped<IUserLocationManager, UserLocationManager>();
             builder.Services.AddScoped<IUserLocationProvider, UserLocationProvider>();

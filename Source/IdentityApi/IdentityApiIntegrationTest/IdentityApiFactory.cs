@@ -34,7 +34,10 @@ namespace IdentityApiIntegrationTest
             builder.ConfigureAppConfiguration(config =>
             {
                 var integrationConfig = new ConfigurationBuilder()
-                    .AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:SQLserver", _dbContainer.ConnectionString } })
+                    .AddInMemoryCollection(new Dictionary<string, string>{
+                        { "ConnectionStrings:SQLserver",  _dbContainer.ConnectionString},
+                        { "ConnectionStrings:SQLserverLeaked", _dbContainer.ConnectionString.Replace("TrustUS", "StoredPasswords")}
+                    })
                     .Build();
 
                 config.AddConfiguration(integrationConfig);
@@ -54,8 +57,11 @@ namespace IdentityApiIntegrationTest
         {
             await _dbContainer.StartAsync();
 
-            var content = await File.ReadAllTextAsync(@"..\..\..\..\..\..\Scripts\DbScheme.sql");
-            await _dbContainer.ExecScriptAsync(content);
+            var dbScheme = await File.ReadAllTextAsync(@"..\..\..\..\..\..\Scripts\DbScheme.sql");
+            await _dbContainer.ExecScriptAsync(dbScheme);
+
+            var leakedScheme = await File.ReadAllTextAsync(@"..\..\..\..\..\..\Scripts\DbPwnCheme.sql");
+            await _dbContainer.ExecScriptAsync(leakedScheme);
 
             HttpClient = CreateClient();
         }
