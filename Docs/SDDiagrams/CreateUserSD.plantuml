@@ -13,6 +13,12 @@ participant Security
 
 
 User->UserController: Create user (email, password)
+UserController->UserController: Validate password(password)
+
+alt Password not complying
+UserController-->User: Return status badrequest
+end
+
 UserController->UserManager: Create user (email, password)
 UserManager->UserLocationManager: Check if ip is blocked (ipadress)
 UserLocationManager-->UserManager: Returns whether ip is block

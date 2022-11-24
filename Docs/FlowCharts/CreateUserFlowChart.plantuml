@@ -1,6 +1,9 @@
 @startuml Create User Flowchart
 
 (*) --> "Recieve create user data"
+if "password length < 8 or > 128" then
+  -->throw badrequest exception
+else
 if "Ip not blocked " then
 	if "Email exists" then
 		-->[true] "Throw Email already in use"
