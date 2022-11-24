@@ -3,6 +3,7 @@ using IdentityApi.Exceptions;
 using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
+using Mapster;
 
 namespace IdentityApi.Managers
 {
@@ -35,16 +36,8 @@ namespace IdentityApi.Managers
                 throw new UserAlreadyExistsException();
             }
 
-
-            // TODO: create mapper
-
-            var toCreateDbUser = new DbUser()
-            {
-                Email = userCreate.Email,
-                FirstName = userCreate.FirstName,
-                LastName = userCreate.LastName,
-                PhoneNumber = userCreate.PhoneNumber
-            };
+            // Map from user create to db user
+            var toCreateDbUser = userCreate.Adapt<DbUser>();
 
             toCreateDbUser.Salt = Security.GetSalt(50);
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
@@ -56,14 +49,8 @@ namespace IdentityApi.Managers
             userLocation.Successful = true;
             await _userLocationManager.LogLocationAsync(userLocation);
 
-            return new User()
-            {
-                ID = createdUser.ID,
-                Email = createdUser.Email,
-                FirstName = createdUser.FirstName,
-                LastName = createdUser.LastName,
-                PhoneNumber = createdUser.PhoneNumber
-            };
+            // Map from db user to user
+            return createdUser.Adapt<User>();
         }
 
         public async Task<User> GetUserByIDAsync(int ID)
@@ -73,16 +60,7 @@ namespace IdentityApi.Managers
             if (dbUser == null)
                 return null;
 
-            // TODO: Add mapper
-
-            return new User()
-            {
-                ID = dbUser.ID,
-                Email = dbUser.Email,
-                FirstName = dbUser.FirstName,
-                LastName = dbUser.LastName,
-                PhoneNumber = dbUser.PhoneNumber
-            };
+            return dbUser.Adapt<User>();
         }
 
         /// <inheritdoc/>
@@ -129,13 +107,14 @@ namespace IdentityApi.Managers
                     existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
                     _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
                 }
-                return existingUser;
+
+                // Map from db user to user
+                return existingUser.Adapt<User>();
             }
             else
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
-                            
 
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
