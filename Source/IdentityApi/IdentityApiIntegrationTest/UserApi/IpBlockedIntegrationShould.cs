@@ -38,7 +38,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var newUserRequest = new UserCreate
             {
                 Email = "test5",
-                Password = "test5",
+                Password = "test51231",
                 FirstName = "test5",
                 LastName = "test5",
                 PhoneNumber = "454545452"
