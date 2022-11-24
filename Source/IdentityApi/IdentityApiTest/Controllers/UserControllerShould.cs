@@ -26,7 +26,7 @@ namespace IdentityApiUnitTest.Controllers
         public async Task ThrowUserIncorrectLoginException_WhenUserIsNull_Login()
         {
             // Arrange
-            A.CallTo(() => _fakeUserManager.LoginAsync(null)).Returns(Task.FromResult<User>(null));
+            A.CallTo(() => _fakeUserManager.LoginAsync(null, A<UserLocation>.Ignored)).Returns(Task.FromResult<User>(null));
 
             // Act
             var func = async () => await _userController.Login(null);
@@ -42,7 +42,7 @@ namespace IdentityApiUnitTest.Controllers
             ActionResult actual;
             var fakeUser = A.Fake<User>();
 
-            A.CallTo(() => _fakeUserManager.LoginAsync(null)).Returns(Task.FromResult(fakeUser));
+            A.CallTo(() => _fakeUserManager.LoginAsync(A<UserLogin>.Ignored, A<UserLocation>.Ignored)).Returns(Task.FromResult(fakeUser));
 
             // Act
             var response = await _userController.Login(null);

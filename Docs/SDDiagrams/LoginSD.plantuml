@@ -5,17 +5,34 @@ participant UserController
 participant UserManager
 participant UserProvider
 participant TokenManager
+participant UserLocationManager
 participant Security
 
 User->UserController: Login (email, password)
 UserController->UserManager: Login (email, password)
+UserManager->UserLocationManager: Check if ip is blocked (ipadress)
+UserLocationManager-->UserManager: Returns whether ip is block
+
+alt Ip blocked
+UserManager-->UserController: Throw IpBlocked exception
+UserController-->User: Return status forbidden
+end
+
 UserManager->UserProvider: Get user by email(email)
 UserProvider->UserManager: Return User
+
 
 alt User not found
 
 UserManager->UserController: Login failed
 UserController->User: Login failed
+
+end
+
+alt User is locked
+
+UserManager-->UserController: Throw account locked exception
+UserController-->User: Return status forbidden
 
 end
 
@@ -26,6 +43,17 @@ alt Password does not match
 
 UserManager->UserController: Login failed
 UserController->User: Login failed
+
+end
+
+
+UserManager->UserLocationManager: Check if user has been logged in from ip (ip, userid)
+UserLocationManager-->UserManager: Returns whether user has been logged in from ip
+
+alt Has not been logged in
+
+UserManager-->UserController: Throw Required 2FA exception
+UserController-->User: Return status forbidden
 
 end
 

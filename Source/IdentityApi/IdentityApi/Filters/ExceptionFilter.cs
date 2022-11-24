@@ -23,19 +23,17 @@ namespace IdentityApi.Filters
 
             switch (context.Exception)
             {
+                case Required2FAException:
+                case IpBlockedException:
+                case UserIncorrectLoginException:
                 case AccountLockedException:
                     context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Forbidden);
                     context.ExceptionHandled = true;
                     break;
-
                 case UserAlreadyExistsException:
                     context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Conflict);
                     context.ExceptionHandled = true;
-                    break;
-                case UserIncorrectLoginException:
-                    context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Forbidden);
-                    context.ExceptionHandled = true;
-                    break;
+                    break;              
                 default:
                     context.Result = GenerateExceptionResult("Unexpected error occurred", HttpStatusCode.InternalServerError);
                     _logger.LogError(exception, "Unexpected error occurred");

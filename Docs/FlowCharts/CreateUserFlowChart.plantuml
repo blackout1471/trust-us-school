@@ -1,14 +1,17 @@
 @startuml Create User Flowchart
 
 (*) --> "Recieve create user data"
-if "Email exists" then
-  -->[true] "Throw Email already in use"
-else 
-  -->[false] "Hash password"
-  --> "Save user in database"
-  --> "Generate token for user"
-  --> "Return token"
-  --> (*)
-end if 
-
+if "Ip not blocked " then
+  if "Email exists" then
+    -->[true] "Throw Email already in use"
+  else 
+    -->[false] "Hash password"
+    --> "Save user in database"
+    --> "Generate token for user"
+    --> "Return token"
+    --> (*)
+  end if 
+  else
+  -->[false] "Throw forbidden"
+end if
 @enduml

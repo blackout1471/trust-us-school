@@ -8,10 +8,12 @@ on:
     branches: [ "main" ]
     paths-ignore:
       - 'Docs/**'
+      - 'Scripts/**'
   pull_request:
     branches: [ "main" ]
     paths-ignore:
       - 'Docs/**'
+      - 'Scripts/**'
 
 jobs:
   build:
@@ -38,4 +40,5 @@ jobs:
     - name: Running messageservice unit tests
       run: |
         cd Source/MessageService/MessageService/MessageServiceUnitTest
-        dotnet test    
+        dotnet test
+    

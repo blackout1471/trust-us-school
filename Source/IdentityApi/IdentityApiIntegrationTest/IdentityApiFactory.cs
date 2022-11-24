@@ -34,13 +34,14 @@ namespace IdentityApiIntegrationTest
             builder.ConfigureAppConfiguration(config =>
             {
                 var integrationConfig = new ConfigurationBuilder()
-                    .AddInMemoryCollection(new Dictionary<string, string>{{ "ConnectionStrings:SQLserver",  _dbContainer.ConnectionString}})
+                    .AddInMemoryCollection(new Dictionary<string, string> { { "ConnectionStrings:SQLserver", _dbContainer.ConnectionString } })
                     .Build();
 
                 config.AddConfiguration(integrationConfig);
 
             });
         }
+
 
         /// <inheritdoc />
         public new async Task DisposeAsync()
@@ -57,6 +58,14 @@ namespace IdentityApiIntegrationTest
             await _dbContainer.ExecScriptAsync(content);
 
             HttpClient = CreateClient();
+        }
+
+        /// <summary>
+        /// Runs the given sql query in the test integration database.
+        /// </summary>
+        public async Task<ExecResult> RunSqlQuery(string query)
+        {
+            return await _dbContainer.ExecScriptAsync(query);
         }
     }
 }

@@ -22,13 +22,14 @@ entity Users {
     IsLocked bit
     LockedDate datetime
 }
-entity "VerifiedUserLocations" as vul {
+entity "UserLocation" as vul {
     ID int (PK)
-    UsersID int (FK)
+    UsersID int
     --
-    IP binary(16)
-    IPType byte
+    IP string(50)
     UserAgent varchar(256)
+    Successful bit
+    CreateDate datetime
 }
 
 Users::ID"      1" -- "*"vul::UsersID
