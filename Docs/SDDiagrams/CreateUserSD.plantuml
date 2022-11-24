@@ -5,6 +5,7 @@ actor User
 participant UserController
 participant UserManager
 participant UserProvider
+participant LeakedPasswordProvider
 participant TokenManager
 participant UserLocationManager
 participant Security
@@ -12,6 +13,12 @@ participant Security
 
 
 User->UserController: Create user (email, password)
+UserController->UserController: Validate password(password)
+
+alt Password not complying
+UserController-->User: Return status badrequest
+end
+
 UserController->UserManager: Create user (email, password)
 UserManager->UserLocationManager: Check if ip is blocked (ipadress)
 UserLocationManager-->UserManager: Returns whether ip is block
@@ -21,31 +28,40 @@ UserManager-->UserController: Throw IPBlocked exception
 UserController-->User: Return status forbidden
 end
 
+
+UserManager->LeakedPasswordProvider: Check is password leaked (password)
+LeakedPasswordProvider-->UserManager: return boolean
+
+alt Password Is leaked
+UserManager-->UserController: Throw password leaked exception
+UserController-->User: Return status forbidden
+end
+
 UserManager->UserProvider: Get user by email(email)
-UserProvider->UserManager: Return User
+UserProvider-->UserManager: Return User
 
 alt User found
 
-UserManager->UserController: User already exists
-UserController->User: User already exists
+UserManager-->UserController: Throw user already exists exception
+UserController-->User: return status conflict
 
 end
 
 
 UserManager->Security: Get salt
-Security->UserManager: Return salt
+Security-->UserManager: Return salt
 
 UserManager->Security: Salt password (password, salt)
-Security->UserManager: Return salted password
+Security-->UserManager: Return salted password
 
 UserManager->UserProvider: Save user in database (user)
-UserProvider->UserManager: Return saved user
+UserProvider-->UserManager: Return saved user
 
 
-UserManager->UserController: Returns User
+UserManager-->UserController: Returns User
 UserController->TokenManager: Get token for user (User)
-TokenManager->UserController: Returns Token
+TokenManager-->UserController: Returns Token
 
-UserController->User: Return token
+UserController-->User: Return token
 
 @enduml

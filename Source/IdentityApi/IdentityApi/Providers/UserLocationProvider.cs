@@ -7,9 +7,9 @@ namespace IdentityApi.Providers
 {
     public class UserLocationProvider : SqlProvider, IUserLocationProvider
     {
-        public UserLocationProvider(IConfiguration configuration) : base(configuration)
-        {
-        }
+        public UserLocationProvider(IConfiguration configuration) 
+            : base(configuration.GetConnectionString("SQLserver"))
+        {}
 
         /// <inheritdoc/>
         public async Task<bool> IsIPLockedAsync(string ipAddress)

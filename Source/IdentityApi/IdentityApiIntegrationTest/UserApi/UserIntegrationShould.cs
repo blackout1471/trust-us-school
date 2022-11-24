@@ -1,12 +1,13 @@
-using DotNet.Testcontainers.Containers;
+﻿using DotNet.Testcontainers.Containers;
 using IdentityApi.Exceptions;
 using IdentityApi.Models;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace IdentityApiIntegrationTest.UserApi
 {
@@ -16,9 +17,9 @@ namespace IdentityApiIntegrationTest.UserApi
         /// The http client used to call the api which is being tested.
         /// </summary>
         private readonly HttpClient _client;
-
         private readonly string _baseUrl;
         private readonly Func<string, Task<ExecResult>> _sqlQuery;
+
         public UserIntegrationShould(IdentityApiFactory factory)
         {
             _client = factory.HttpClient;
@@ -32,18 +33,11 @@ namespace IdentityApiIntegrationTest.UserApi
             // Arrange
             var expected = HttpStatusCode.OK;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
-            var newUserRequest = new UserCreate
-            {
-                Email = "test",
-                Password = "test",
-                FirstName = "test",
-                LastName = "test",
-                PhoneNumber = "45454545"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
             var customerLoginRequest = new UserLogin
             {
-                Email = "test",
-                Password = "test"
+                Email = newUserRequest.Email,
+                Password = newUserRequest.Password
             };
             var createCustomerResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
 
@@ -104,14 +98,7 @@ namespace IdentityApiIntegrationTest.UserApi
             // Arrange
             var expected = HttpStatusCode.OK;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
-            var newUserRequest = new UserCreate
-            {
-                Email = "test2",
-                Password = "test2",
-                FirstName = "test2",
-                LastName = "test2",
-                PhoneNumber = "454545452"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
 
             // Act
             var response = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
@@ -121,12 +108,38 @@ namespace IdentityApiIntegrationTest.UserApi
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public async void ExpectStatusCode200_WhenUserRegistersWithEmojiPassword_Register_Login()
+        {
+            // Arrange
+            var expected = HttpStatusCode.OK;
+            HttpStatusCode actualRegister = HttpStatusCode.InternalServerError;
+            HttpStatusCode actualLogin = HttpStatusCode.InternalServerError;
+
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            newUserRequest.Password = "Pass123456❤️❤️❤️";
+
+            var userLoginRequest = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = newUserRequest.Password
+            };
+
+            // Act
+            var createResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actualLogin = createResponse.StatusCode;
+
+            var loginResponse = await _client.PostAsJsonAsync(_baseUrl + "login", userLoginRequest);
+            actualRegister = loginResponse.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actualRegister);
+            Assert.Equal(expected, actualLogin);
+        }
+
         [Theory]
-        [InlineData(null, "", "", "")]
-        [InlineData("", null, "", "")]
-        [InlineData("", "", null, "")]
-        [InlineData("", "", "", null)]
-        public async void ExpectStatusCode400_WhenMissingRequiredData_Register(string email, string pass, string first, string last)
+        [MemberData(nameof(RequiredRegisterTestData))]
+        public async void ExpectStatusCode400_WhenMissingRequiredData_Register(string email, string pass, string firstname, string lastname)
         {
             // Arrange
             var expected = HttpStatusCode.BadRequest;
@@ -134,10 +147,10 @@ namespace IdentityApiIntegrationTest.UserApi
             var newUserRequest = new UserCreate
             {
                 Email = email,
+                FirstName = firstname,
+                LastName = lastname,
                 Password = pass,
-                FirstName = first,
-                LastName = last,
-                PhoneNumber = "454545452"
+                PhoneNumber = "45454545"
             };
 
             // Act
@@ -154,14 +167,7 @@ namespace IdentityApiIntegrationTest.UserApi
             // Arrange
             var expected = HttpStatusCode.OK;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
-            var newUserRequest = new UserCreate
-            {
-                Email = "test3",
-                Password = "test3",
-                FirstName = "test3",
-                LastName = "test3",
-                PhoneNumber = "454545452"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
             var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
             var token = await createUserResponse.Content.ReadFromJsonAsync<UserToken>();
 
@@ -180,6 +186,32 @@ namespace IdentityApiIntegrationTest.UserApi
         }
 
         [Fact]
+        public async Task ExpectStatusCode403_WhenPasswordIsLeaked_Register()
+        {
+            // Arrange
+            var expected = HttpStatusCode.Forbidden;
+            var actual = HttpStatusCode.InternalServerError;
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            newUserRequest.Password = "breachedpassword";
+
+            // setup sql data
+            var stringBytes = Encoding.UTF8.GetBytes(newUserRequest.Password);
+            var hashedBytes = SHA1.HashData(stringBytes);
+            var hashedPassword = Convert.ToHexString(hashedBytes);
+
+            var sql = $"use StoredPasswords; insert into dbo.LeakedPasswords values ('{hashedPassword}', {0})";
+            await _sqlQuery(sql);
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actual = response.StatusCode;
+
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public async void ExpectStatusCode403_WhenAccountIsLockedWrongPassword_Login()
         {
             // Arrange
@@ -188,14 +220,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var expected = accountLockedException.Message;
             string actual = null;
 
-            var newUserRequest = new UserCreate
-            {
-                Email = "test4",
-                Password = "test4",
-                FirstName = "test4",
-                LastName = "test4",
-                PhoneNumber = "454545452"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
 
             var userLogin = new UserLogin
             {
@@ -205,7 +230,7 @@ namespace IdentityApiIntegrationTest.UserApi
 
 
             var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
-
+            var message = createUserResponse.Content.ReadAsStringAsync();
             // act 
             int tries = 6;
 
@@ -231,14 +256,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var expected = exception.Message; 
             string actual = null;
 
-            var newUserRequest = new UserCreate
-            {
-                Email = "test5",
-                Password = "test5",
-                FirstName = "test5",
-                LastName = "test",
-                PhoneNumber = "454545452"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
 
             var userLogin = new UserLogin
             {
@@ -271,14 +289,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var expected = exception.Message; 
             string actual = null;
 
-            var newUserRequest = new UserCreate
-            {
-                Email = "test6",
-                Password = "test6",
-                FirstName = "test6",
-                LastName = "test",
-                PhoneNumber = "454545452"
-            };
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
 
             var userLogin = new UserLogin
             {
@@ -302,6 +313,18 @@ namespace IdentityApiIntegrationTest.UserApi
             // Assert
             Assert.Equal(expected, jObject.Value<string>("error"));
         }
+
+        #region TestData Setup
+        public static IEnumerable<object[]> RequiredRegisterTestData => new List<object[]>
+        {
+            new object[] { null, "pass1234567", "f", "n" },
+            new object[] { "email", null, "first", "last" },
+            new object[] { "email", "pass1234567", null, "last" },
+            new object[] { "email", "pass1234567", "first", null },
+            new object[] { "email", new String('a', 7), "first", "last" },
+            new object[] { "email", new String('a', 129), "first", "last" },
+        };
+        #endregion
 
     }
 }

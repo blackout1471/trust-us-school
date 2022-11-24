@@ -5,6 +5,7 @@ namespace IdentityApi.Models
     public class UserCreate : UserBase
     {
         [Required]
-        public string Password { get; set; }
+        [StringLength(128, MinimumLength = 8)]
+        public string Password { get; set; } = default!;
     }
 }

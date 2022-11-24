@@ -7,11 +7,9 @@ namespace IdentityApi.Providers
 {
     public class UserProvider : SqlProvider, IUserProvider
     {
-        private readonly ILogger<UserProvider> _logger;
-
-        public UserProvider(IConfiguration configuration, ILogger<UserProvider> logger) : base(configuration)
+        public UserProvider(IConfiguration configuration) 
+            : base(configuration.GetConnectionString("SQLserver"))
         {
-            _logger = logger;
         }
 
         /// <inheritdoc/>

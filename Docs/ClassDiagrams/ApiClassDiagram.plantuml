@@ -51,8 +51,11 @@ class TokenManager{
 
 class UserManager{
     -_userProvider : IUserProvider
+    -_leakedPasswordProvider : ILeakedPasswordProvider;
     -_userLocationManager : IUserLocationManager
-    +UserManager(userProvider : IUserProvider, userLocationManager : UserLocationManager)
+    +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager)
+    --
+    -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
 
 class UserLocationManager{
@@ -66,8 +69,10 @@ class UserLocationManager{
 IUserManager --> UserCreate
 IUserManager --> UserLogin
 UserManager .-|> IUserManager
+
 UserManager o-- IUserProvider
 UserManager o-- IUserLocationManager
+UserManager o-- ILeakedPasswordProvider
 
 TokenManager .-|> ITokenManager
 ITokenManager *-- UserToken
@@ -81,6 +86,24 @@ interface IUserProvider{
     +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
     +GetUserByEmailAsync(email : string) : Task<DbUser>
     +GetUserByIdAsync(id : int) : Task<DbUser>
+    +UpdateUserFailedTries(userId : int) : Task<DbUser>
+    +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
+}
+
+interface ILeakedPasswordProvider {
+    +GetIsPasswordLeakedAsync(password : string) : Task<bool>
+}
+
+class SqlProvider {
+    +SqlProvider(connection : string)
+
+    {abstract}#RunSpAsync(storedProcedureName : string, storedProcedureElements : SpElements[]) : Task<DataTable>
+    {abstract}#RunQueryAsync(query : string) : Task<DataTable>
+}
+
+class LeakedPasswordProvider {
+    +LeakedPasswordProvider(configuration : IConfiguration)
+    --
 }
 
 interface IUserLocationProvider{
@@ -89,10 +112,24 @@ interface IUserLocationProvider{
     +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
 }
 
+class UserProvider {
+    +UserProvider(configuration : IConfiguration)
+    --
+    -DRToUser(dr : DataRow) : DbUser
+}
+
+
+
 'Providers mappings'
 
 IUserProvider *-- DbUser
 IUserLocationProvider *-- UserLocation  
+
+LeakedPasswordProvider .-|> ILeakedPasswordProvider
+LeakedPasswordProvider --|> SqlProvider
+
+UserProvider .-|> IUserProvider
+UserProvider --|> SqlProvider
 
 'Utility'
 

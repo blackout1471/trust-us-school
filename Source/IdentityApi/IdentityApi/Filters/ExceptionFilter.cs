@@ -26,6 +26,7 @@ namespace IdentityApi.Filters
                 case Required2FAException:
                 case IpBlockedException:
                 case UserIncorrectLoginException:
+                case PasswordLeakedException:
                 case AccountLockedException:
                     context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Forbidden);
                     context.ExceptionHandled = true;

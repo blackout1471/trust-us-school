@@ -76,13 +76,17 @@ namespace IdentityApi
                 .CreateLogger();
 
             builder.Host.UseSerilog();
-            builder.Services.AddScoped<IUserManager, UserManager>();
+            
+            // Providers
             builder.Services.AddScoped<IUserProvider, UserProvider>();
+            builder.Services.AddScoped<ILeakedPasswordProvider, LeakedPasswordProvider>();
+            builder.Services.AddScoped<IMessageProvider, EmailMessageProvider>();
+            // Managers
+            builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
             builder.Services.AddScoped<IUserLocationManager, UserLocationManager>();
             builder.Services.AddScoped<IUserLocationProvider, UserLocationProvider>();
             builder.Services.AddScoped<IMessageService, MailMessageService>();
-            builder.Services.AddScoped<IMessageProvider, EmailMessageProvider>();
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

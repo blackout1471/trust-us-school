@@ -3,6 +3,9 @@ using IdentityApi.Exceptions;
 using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
 using IdentityApi.Models;
+using Mapster;
+using System.Security.Cryptography;
+using System.Text;
 using MessageService.MessageServices;
 using MessageService.Providers;
 
@@ -14,11 +17,13 @@ namespace IdentityApi.Managers
         private readonly IMessageService _messageService;
         private readonly IMessageProvider _messageProvider;
         private readonly IUserLocationManager _userLocationManager;
+        private readonly ILeakedPasswordProvider _leakedPasswordProvider;
         private readonly ILogger<UserManager> _logger;
-        public UserManager(IUserProvider userProvider, IMessageService messageService, IMessageProvider messageProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager)
+        public UserManager(IUserProvider userProvider, IMessageService messageService, IMessageProvider messageProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
         {
             _userProvider = userProvider;
             _userLocationManager = userLocationManager;
+            _leakedPasswordProvider = leakedPasswordProvider;
             _logger = logger;
             _messageService = messageService;
             _messageProvider = messageProvider;
@@ -30,26 +35,23 @@ namespace IdentityApi.Managers
             if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
                 throw new IpBlockedException();
 
-            // check if user exists
-            var existingUser = await _userProvider.GetUserByEmailAsync(userCreate.Email);
+            // Check if password has been leaked
+            if (await CheckPasswordLeakedForUser(userCreate.Password))
+            {
+                _logger.LogWarning($"User[{userCreate.Email}] tried to register leaked password");
+                throw new PasswordLeakedException();
+            }
+
             // User already in use 
-            if (existingUser != null)
+            if (await _userProvider.GetUserByEmailAsync(userCreate.Email) != null)
             {
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userCreate.Email}] cannot be created because they already exists");
                 throw new UserAlreadyExistsException();
             }
 
-
-            // TODO: create mapper
-
-            var toCreateDbUser = new DbUser()
-            {
-                Email = userCreate.Email,
-                FirstName = userCreate.FirstName,
-                LastName = userCreate.LastName,
-                PhoneNumber = userCreate.PhoneNumber
-            };
+            // Map from user create to db user
+            var toCreateDbUser = userCreate.Adapt<DbUser>();
 
             toCreateDbUser.Salt = Security.GetSalt(50);
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
@@ -63,21 +65,15 @@ namespace IdentityApi.Managers
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
             await _userLocationManager.LogLocationAsync(userLocation);
-
             var registerMessage = _messageProvider.GetRegisterMessage(createdUser.Email, createdUser.SecretKey);
 
             await _messageService.SendMessageAsync(registerMessage);
 
-            return new User()
-            {
-                ID = createdUser.ID,
-                Email = createdUser.Email,
-                FirstName = createdUser.FirstName,
-                LastName = createdUser.LastName,
-                PhoneNumber = createdUser.PhoneNumber
-            };
+            // Map from db user to user
+            return createdUser.Adapt<User>();
         }
 
+        /// <inheritdoc/>
         public async Task<User> GetUserByIDAsync(int ID)
         {
             var dbUser = await _userProvider.GetUserByIDAsync(ID);
@@ -85,16 +81,7 @@ namespace IdentityApi.Managers
             if (dbUser == null)
                 return null;
 
-            // TODO: Add mapper
-
-            return new User()
-            {
-                ID = dbUser.ID,
-                Email = dbUser.Email,
-                FirstName = dbUser.FirstName,
-                LastName = dbUser.LastName,
-                PhoneNumber = dbUser.PhoneNumber
-            };
+            return dbUser.Adapt<User>();
         }
 
         /// <inheritdoc/>
@@ -153,18 +140,35 @@ namespace IdentityApi.Managers
                     existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
                     _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
                 }
-                return existingUser;
+
+                // Map from db user to user
+                return existingUser.Adapt<User>();
             }
             else
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
 
-
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
+        }
+
+        /// <summary>
+        /// Checks whether the given password has been breached,
+        /// by calling the leakedpassword provider.
+        /// </summary>
+        /// <param name="password">The password to check is breached</param>
+        /// <returns>True if breached, false otherwise</returns>
+        private async Task<bool> CheckPasswordLeakedForUser(string password)
+        {
+            var stringBytes = Encoding.UTF8.GetBytes(password);
+            var hashedBytes = SHA1.HashData(stringBytes);
+            var hashedPassword = Convert.ToHexString(hashedBytes);
+
+            // Check if password has been leaked
+            return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
         }
 
         /// <inheritdoc/>
