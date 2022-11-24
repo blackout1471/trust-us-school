@@ -130,11 +130,17 @@ namespace IdentityApi.Managers
                 // if user was not logged in from this location before
                 if (!await _userLocationManager.UserWasLoggedInFromLocationAsync(userLocation))
                 {
+                    if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
+                    {
+                        //TODO: Handle multiple logins in an attempt to generate more OTPS
+                        //Maybe just return or throw error
+                    }
+                    existingUser = await _userProvider.UpdateUserLoginNewLocation(existingUser.ID);
                     var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
                     if (hotp != null)
                     {
                         var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
-                        //Figure out where the counter should go up
+
                         _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
                     }
                     await _userLocationManager.LogLocationAsync(userLocation);
@@ -152,7 +158,7 @@ namespace IdentityApi.Managers
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
-                            
+
 
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
@@ -161,7 +167,7 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<User> Login2FaAsync(UserLogin userLogin)
+        public async Task<User> Login2FaAsync(UserLogin userLogin, UserLocation userLocation)
         {
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
@@ -174,13 +180,15 @@ namespace IdentityApi.Managers
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
-                // TODO: log
-                throw new Exception("Login failed, Account locked");
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
+                throw new AccountLockedException();
             }
 
             // TODO: Add in SP
-            if(existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
+            if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
             {
+                //TODO: Log, maybe a session expired exception
                 throw new Exception("Login failed, password expired");
             }
 
@@ -190,26 +198,21 @@ namespace IdentityApi.Managers
 
                 // login success 
                 existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
-
-
-                // TODO: Update counter & login tries
+                userLocation.Successful = true;
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
 
                 return existingUser;
             }
             else
             {
-                // TODO: log
                 // login failed
+                await _userLocationManager.LogLocationAsync(userLocation);
 
-                existingUser = await _userProvider.UpdateUserFailedTries(existingUser.ID);
 
-                if (existingUser.IsLocked)
-                {
-                    throw new Exception("Login failed, Account locked");
-                }
-
-                // update tries, if tries >= 3 lock account  <- consider moving both to sp and returning dbuser
-                throw new Exception("Login failed, one-time password is wrong");
+                _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing with 2 step");
+                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                throw new UserIncorrectLoginException();
             }
         }
     }

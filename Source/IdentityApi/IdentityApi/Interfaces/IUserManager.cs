@@ -19,7 +19,7 @@ namespace IdentityApi.Interfaces
         /// Logs user in with otp
         /// </summary>
         /// <returns>Logged in user</returns>
-        Task<User> Login2FaAsync(UserLogin userLogin);
+        Task<User> Login2FaAsync(UserLogin userLogin, UserLocation userLocation);
 
         /// <summary>
         /// Gets user based on id

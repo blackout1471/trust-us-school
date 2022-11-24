@@ -81,6 +81,17 @@ namespace IdentityApi.Providers
             return DRToUser(userTable.Rows[0]);
         }
 
+
+        public async Task<DbUser> UpdateUserLoginNewLocation(int userID)
+        {
+            var userTable = await RunSpAsync("SP_UpdateLastRequest", new SpElement("UserID", userID, SqlDbType.Int));
+
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
+
+            return DRToUser(userTable.Rows[0]);
+        }
+
         /// <summary>
         /// Maps datarow to db user
         /// </summary>
@@ -115,7 +126,7 @@ namespace IdentityApi.Providers
                 dbUser.Counter = Convert.ToInt64(dr["Counter"]);
 
             if (dr.Table.Columns.Contains("LastRequestDate"))
-                dbUser.LastRequestDate = dr["LastRequestDate"] == null ? (DateTime?)dr["LastRequestDate"] : null;
+                dbUser.LastRequestDate = dr["LastRequestDate"] != null ? (DateTime?)dr["LastRequestDate"] : null;
             return dbUser;
         }
     }

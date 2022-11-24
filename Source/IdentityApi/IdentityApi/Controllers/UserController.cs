@@ -56,7 +56,7 @@ namespace IdentityApi.Controllers
         {
             try
             {
-                var user = await _userManager.Login2FaAsync(userLogin);
+                var user = await _userManager.Login2FaAsync(userLogin, GetUserLocation());
 
                 if (user == null)
                     return NoContent();
