@@ -27,7 +27,7 @@ namespace IdentityApi.Controllers
         [Route("create")]
         public async Task<ActionResult<UserToken>> Create(UserCreate userCreate)
         {
-            var createdUser = await _userManager.CreateUserAsync(userCreate);
+            var createdUser = await _userManager.CreateUserAsync(userCreate, GetUserLocation());
             return Ok(_tokenManager.GenerateUserToken(createdUser));
         }
 
@@ -39,7 +39,7 @@ namespace IdentityApi.Controllers
         [Route("login")]
         public async Task<ActionResult<UserToken>> Login(UserLogin userLogin)
         {
-            var user = await _userManager.LoginAsync(userLogin);
+            var user = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             if (user == null)
                 throw new UserIncorrectLoginException();
@@ -68,5 +68,19 @@ namespace IdentityApi.Controllers
 
             return Ok(user);
         }
+
+        /// <summary>
+        /// Retrieves the user location data from the request context
+        /// </summary>
+        private UserLocation GetUserLocation()
+        {
+            var userLocation = new UserLocation();
+            userLocation.IP = Request?.HttpContext?.Connection?.RemoteIpAddress?.ToString() ?? "Unknown";
+
+            userLocation.UserAgent = Request?.Headers["User-Agent"].ToString() ?? "Unknown";
+
+            return userLocation;
+        }
     }
 }
+

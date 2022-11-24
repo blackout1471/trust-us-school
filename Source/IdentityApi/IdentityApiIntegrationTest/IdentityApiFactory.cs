@@ -45,6 +45,7 @@ namespace IdentityApiIntegrationTest
             });
         }
 
+
         /// <inheritdoc />
         public new async Task DisposeAsync()
         {

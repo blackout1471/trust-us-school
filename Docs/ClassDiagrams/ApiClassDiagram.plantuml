@@ -35,6 +35,13 @@ interface ITokenManager{
     +GetUserTokenFromToken(token : string) : UserToken
 }
 
+
+interface IUserLocationManager{
+    +IsIPLockedAsync(ip : string) : Task<bool>
+    +LogLocationAsync(userLocation : UserLocation) : Task<UserLocation>
+    +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
+}
+
 class TokenManager{
     -GetPrincipal(token : string) : ClaimsPrincipal
     -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
@@ -43,10 +50,17 @@ class TokenManager{
 class UserManager{
     -_userProvider : IUserProvider
     -_leakedPasswordProvider : ILeakedPasswordProvider;
+    -_userLocationManager : IUserLocationManager
+    +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager)
     --
-    +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider)
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
+
+class UserLocationManager{
+    -_userLocationProvider : IUserLocationProvider
+    +UserLocationManager(userLocationProvider : UserLocationProvider)
+}
+
 
 'Managers mappings'
 
@@ -55,12 +69,15 @@ IUserManager --> UserLogin
 UserManager .-|> IUserManager
 
 UserManager o-- IUserProvider
+UserManager o-- IUserLocationManager
 UserManager o-- ILeakedPasswordProvider
 
 TokenManager .-|> ITokenManager
 ITokenManager *-- UserToken
 
 
+UserLocationManager .-|> IUserLocationManager
+UserLocationManager o-- IUserLocationProvider
 'Providers'
 
 interface IUserProvider{
@@ -87,6 +104,12 @@ class LeakedPasswordProvider {
     --
 }
 
+interface IUserLocationProvider{
+    +IsIPLockedAsync(ip : string) : Task<bool>
+    +LogLocationAsync(userLocation: UserLocation) : Task<UserLocation>
+    +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
+}
+
 class UserProvider {
     +UserProvider(configuration : IConfiguration)
     --
@@ -98,6 +121,7 @@ class UserProvider {
 'Providers mappings'
 
 IUserProvider *-- DbUser
+IUserLocationProvider *-- UserLocation  
 
 LeakedPasswordProvider .-|> ILeakedPasswordProvider
 LeakedPasswordProvider --|> SqlProvider
@@ -113,6 +137,9 @@ class Security{
     {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
 }
 
+class RegexHelper{
+    {static}+TryToGetBrowserWithoutVersion(browser : string) : string
+}
 
 'Users mappings'
 
@@ -162,8 +189,10 @@ class UserLogin{
 class UserLocation{
     +ID : int
     +UserID : int
-    +IP : byte[]
+    +IP : string
     +UserAgent : string
+    +Successful : bool
+    +CreateDate : datetime
 }
 
 

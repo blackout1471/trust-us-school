@@ -11,29 +11,36 @@ namespace IdentityApi.Managers
     public class UserManager : IUserManager
     {
         private readonly IUserProvider _userProvider;
+        private readonly IUserLocationManager _userLocationManager;
         private readonly ILeakedPasswordProvider _leakedPasswordProvider;
         private readonly ILogger<UserManager> _logger;
 
-        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger, ILeakedPasswordProvider leakedPasswordProvider)
+        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
         {
             _userProvider = userProvider;
+            _userLocationManager = userLocationManager;
             _leakedPasswordProvider = leakedPasswordProvider;
             _logger = logger;
         }
 
         /// <inheritdoc/>
-        public async Task<User> CreateUserAsync(UserCreate userCreate)
+        public async Task<User> CreateUserAsync(UserCreate userCreate, UserLocation userLocation)
         {
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+                throw new IpBlockedException();
+
+            // Check if password has been leaked
             if (await CheckPasswordLeakedForUser(userCreate.Password))
             {
                 _logger.LogWarning($"User[{userCreate.Email}] tried to register leaked password");
                 throw new PasswordLeakedException();
             }
 
-            // check if user exists
+            // User already in use 
             if (await _userProvider.GetUserByEmailAsync(userCreate.Email) != null)
             {
-                _logger.LogWarning($"User cannot be created because they already exists {userCreate.Email}");
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{userCreate.Email}] cannot be created because they already exists");
                 throw new UserAlreadyExistsException();
             }
 
@@ -52,6 +59,11 @@ namespace IdentityApi.Managers
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
 
             var createdUser = await _userProvider.CreateUserAsync(toCreateDbUser);
+            _logger.LogInformation($"User[{userCreate.Email}] has been created");
+
+            userLocation.UserID = createdUser.ID;
+            userLocation.Successful = true;
+            await _userLocationManager.LogLocationAsync(userLocation);
 
             return new User()
             {
@@ -77,46 +89,64 @@ namespace IdentityApi.Managers
             {
                 ID = dbUser.ID,
                 Email = dbUser.Email,
-                FirstName = dbUser.FirstName
+                FirstName = dbUser.FirstName,
+                LastName = dbUser.LastName,
+                PhoneNumber = dbUser.PhoneNumber
             };
         }
 
         /// <inheritdoc/>
-        public async Task<User> LoginAsync(UserLogin userLogin)
+        public async Task<User> LoginAsync(UserLogin userLogin, UserLocation userLocation)
         {
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+                throw new IpBlockedException();
+
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
 
             if (existingUser == null)
+            {
+                await _userLocationManager.LogLocationAsync(userLocation);
+
                 return null;
+            }
+
+            // Set user id for the rest of the location logs
+            userLocation.UserID = existingUser.ID;
 
             // User is locked, no need for further checks
             if (existingUser.IsLocked)
             {
-                _logger.LogWarning($"Login attempt for locked user {userLogin.Email}");
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
                 throw new AccountLockedException();
             }
+
 
             // check if given password matches with the hashedpassword of the user
             if (existingUser.HashedPassword == Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
             {
-                // TODO: Add check for ip adresse here
-                // if user was not logged in with this ip adress
-                // Send 2FA here, then
-                // throw error here with "Check email", 
-
-                // else
-
-                // login success 
-                existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
-                _logger.LogInformation($"User has logged in {userLogin.Email}");
-                // TODO: Update 
+                // if user was not logged in from this location before
+                if (!await _userLocationManager.UserWasLoggedInFromLocationAsync(userLocation))
+                {
+                    // send 2fa here
+                    await _userLocationManager.LogLocationAsync(userLocation);
+                    throw new Required2FAException();
+                }
+                else
+                {
+                    // login success 
+                    existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+                    _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
+                }
                 return existingUser;
             }
             else
             {
                 // login failed
-                _logger.LogWarning($"Login failed for user email {userLogin.Email}");
+                await _userLocationManager.LogLocationAsync(userLocation);           
+
+                _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }

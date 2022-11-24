@@ -8,10 +8,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using System;
 using Microsoft.AspNetCore.HttpOverrides;
 using IdentityApi.Filters;
 using Microsoft.AspNetCore.Mvc;
+using IdentityApi.Middlewares;
 
 namespace IdentityApi
 {
@@ -78,6 +78,8 @@ namespace IdentityApi
             // Managers
             builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
+            builder.Services.AddScoped<IUserLocationManager, UserLocationManager>();
+            builder.Services.AddScoped<IUserLocationProvider, UserLocationProvider>();
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
@@ -122,6 +124,9 @@ namespace IdentityApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Middleware to push remote ip to log context
+            app.UseClientLogging();
 
             app.MapControllers();
 
