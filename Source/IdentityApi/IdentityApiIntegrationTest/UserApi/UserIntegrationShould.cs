@@ -1,4 +1,4 @@
-using DotNet.Testcontainers.Containers;
+﻿using DotNet.Testcontainers.Containers;
 using IdentityApi.Exceptions;
 using IdentityApi.Models;
 using Newtonsoft.Json;
@@ -104,6 +104,35 @@ namespace IdentityApiIntegrationTest.UserApi
 
             // Assert
             Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public async void ExpectStatusCode200_WhenUserRegistersWithEmojiPassword_Register_Login()
+        {
+            // Arrange
+            var expected = HttpStatusCode.OK;
+            HttpStatusCode actualRegister = HttpStatusCode.InternalServerError;
+            HttpStatusCode actualLogin = HttpStatusCode.InternalServerError;
+
+            var newUserRequest = GenerateNewUserRequest();
+            newUserRequest.Password = "Pass123456❤️❤️❤️";
+
+            var userLoginRequest = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = newUserRequest.Password
+            };
+
+            // Act
+            var createResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            actualLogin = createResponse.StatusCode;
+
+            var loginResponse = await _client.PostAsJsonAsync(_baseUrl + "login", userLoginRequest);
+            actualRegister = loginResponse.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actualRegister);
+            Assert.Equal(expected, actualLogin);
         }
 
         [Theory]
