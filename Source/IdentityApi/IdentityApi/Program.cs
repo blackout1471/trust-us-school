@@ -11,6 +11,10 @@ using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
 using System.Text;
+using Microsoft.AspNetCore.HttpOverrides;
+using IdentityApi.Filters;
+using Microsoft.AspNetCore.Mvc;
+using IdentityApi.Middlewares;
 
 namespace IdentityApi
 {
@@ -26,7 +30,19 @@ namespace IdentityApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
+            builder.Services.AddControllers(options => 
+            {
+                options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+                options.Filters.Add<ExceptionFilter>();
+                options.Filters.Add<ModelStateFilter>();
+            });
+
+            // Turn off default model state invalid filter.
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             AddJwtConfiguration(builder);
 
             // Read configurations file
@@ -56,14 +72,18 @@ namespace IdentityApi
                                                         .ServerCertificateValidationCallback((o, certificate, arg3, arg4) => { return true; }), // TODO: Add not self signed certificate for elasticsearch
                     TypeName = null
                 })
+                .ReadFrom.Configuration(configuration)
                 .CreateLogger();
 
             builder.Host.UseSerilog();
             builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<IUserProvider, UserProvider>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
+            builder.Services.AddScoped<IUserLocationManager, UserLocationManager>();
+            builder.Services.AddScoped<IUserLocationProvider, UserLocationProvider>();
             builder.Services.AddScoped<IMessageService, MailMessageService>();
             builder.Services.AddScoped<IMessageProvider, EmailMessageProvider>();
+
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
@@ -107,6 +127,9 @@ namespace IdentityApi
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            // Middleware to push remote ip to log context
+            app.UseClientLogging();
 
             app.MapControllers();
 

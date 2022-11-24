@@ -1,22 +1,22 @@
 ﻿using IdentityApi.Interfaces;
-using System.Data.SqlClient;
 using System.Data;
 using IdentityApi.DbModels;
+using System;
 
 namespace IdentityApi.Providers
 {
     public class UserProvider : SqlProvider, IUserProvider
     {
-        public UserProvider(IConfiguration configuration) : base(configuration)
-        {
+        private readonly ILogger<UserProvider> _logger;
 
+        public UserProvider(IConfiguration configuration, ILogger<UserProvider> logger) : base(configuration)
+        {
+            _logger = logger;
         }
 
         /// <inheritdoc/>
         public async Task<DbUser> CreateUserAsync(DbUser userCreate)
         {
-            try
-            {
                 var spElements = new SpElement[]
                 {
                     new SpElement("Email", userCreate.Email, SqlDbType.VarChar),
@@ -29,96 +29,56 @@ namespace IdentityApi.Providers
                     new SpElement("Counter", userCreate.Counter, SqlDbType.BigInt)
                 };
 
-                var userTable = await RunSpAsync("SP_CreateUser", spElements);
+            var userTable = await RunSpAsync("SP_CreateUser", spElements);
 
-                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
-                    return null;
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
 
-                return DRToUser(userTable.Rows[0]);
-            }
-            catch (Exception e)
-            {
-                // TODO: log here
-
-                throw e; // TODO: Change to better error
-            }
+            return DRToUser(userTable.Rows[0]);
         }
 
         /// <inheritdoc/>
         public async Task<DbUser> GetUserByIDAsync(int userID)
         {
-            try
-            {
-                var userTable = await RunQueryAsync($"select top(1)* from Users  where ID = {userID}");
+            var userTable = await RunQueryAsync($"select top(1)* from Users  where ID = {userID}");
 
-                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
-                    return null;
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
 
-                return DRToUser(userTable.Rows[0]);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            return DRToUser(userTable.Rows[0]);
         }
 
         /// <inheritdoc/>
         public async Task<DbUser> GetUserByEmailAsync(string userEmail)
         {
-            try
-            {
-                var userTable = await RunSpAsync("SP_UserExists", new SpElement("Email", userEmail, SqlDbType.VarChar));
+            var userTable = await RunSpAsync("SP_UserExists", new SpElement("Email", userEmail, SqlDbType.VarChar));
 
-                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
-                    return null;
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
 
-                return DRToUser(userTable.Rows[0]);
-            }
-            catch (Exception e)
-            {
-                // TODO: log here
-
-                throw e; // TODO: Change to better error
-            }
+            return DRToUser(userTable.Rows[0]);
         }
 
+        /// <inheritdoc/>
         public async Task<DbUser> UpdateUserFailedTries(int userID)
         {
-            try
-            {
-                var userTable = await RunSpAsync("SP_UpdateUserFailedTries", new SpElement("UserID", userID, SqlDbType.Int));
+            var userTable = await RunSpAsync("SP_UpdateUserFailedTries", new SpElement("UserID", userID, SqlDbType.Int));
 
-                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
-                    return null;
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
 
-                return DRToUser(userTable.Rows[0]);
-            }
-            catch (Exception e)
-            {
-                // TODO: log here
-
-                throw e; // TODO: Change to better error
-            }
+            return DRToUser(userTable.Rows[0]);
         }
 
-
+        /// <inheritdoc/>
         public async Task<DbUser> UpdateUserLoginSuccess(int userID)
         {
-            try
-            {
-                var userTable = await RunSpAsync("SP_UserLoggedIn", new SpElement("UserID", userID, SqlDbType.Int));
+            var userTable = await RunSpAsync("SP_UserLoggedIn", new SpElement("UserID", userID, SqlDbType.Int));
 
-                if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
-                    return null;
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
 
-                return DRToUser(userTable.Rows[0]);
-            }
-            catch (Exception e)
-            {
-                // TODO: log here
-
-                throw e; // TODO: Change to better error
-            }
+            return DRToUser(userTable.Rows[0]);
         }
 
         /// <summary>
@@ -126,52 +86,37 @@ namespace IdentityApi.Providers
         /// </summary>
         private DbUser DRToUser(DataRow dr)
         {
-            try
-            {
-                if (dr == null)
-                    return null;
+            if (dr == null)
+                return null;
 
-                var dbUser = new DbUser();
+            var dbUser = new DbUser();
 
-                dbUser.Email = dr["Email"].ToString();
-                dbUser.ID = Convert.ToInt32(dr["ID"]);
-                dbUser.FirstName = dr["FirstName"].ToString();
-                dbUser.LastName = dr["LastName"].ToString();
-                dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
-                dbUser.IsVerified = (bool)dr["IsLocked"];
-                dbUser.IsLocked = (bool)dr["IsLocked"];
-                dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
-                dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
+            dbUser.Email = dr["Email"].ToString();
+            dbUser.ID = Convert.ToInt32(dr["ID"]);
+            dbUser.FirstName = dr["FirstName"].ToString();
+            dbUser.LastName = dr["LastName"].ToString();
+            dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
+            dbUser.IsVerified = (bool)dr["IsLocked"];
+            dbUser.IsLocked = (bool)dr["IsLocked"];
+            dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
+            dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
-                if (dr.Table.Columns.Contains("HashedPassword"))
-                    dbUser.HashedPassword = dr["HashedPassword"]?.ToString();
-
-                if (dr.Table.Columns.Contains("Salt"))
-                    dbUser.Salt = dr["Salt"]?.ToString();
-
-                if (dr.Table.Columns.Contains("SecretKey"))
-                    dbUser.SecretKey = dr["SecretKey"]?.ToString();
-
-                if (dr.Table.Columns.Contains("Counter"))
-                    dbUser.Counter = Convert.ToInt64(dr["Counter"]);
-
-                if (dr.Table.Columns.Contains("LastRequestDate"))
-                    dbUser.LastRequestDate = dr["LastRequestDate"] == null ? (DateTime?)dr["LastRequestDate"] : null;
+            if (dr.Table.Columns.Contains("HashedPassword"))
+                dbUser.HashedPassword = dr["HashedPassword"]?.ToString();
 
 
-                return dbUser;
-            }
-            catch (Exception e)
-            {
-                // TODO: Add log and replace throw
+            if (dr.Table.Columns.Contains("Salt"))
+                dbUser.Salt = dr["Salt"]?.ToString();
 
-                throw e;
-            }
-        }
+            if (dr.Table.Columns.Contains("SecretKey"))
+                dbUser.SecretKey = dr["SecretKey"]?.ToString();
 
-        public Task<DbUser> UpdateUserLoginNewLocation(int userID)
-        {
-            throw new NotImplementedException();
+            if (dr.Table.Columns.Contains("Counter"))
+                dbUser.Counter = Convert.ToInt64(dr["Counter"]);
+
+            if (dr.Table.Columns.Contains("LastRequestDate"))
+                dbUser.LastRequestDate = dr["LastRequestDate"] == null ? (DateTime?)dr["LastRequestDate"] : null;
+            return dbUser;
         }
     }
 }

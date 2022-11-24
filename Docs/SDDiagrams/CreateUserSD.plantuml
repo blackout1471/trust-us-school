@@ -6,10 +6,21 @@ participant UserController
 participant UserManager
 participant UserProvider
 participant TokenManager
+participant UserLocationManager
 participant Security
+
+
 
 User->UserController: Create user (email, password)
 UserController->UserManager: Create user (email, password)
+UserManager->UserLocationManager: Check if ip is blocked (ipadress)
+UserLocationManager-->UserManager: Returns whether ip is block
+
+alt Ip blocked
+UserManager-->UserController: Throw IPBlocked exception
+UserController-->User: Return status forbidden
+end
+
 UserManager->UserProvider: Get user by email(email)
 UserProvider->UserManager: Return User
 

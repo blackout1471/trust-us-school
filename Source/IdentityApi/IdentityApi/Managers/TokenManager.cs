@@ -12,6 +12,7 @@ namespace IdentityApi.Managers
         private readonly ILogger<TokenManager> _logger;
         private readonly IConfiguration _configuration;
         private readonly string _secret;
+
         public TokenManager(IConfiguration configuration, ILogger<TokenManager> logger)
         {
             _configuration = configuration;
@@ -26,22 +27,13 @@ namespace IdentityApi.Managers
 
             if (principal == null)
             {
-                // TODO: log and change error message
-                throw new Exception();
+                _logger.LogError($"Principal could not be extracted from token {token}");
+                throw new MissingFieldException("Principal is missing from token");
             }
 
-            try
-            {
-                ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
+            ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
 
-                return ClaimsIdentityToUserToken(identity, token);
-            }
-            catch (Exception e)
-            {
-                // TODO: Log and change error
-
-                throw e;
-            }
+            return ClaimsIdentityToUserToken(identity, token);
         }
 
         /// <inheritdoc/>
@@ -71,6 +63,8 @@ namespace IdentityApi.Managers
             userToken.UserID = user.ID;
             userToken.Email = user.Email;
 
+            _logger.LogInformation($"User[{user.Email}] has created a new token");
+
             return userToken;
         }
 
@@ -87,13 +81,13 @@ namespace IdentityApi.Managers
                 ClaimsIdentity identity = (ClaimsIdentity)principal.Identity;
 
                 var userToken = ClaimsIdentityToUserToken(identity, token);
+                _logger.LogInformation($"{token} has been validated");
 
                 return userToken == null ? false : true;
             }
             catch (Exception e)
             {
-                // TODO: Log
-
+                _logger.LogWarning(e, $"Token could not be validated: {token} in method ValidateToken");
                 return false;
             }
         }
@@ -103,37 +97,28 @@ namespace IdentityApi.Managers
         /// </summary>
         private ClaimsPrincipal GetPrincipal(string token)
         {
-            try
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
+
+            if (jwtToken == null)
             {
-                JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-                JwtSecurityToken jwtToken = (JwtSecurityToken)tokenHandler.ReadToken(token);
-
-                if (jwtToken == null)
-                {
-                    // TODO: Log and throw better error
-                    throw new Exception();
-                }
-
-                byte[] key = Encoding.UTF8.GetBytes(_secret);
-
-                TokenValidationParameters parameters = new TokenValidationParameters()
-                {
-                    RequireExpirationTime = true,
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidAudience = _configuration["Jwt:Audience"],
-                    ValidIssuer = _configuration["Jwt:Issuer"],
-                };
-
-                return tokenHandler.ValidateToken(token, parameters, out SecurityToken securityToken);
+                _logger.LogError($"Jwt Token is null {token} in method GetPrincipal");
+                throw new InvalidDataException($"Jwt Token is null {token} in method GetPrincipal");
             }
-            catch (Exception e)
+
+            byte[] key = Encoding.UTF8.GetBytes(_secret);
+
+            TokenValidationParameters parameters = new TokenValidationParameters()
             {
-                // TODO: Log and change message
+                RequireExpirationTime = true,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                IssuerSigningKey = new SymmetricSecurityKey(key),
+                ValidAudience = _configuration["Jwt:Audience"],
+                ValidIssuer = _configuration["Jwt:Issuer"],
+            };
 
-                throw e;
-            }
+            return tokenHandler.ValidateToken(token, parameters, out SecurityToken securityToken);
         }
 
         /// <summary>

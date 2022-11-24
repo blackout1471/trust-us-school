@@ -35,6 +35,13 @@ interface ITokenManager{
     +GetUserTokenFromToken(token : string) : UserToken
 }
 
+
+interface IUserLocationManager{
+    +IsIPLockedAsync(ip : string) : Task<bool>
+    +LogLocationAsync(userLocation : UserLocation) : Task<UserLocation>
+    +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
+}
+
 class TokenManager{
     -GetPrincipal(token : string) : ClaimsPrincipal
     -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
@@ -42,8 +49,15 @@ class TokenManager{
 
 class UserManager{
     -_userProvider : IUserProvider
-    +UserManager(userProvider : IUserProvider)
+    -_userLocationManager : IUserLocationManager
+    +UserManager(userProvider : IUserProvider, userLocationManager : UserLocationManager)
 }
+
+class UserLocationManager{
+    -_userLocationProvider : IUserLocationProvider
+    +UserLocationManager(userLocationProvider : UserLocationProvider)
+}
+
 
 'Managers mappings'
 
@@ -51,11 +65,14 @@ IUserManager --> UserCreate
 IUserManager --> UserLogin
 UserManager .-|> IUserManager
 UserManager o-- IUserProvider
+UserManager o-- IUserLocationManager
 
 TokenManager .-|> ITokenManager
 ITokenManager *-- UserToken
 
 
+UserLocationManager .-|> IUserLocationManager
+UserLocationManager o-- IUserLocationProvider
 'Providers'
 
 interface IUserProvider{
@@ -64,10 +81,16 @@ interface IUserProvider{
     +GetUserByIdAsync(id : int) : Task<DbUser>
 }
 
+interface IUserLocationProvider{
+    +IsIPLockedAsync(ip : string) : Task<bool>
+    +LogLocationAsync(userLocation: UserLocation) : Task<UserLocation>
+    +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
+}
+
 'Providers mappings'
 
 IUserProvider *-- DbUser
-
+IUserLocationProvider *-- UserLocation  
 
 'Utility'
 
@@ -77,6 +100,9 @@ class Security{
     {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
 }
 
+class RegexHelper{
+    {static}+TryToGetBrowserWithoutVersion(browser : string) : string
+}
 
 'Users mappings'
 
@@ -126,8 +152,10 @@ class UserLogin{
 class UserLocation{
     +ID : int
     +UserID : int
-    +IP : byte[]
+    +IP : string
     +UserAgent : string
+    +Successful : bool
+    +CreateDate : datetime
 }
 
 
