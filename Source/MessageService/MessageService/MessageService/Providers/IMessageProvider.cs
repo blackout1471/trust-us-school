@@ -1,6 +1,6 @@
 ﻿using MessageService.Messages;
 
-namespace IdentityApi.Interfaces
+namespace MessageService.Providers
 {
     public interface IMessageProvider
     {

@@ -51,24 +51,16 @@ namespace IdentityApi.Controllers
         /// </summary>
         /// <returns>User Token</returns>
         [HttpPost]
-        [Route("login2f")]
-        public async Task<ActionResult<UserToken>> Login2Factor(UserLogin userLogin)
+        [Route("verificationlogin")]
+        public async Task<ActionResult<UserToken>> VerificationLogin(UserLogin userLogin)
         {
-            try
-            {
-                var user = await _userManager.Login2FaAsync(userLogin, GetUserLocation());
+            var user = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
 
-                if (user == null)
-                    return NoContent();
+            if (user == null)
+                throw new UserIncorrectLoginException();
 
-                return Ok(_tokenManager.GenerateUserToken(user));
-            }
-            catch (Exception e)
-            {
-                // TODO: log
+            return Ok(_tokenManager.GenerateUserToken(user));
 
-                return Problem("E");
-            }
         }
 
         /// <summary>

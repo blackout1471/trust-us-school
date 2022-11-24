@@ -1,6 +1,4 @@
-﻿using MessageService.Messages;
-
-namespace IdentityApi.Messages
+﻿namespace MessageService.Messages
 {
     public class EmailMessage : IMessage
     {

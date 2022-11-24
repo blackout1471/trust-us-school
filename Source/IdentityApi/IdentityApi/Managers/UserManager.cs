@@ -2,9 +2,9 @@
 using IdentityApi.Exceptions;
 using IdentityApi.Helpers;
 using IdentityApi.Interfaces;
-using IdentityApi.Messages;
 using IdentityApi.Models;
 using MessageService.MessageServices;
+using MessageService.Providers;
 
 namespace IdentityApi.Managers
 {
@@ -168,7 +168,7 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<User> Login2FaAsync(UserLogin userLogin, UserLocation userLocation)
+        public async Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation)
         {
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);

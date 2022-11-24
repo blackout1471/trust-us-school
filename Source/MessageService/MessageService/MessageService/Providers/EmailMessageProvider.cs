@@ -1,9 +1,6 @@
-﻿using IdentityApi.Interfaces;
-using IdentityApi.Messages;
-using MessageService.Messages;
-using static System.Net.WebRequestMethods;
+﻿using MessageService.Messages;
 
-namespace IdentityApi.Providers
+namespace MessageService.Providers
 {
     public class EmailMessageProvider : IMessageProvider
     {
@@ -11,7 +8,7 @@ namespace IdentityApi.Providers
         public IMessage GetLoginAttemptMessage(string to, string otp)
         {
             var message = "There has been a login attempt from a new location, this is your one-time password for this login:\n" + otp
-            + "\n If this was not you, consider changing your password.";
+            + "\nIf this was not you, consider changing your password.";
 
             return new EmailMessage()
             {
@@ -23,7 +20,7 @@ namespace IdentityApi.Providers
         /// <inheritdoc/>
         public IMessage GetRegisterMessage(string to, string key)
         {
-            var message = "Welcome, this is your 2-factor password:" + key + " Save this password in case you lose access to your email.";
+            var message = "Welcome, this is your 2-factor password:\n" + key + "\nSave this password in case you lose access to your email.";
 
 
             return new EmailMessage { To = to, Message = message };

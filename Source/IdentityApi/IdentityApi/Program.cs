@@ -1,20 +1,20 @@
+using IdentityApi.Filters;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
+using IdentityApi.Middlewares;
 using IdentityApi.Providers;
 using MessageService.Configurations;
 using MessageService.MessageServices;
+using MessageService.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
 using System.Text;
-using Microsoft.AspNetCore.HttpOverrides;
-using IdentityApi.Filters;
-using Microsoft.AspNetCore.Mvc;
-using IdentityApi.Middlewares;
 
 namespace IdentityApi
 {
