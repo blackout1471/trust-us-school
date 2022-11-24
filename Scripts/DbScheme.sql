@@ -309,27 +309,12 @@ and
 DATEADD(minute, 10, UserLocation.CreateDate) > getdate() -- in the last 10 minutes
 go
 
--- Updates the SecretKeyCounters counter for user
-DROP PROCEDURE IF EXISTS dbo.SP_UpdateCounter;
-go
-
-CREATE PROCEDURE SP_UpdateCounter 
-@UserEmail varchar(100),
-@Counter BIGINT
-as 
-Update SecretKeyCounter
-Set Counter = @Counter
-where(select id from Users where Users.Email = @UserEmail) = SecretKeyCounter.UserID
-
-exec SP_FetchFullUser @Email = @UserEmail
-go
-
 -- Updates last request
 DROP PROCEDURE IF EXISTS dbo.SP_UpdateLastRequest;
 go
 
 CREATE PROCEDURE SP_UpdateLastRequest 
-@UserID int,
+@UserID int
 as 
 Update SecretKeyCounter
 Set LastRequestDate = GETDate(), Counter = Counter +1

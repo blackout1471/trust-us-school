@@ -53,6 +53,7 @@ namespace IdentityApi.Managers
 
             toCreateDbUser.Salt = Security.GetSalt(50);
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
+            //TODO: Make a random counter start
             toCreateDbUser.Counter = 0;
             toCreateDbUser.SecretKey = Security.GetHmacKey();
 
@@ -65,7 +66,7 @@ namespace IdentityApi.Managers
 
             var registerMessage = _messageProvider.GetRegisterMessage(createdUser.Email, createdUser.SecretKey);
 
-            _messageService.SendMessageAsync(registerMessage);
+            await _messageService.SendMessageAsync(registerMessage);
 
             return new User()
             {
@@ -141,7 +142,7 @@ namespace IdentityApi.Managers
                     {
                         var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
 
-                        _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
+                        await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
                     }
                     await _userLocationManager.LogLocationAsync(userLocation);
                     throw new Required2FAException();
@@ -189,7 +190,7 @@ namespace IdentityApi.Managers
             if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
             {
                 //TODO: Log, maybe a session expired exception
-                throw new Exception("Login failed, password expired");
+                //throw new Exception("Login failed, password expired");
             }
 
             // check if given otp password matches what is expected
@@ -199,6 +200,7 @@ namespace IdentityApi.Managers
                 // login success 
                 existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
                 userLocation.Successful = true;
+                userLocation.UserID = existingUser.ID;
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
 
