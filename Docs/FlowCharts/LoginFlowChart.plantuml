@@ -10,7 +10,13 @@ if "Ip not blocked " then
                 --> "Return token"
                 --> (*)
             else
-                -->[false] 2FA
+                -->[false] Send verification code to User
+                --> User enters verification code
+                if "Verification code match" then
+                -->[true] "Generate token"
+                else
+                -->[false] "Throw Login failed"
+                end if
             end if 
         else
             -->[false] "Throw Login failed"

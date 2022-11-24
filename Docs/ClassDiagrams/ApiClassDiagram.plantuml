@@ -88,6 +88,7 @@ interface IUserProvider{
     +GetUserByIdAsync(id : int) : Task<DbUser>
     +UpdateUserFailedTries(userId : int) : Task<DbUser>
     +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
+    +UpdateUserLoginNewLocation(userId : int) : Task<DbUser>
 }
 
 interface ILeakedPasswordProvider {
@@ -137,6 +138,8 @@ class Security{
     {static}-GetEncryptedPassword(password : string) : string
     {static}+GetSalt(saltLength : int) : string
     {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
+    {static}+GetHotp(key : string, counter : long) : string
+    {static}+GetHmacKey() : string
 }
 
 class RegexHelper{

@@ -50,11 +50,24 @@ end
 UserManager->UserLocationManager: Check if user has been logged in from ip (ip, userid)
 UserLocationManager-->UserManager: Returns whether user has been logged in from ip
 
-alt Has not been logged in
+alt Has not been logged in from location before
 
 UserManager-->UserController: Throw Required 2FA exception
 UserController-->User: Return status forbidden
+UserManager-->User: Sends verification code
+User->UserController: Enters verification code
+UserController->UserManager: VerificationLogin(email, verification code)
+UserManager->UserManager: Check if verification matches
+alt Verification does not match
 
+UserManager->UserController: Login failed
+UserController->User: Login failed
+
+end
+UserManager->UserController: Returns User
+UserController->TokenManager: Get token for user (User)
+TokenManager->UserController: Returns Token
+UserController->User: Return token
 end
 
 UserManager->UserController: Returns User

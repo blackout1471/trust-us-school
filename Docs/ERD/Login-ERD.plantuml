@@ -15,6 +15,7 @@ entity "SecretKeyCounter" as sk {
     --
     SecretKey varchar(200)
     Counter BIGINT
+    LastRequestDate : datetime
 }
 
 entity Users {
