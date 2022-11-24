@@ -13,14 +13,12 @@ GO
 use StoredPasswords;
 go
 
--- Drop pre exisitng tables if they exist
-DROP TABLE IF EXISTS [dbo].LeakedPasswords;
-
 /*
 *
 * Create tables
 *
 */
+IF OBJECT_ID(N'[dbo].LeakedPasswords', N'U') IS NULL
 create table LeakedPasswords(
   HashedPassword varchar(60) PRIMARY KEY,
   PwnCount integer
