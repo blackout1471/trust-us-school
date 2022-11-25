@@ -60,7 +60,7 @@ namespace MessageService.MessageServices
                     EnableSsl = configuration.EnableSSL,
                     Port = configuration.Port,
                     UseDefaultCredentials = configuration.UseDefaultCredentials,
-                    Credentials = new NetworkCredential(configuration.UserName, configuration.Password),
+                    Credentials = configuration.UseDefaultCredentials ? null : new NetworkCredential(configuration.UserName, configuration.Password),
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                 };
 

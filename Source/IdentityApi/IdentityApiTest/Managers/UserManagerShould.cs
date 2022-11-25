@@ -62,6 +62,25 @@ namespace IdentityApiUnitTest.Managers
         }
 
         [Fact]
+        public async Task ExpectUserDetails_WhenLoggingIn_LoginWithVerificationCode()
+        {
+            // Arrange 
+            var expected = GetUser();
+            var userLogin = GetUserLoginVerification();
+
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
+            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
+
+            // Act
+            var actual = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
+
+            // Assert
+            Assert.Equal(expected.Email, actual.Email);
+            Assert.Equal(expected.ID, actual.ID);
+        }
+
+        [Fact]
         public async Task ThrowsUserIncorrectLoginException_WhenPasswordIsWrong_Login()
         {
             // Arrange
@@ -74,6 +93,24 @@ namespace IdentityApiUnitTest.Managers
 
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
+        }
+
+        [Fact]
+        public async Task ThrowsUserIncorrectLoginException_WhenPasswordIsWrong_LoginWithVerificationCode()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+            userLogin.Password = "PasswordThatIsWrong";
+            var dbUser = GetDbUser();
+
+            var userLocation = A.Fake<IUserLocationManager>();
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
+
+            // Act
+            var func = async () => await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
 
             // Assert
             await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
@@ -163,6 +200,24 @@ namespace IdentityApiUnitTest.Managers
         }
 
         [Fact]
+        public async void ThrowsIpBlockedException_WhenIPBlocked_LoginWithVerificationCode()
+        {
+            // Arrange
+            var expected = GetUser();
+            var userLogin = GetUserLoginVerification();
+
+            var userProvider = A.Fake<IUserProvider>();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
+
+            // Act
+            var func = async () => await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAnyAsync<IpBlockedException>(func);
+        }
+
+        [Fact]
         public async void ThrowsException_WhenUserNotLoggedInLoctaion_Login()
         {
             // Arrange
@@ -174,6 +229,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -204,7 +260,9 @@ namespace IdentityApiUnitTest.Managers
                 Salt = "CVkTFhIFerV0uxOMbZ0fFlE4HFVrwOs2PW5kkPEvzSoFcVJkNP",
                 FirstName = "jon",
                 LastName = "stevensen",
-                PhoneNumber = "13246578"
+                PhoneNumber = "13246578",
+                SecretKey = "ABCDE123",
+                Counter = 33
             };
         }
 
@@ -215,6 +273,14 @@ namespace IdentityApiUnitTest.Managers
             {
                 Email = "a@b.com",
                 Password = "tron"
+            };
+        }
+        private UserLogin GetUserLoginVerification()
+        {
+            return new UserLogin()
+            {
+                Email = "a@b.com",
+                Password = "19C3AC2A1465BDB4CCECBE4FAED78B2C8AF633ED"
             };
         }
 

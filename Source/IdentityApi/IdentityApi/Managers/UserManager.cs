@@ -174,11 +174,16 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation)
         {
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+                throw new IpBlockedException();
+
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
 
             if (existingUser == null)
             {
+                await _userLocationManager.LogLocationAsync(userLocation);
+
                 return null;
             }
 
