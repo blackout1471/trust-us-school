@@ -2,9 +2,17 @@
 
 left to right direction
 
-"User" as user
-"Hacker" as hacker
+actor "User" as user
+actor "Bad user" as hacker #black
 
+skinparam usecase {
+    FontColor<<misuse>> White
+    BackgroundColor<<misuse>> Black
+    ArrowColor<<misuse>> red
+
+    BackgroundColor<<mitigation>> lightblue
+    ArrowColor<<mitigation>> blue
+}
 
 rectangle System {
     usecase "Login" as u1
@@ -12,103 +20,81 @@ rectangle System {
     usecase "Verify Email" as u3
     usecase "Verify Login" as u4
 
-    usecase "Stolen password" as h1
-    usecase "Brute force user login" as h2
-    usecase "Stolen user token" as h3
-    usecase "Tampering parameter" as h4
-    usecase "Tampering configuration" as h5
-    usecase "Reading of configuration" as h6
-    usecase "Leaked error messages" as h7
-    usecase "Source code exposed" as h8
-    usecase "Network clear text" as h9
-    usecase "Select query against database" as h10
-    usecase "Automatically creation of users" as h11
-    usecase "Repeated verification of token" as h12
+    usecase "Stolen password" as h1 <<misuse>>
+    usecase "Brute force user login" as h2 <<misuse>>
+    usecase "Stolen user token" as h3 <<misuse>>
+    usecase "Tampering parameter" as h4 <<misuse>>
+    usecase "Leaked error messages" as h7 <<misuse>>
+    usecase "Network clear text" as h9 <<misuse>>
+    usecase "Automatically creation of users" as h11 <<misuse>>
+    usecase "Repeated verification of token" as h12 <<misuse>>
     
-    usecase "Obstruction of unauthorized login" as m1
-    usecase "Prevention of stolen user token" as m2
-    usecase "Prevention of applikation crash" as m3
-    usecase "User roles prevention" as m4
-    usecase "Generic error messages" as m5
-    usecase "Visibility of source code" as m6
-    usecase "Encrypt sensitive data" as m7
-    usecase "Log user action" as m8
+    usecase "Obstruction of unauthorized login" as m1 <<mitigation>>
+    usecase "Prevention of stolen user token" as m2 <<mitigation>>
+    usecase "Prevention of applikation crash" as m3 <<mitigation>>
+    usecase "Generic error messages" as m5 <<mitigation>>
+    usecase "Encrypt sensitive data" as m7 <<mitigation>>
+    usecase "Log user action" as m8 <<mitigation>>
 }
 
-user --> u1
-user --> u2
+user -- u1
+user -- u2
 
-h1 <--- hacker
-h2 <--- hacker
-h3 <--- hacker
-h4 <--- hacker
-h5 <--- hacker
-h6 <--- hacker
-h7 <--- hacker
-h8 <--- hacker
-h9 <--- hacker
-h10 <--- hacker
-h11 <--- hacker
-h12 <--- hacker
+h1 --- hacker
+h2 --- hacker
+h3 --- hacker
+h4 --- hacker
+h7 --- hacker
+h9 --- hacker
+h11 --- hacker
+h12 --- hacker
 
 u2 .> u3: <<include>>
 u1 <. u4: <<extends>>
 
 'Stolen password'
-u1 <-- h1 : Threatens
-m1 --> h1 : Mitigates
+u1 <-- h1 <<misuse>> : Threatens
+m1 --> h1 <<mitigation>> : Mitigates
 u1 --> m1 : <<include>>
 
 'Brute force'
-u1 <-- h2 : Threatens
-m1 --> h2 : Mitigates
-m8 --> h2 : Mitigates
+u1 <-- h2 <<misuse>> : Threatens
+m1 --> h2 <<mitigation>> : Mitigates
+m8 --> h2 <<mitigation>> : Mitigates
 u1 --> m8 : <<include>>
 
 'Stolen user token'
-u1 <-- h3 : Threatens
-m2 --> h3 : Mitigates
+u1 <-- h3 <<misuse>> : Threatens
+m2 --> h3 <<mitigation>> : Mitigates
 u1 --> m2 : <<include>>
 
 'tampering parameter'
-u1 <-- h4 : Threatens
-u2 <-- h4 : Threatens
-m3 --> h4 : Mitigates
-m8 --> h4 : Mitigates
+u1 <-- h4 <<misuse>> : Threatens
+u2 <-- h4 <<misuse>> : Threatens
+m3 --> h4 <<mitigation>> : Mitigates
+m8 --> h4 <<mitigation>> : Mitigates
 u1 --> m3 : <<include>>
 u2 --> m3 : <<include>>
 u2 --> m8 : <<include>>
 
-'Tampering config'
-m4 --> h5 : Mitigates
-
-'read config'
-m4 --> h6 : Mitigates
-
 'Fullstack messages'
-u1 <-- h7 : Threatens
-u2 <-- h7 : Threatens
-m5 --> h7 : Mitigates
+u1 <-- h7 <<misuse>> : Threatens
+u2 <-- h7 <<misuse>> : Threatens
+m5 --> h7 <<mitigation>> : Mitigates
 u1 --> m5 : <<include>>
 u2 --> m5 : <<include>>
-
-'source code leaked'
-m6 --> h8 : Mitigates
 
 'Network clear text'
 m7 --> h9 : Mitigates
 
-'Select query'
-m4 --> h10 : Mitigates
-
 'Automatic user registration'
-u2 <-- h11 : Threatens
-m1 --> h11 : Mitigates
-m8 --> h11 : Mitigates
+u2 <-- h11 <<misuse>> : Threatens
+m1 --> h11 <<mitigation>> : Mitigates
+m8 --> h11 <<mitigation>> : Mitigates
 u2 --> m1 : <<include>>
 
 'repeated verification of token'
-m8 --> h12 : Mitigates
+m8 --> h12 <<mitigation>> : Mitigates
 
 
 @enduml
