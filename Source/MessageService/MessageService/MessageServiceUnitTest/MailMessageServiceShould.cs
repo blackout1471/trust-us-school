@@ -2,8 +2,7 @@ using FakeItEasy;
 using MessageService.Configurations;
 using MessageService.Messages;
 using MessageService.MessageServices;
-using MessageService.Recipients;
-using System.Net.Mail;
+using Microsoft.Extensions.Options;
 
 namespace MessageServiceUnitTest
 {
@@ -13,8 +12,8 @@ namespace MessageServiceUnitTest
         public void ThrowArgumentException_WhenMisconfigured_Constructor()
         {
             //Arrange
-            var fakeConfig = A.Fake<ISMTPConfigModel>();
-            fakeConfig.Host = null;
+            var fakeConfig = A.Fake<IOptions<SMTPConfigModel>>();
+            fakeConfig.Value.Host = null;
             //Act
             var func = () => new MailMessageService(fakeConfig);
             //Assert
@@ -26,31 +25,19 @@ namespace MessageServiceUnitTest
         {
             //Arrange
             var message = A.Fake<IMessage>();
-            var recipient = A.Fake<IRecipient>();
-            var fakeConfig = A.Fake<ISMTPConfigModel>();
-            fakeConfig.UseDefaultCredentials = false;
-            fakeConfig.SenderDisplayName = "Test";
-            fakeConfig.IsBodyHTML = false;
-            fakeConfig.EnableSSL = true;
-            fakeConfig.Host = "smtp.gmail.com";
-            fakeConfig.Port = 587;
-            fakeConfig.UserName = "test@gmail.com";
-            fakeConfig.SenderAddress = "test@gmail.com";
+            var options = Options.Create(GenerateFakeSMTPConfig());
+            var mailMessageService = new MailMessageService(options);
             message.Message = "Hello there";
-            var mailMessageService = new MailMessageService(fakeConfig);
             //Act
-            var func = async () => await mailMessageService.SendMessageAsync(recipient, message);
+            var func = async () => await mailMessageService.SendMessageAsync(message);
             //Assert
             await Assert.ThrowsAsync<ArgumentNullException>(func);
         }
-        [Fact]
-        public async void ThrowsSmtpException_WhenSenderIsUnauthorized_SendMessageAsync()
-        {
-            //Arrange
-            var message = A.Fake<IMessage>();
-            var recipient = A.Fake<IRecipient>();
-            var fakeConfig = A.Fake<ISMTPConfigModel>();
+  
 
+        private static SMTPConfigModel GenerateFakeSMTPConfig()
+        {
+            var fakeConfig = new SMTPConfigModel();
             fakeConfig.UseDefaultCredentials = false;
             fakeConfig.SenderDisplayName = "Test";
             fakeConfig.IsBodyHTML = false;
@@ -61,13 +48,8 @@ namespace MessageServiceUnitTest
             fakeConfig.SenderAddress = "test@gmail.com";
             fakeConfig.Password = "password";
 
-            message.Message = "Hello there";
-            recipient.To = "test@gmail.com";
-            var mailMessageService = new MailMessageService(fakeConfig);
-            //Act
-            var func = async () => await mailMessageService.SendMessageAsync(recipient, message);
-            //Assert
-            await Assert.ThrowsAsync<SmtpException>(func);
+            return fakeConfig;
+
         }
     }
 }
