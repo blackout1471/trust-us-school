@@ -77,10 +77,6 @@ namespace IdentityApi.Managers
         public async Task<User> GetUserByIDAsync(int ID)
         {
             var dbUser = await _userProvider.GetUserByIDAsync(ID);
-
-            if (dbUser == null)
-                return null;
-
             return dbUser.Adapt<User>();
         }
 
