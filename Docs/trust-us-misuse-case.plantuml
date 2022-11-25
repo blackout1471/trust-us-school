@@ -53,48 +53,48 @@ u2 .> u3: <<include>>
 u1 <. u4: <<extends>>
 
 'Stolen password'
-u1 <-- h1 <<misuse>> : Threatens
-m1 --> h1 <<mitigation>> : Mitigates
-u1 --> m1 : <<include>>
+u1 <.. h1 <<misuse>> : Threatens
+m1 ..> h1 <<mitigation>> : Mitigates
+u1 ..> m1 : <<include>>
 
 'Brute force'
-u1 <-- h2 <<misuse>> : Threatens
-m1 --> h2 <<mitigation>> : Mitigates
-m8 --> h2 <<mitigation>> : Mitigates
-u1 --> m8 : <<include>>
+u1 <.. h2 <<misuse>> : Threatens
+m1 ..> h2 <<mitigation>> : Mitigates
+m8 ..> h2 <<mitigation>> : Mitigates
+u1 ..> m8 : <<include>>
 
 'Stolen user token'
-u1 <-- h3 <<misuse>> : Threatens
-m2 --> h3 <<mitigation>> : Mitigates
-u1 --> m2 : <<include>>
+u1 <.. h3 <<misuse>> : Threatens
+m2 ..> h3 <<mitigation>> : Mitigates
+u1 ..> m2 : <<include>>
 
 'tampering parameter'
-u1 <-- h4 <<misuse>> : Threatens
-u2 <-- h4 <<misuse>> : Threatens
-m3 --> h4 <<mitigation>> : Mitigates
-m8 --> h4 <<mitigation>> : Mitigates
-u1 --> m3 : <<include>>
-u2 --> m3 : <<include>>
-u2 --> m8 : <<include>>
+u1 <.. h4 <<misuse>> : Threatens
+u2 <.. h4 <<misuse>> : Threatens
+m3 ..> h4 <<mitigation>> : Mitigates
+m8 ..> h4 <<mitigation>> : Mitigates
+u1 ..> m3 : <<include>>
+u2 ..> m3 : <<include>>
+u2 ..> m8 : <<include>>
 
 'Fullstack messages'
-u1 <-- h7 <<misuse>> : Threatens
-u2 <-- h7 <<misuse>> : Threatens
-m5 --> h7 <<mitigation>> : Mitigates
-u1 --> m5 : <<include>>
-u2 --> m5 : <<include>>
+u1 <.. h7 <<misuse>> : Threatens
+u2 <.. h7 <<misuse>> : Threatens
+m5 ..> h7 <<mitigation>> : Mitigates
+u1 ..> m5 : <<include>>
+u2 ..> m5 : <<include>>
 
 'Network clear text'
-m7 --> h9 : Mitigates
+m7 ..> h9 : Mitigates
 
 'Automatic user registration'
-u2 <-- h11 <<misuse>> : Threatens
-m1 --> h11 <<mitigation>> : Mitigates
-m8 --> h11 <<mitigation>> : Mitigates
-u2 --> m1 : <<include>>
+u2 <.. h11 <<misuse>> : Threatens
+m1 ..> h11 <<mitigation>> : Mitigates
+m8 ..> h11 <<mitigation>> : Mitigates
+u2 ..> m1 : <<include>>
 
 'repeated verification of token'
-m8 --> h12 <<mitigation>> : Mitigates
+m8 ..> h12 <<mitigation>> : Mitigates
 
 
 @enduml
