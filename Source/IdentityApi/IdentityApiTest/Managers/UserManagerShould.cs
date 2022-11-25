@@ -237,6 +237,28 @@ namespace IdentityApiUnitTest.Managers
             await Assert.ThrowsAsync<Required2FAException>(func);
         }
 
+        [Fact]
+        public async void ExpectNull_WhenDbUserIsNull_GetUserByIDAsync()
+        {
+            // Arrange & Act
+            A.CallTo(() => _fakeUserProvider.GetUserByIDAsync(A<int>.Ignored)).Returns<DbUser>(null);
+            var actual = await _userManager.GetUserByIDAsync(0);
+
+            // Assert
+            Assert.Null(actual);
+        }
+
+        [Fact]
+        public async void ExpectNotNull_WhenDbUserIsNotNull_GetUserByIDAsync()
+        {
+            // Arrange & Act
+            A.CallTo(() => _fakeUserProvider.GetUserByIDAsync(A<int>.Ignored)).Returns<DbUser>(A.Fake<DbUser>());
+            var actual = await _userManager.GetUserByIDAsync(0);
+
+            // Assert
+            Assert.NotNull(actual);
+        }
+
 
         private User GetUser()
         {
