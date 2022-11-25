@@ -128,34 +128,16 @@ namespace IdentityApi.Managers
                 if (hotp != null)
                 {
                     var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
-
                     await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
                 }
                 await _userLocationManager.LogLocationAsync(userLocation);
                 throw new Required2FAException();
             }
 
-
             // login success 
             existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
             _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
             return existingUser.Adapt<User>();
-        }
-
-        /// <summary>
-        /// Checks whether the given password has been breached,
-        /// by calling the leakedpassword provider.
-        /// </summary>
-        /// <param name="password">The password to check is breached</param>
-        /// <returns>True if breached, false otherwise</returns>
-        private async Task<bool> CheckPasswordLeakedForUser(string password)
-        {
-            var stringBytes = Encoding.UTF8.GetBytes(password);
-            var hashedBytes = SHA1.HashData(stringBytes);
-            var hashedPassword = Convert.ToHexString(hashedBytes);
-
-            // Check if password has been leaked
-            return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
         }
 
         /// <inheritdoc/>
@@ -166,11 +148,9 @@ namespace IdentityApi.Managers
 
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
-
             if (existingUser == null)
             {
                 await _userLocationManager.LogLocationAsync(userLocation);
-
                 return null;
             }
 
@@ -189,29 +169,40 @@ namespace IdentityApi.Managers
                 //throw new Exception("Login failed, password expired");
             }
 
-            // check if given otp password matches what is expected
-            if (userLogin.Password == Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
-            {
-
-                // login success 
-                existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
-                userLocation.Successful = true;
-                userLocation.UserID = existingUser.ID;
-                await _userLocationManager.LogLocationAsync(userLocation);
-                _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
-
-                return existingUser;
-            }
-            else
+            // Checks if otp password does not match
+            if (userLogin.Password != Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
-
-
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing with 2 step");
                 await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
+
+            // login success 
+            existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+            userLocation.Successful = true;
+            userLocation.UserID = existingUser.ID;
+            await _userLocationManager.LogLocationAsync(userLocation);
+            _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
+
+            return existingUser;
+        }
+
+        /// <summary>
+        /// Checks whether the given password has been breached,
+        /// by calling the leakedpassword provider.
+        /// </summary>
+        /// <param name="password">The password to check is breached</param>
+        /// <returns>True if breached, false otherwise</returns>
+        private async Task<bool> CheckPasswordLeakedForUser(string password)
+        {
+            var stringBytes = Encoding.UTF8.GetBytes(password);
+            var hashedBytes = SHA1.HashData(stringBytes);
+            var hashedPassword = Convert.ToHexString(hashedBytes);
+
+            // Check if password has been leaked
+            return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
         }
     }
 }
