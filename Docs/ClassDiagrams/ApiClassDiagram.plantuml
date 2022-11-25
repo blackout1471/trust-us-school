@@ -1,6 +1,5 @@
 @startuml API class diagram
 
-
 top to bottom direction
 
 'Controllers'
@@ -23,31 +22,31 @@ UserController o-- ITokenManager
 
 'Managers'
 
-interface IUserManager{
+Interface IUserManager {
     +CreateUserAsync(userCreate : UserCreate) : Task<User>
     +LoginAsync(userLogin : UserLogin) : Task<User>
     +GetUserByIDAsync(id : int) : Task<User>
 }
 
-interface ITokenManager{
+interface ITokenManager {
     +GenerateUserToken(user : User) : UserToken
     +ValidateToken(token : string) : bool
     +GetUserTokenFromToken(token : string) : UserToken
 }
 
 
-interface IUserLocationManager{
+interface IUserLocationManager {
     +IsIPLockedAsync(ip : string) : Task<bool>
     +LogLocationAsync(userLocation : UserLocation) : Task<UserLocation>
     +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
 }
 
-class TokenManager{
+class TokenManager {
     -GetPrincipal(token : string) : ClaimsPrincipal
     -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
 }
 
-class UserManager{
+class UserManager {
     -_userProvider : IUserProvider
     -_leakedPasswordProvider : ILeakedPasswordProvider;
     -_userLocationManager : IUserLocationManager
@@ -56,7 +55,7 @@ class UserManager{
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
 
-class UserLocationManager{
+class UserLocationManager {
     -_userLocationProvider : IUserLocationProvider
     +UserLocationManager(userLocationProvider : UserLocationProvider)
 }
@@ -80,7 +79,7 @@ UserLocationManager .-|> IUserLocationManager
 UserLocationManager o-- IUserLocationProvider
 'Providers'
 
-interface IUserProvider{
+interface IUserProvider {
     +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
     +GetUserByEmailAsync(email : string) : Task<DbUser>
     +GetUserByIdAsync(id : int) : Task<DbUser>

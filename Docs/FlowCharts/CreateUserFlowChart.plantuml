@@ -1,5 +1,15 @@
 @startuml Create User Flowchart
 
+skinparam activity {
+    BackgroundColor lightblue
+    
+    StartColor green
+    EndColor red
+    
+    diamondBackgroundColor lightgreen
+}
+
+
 (*) --> "Recieve create user data"
 if "password length < 8 or > 128" then
   -->throw badrequest exception

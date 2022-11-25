@@ -12,13 +12,15 @@ skinparam usecase {
 
     BackgroundColor<<mitigation>> lightblue
     ArrowColor<<mitigation>> blue
+
+    bordercolor<<use>> green
 }
 
 rectangle System {
-    usecase "Login" as u1
-    usecase "Register" as u2
-    usecase "Verify Email" as u3
-    usecase "Verify Login" as u4
+    usecase "Login" <<use>> as u1
+    usecase "Register" <<use>> as u2
+    usecase "Verify Email" <<use>> as u3
+    usecase "Verify Login" <<use>> as u4
 
     usecase "Stolen password" as h1 <<misuse>>
     usecase "Brute force user login" as h2 <<misuse>>
@@ -85,7 +87,7 @@ u1 ..> m5 : <<include>>
 u2 ..> m5 : <<include>>
 
 'Network clear text'
-m7 ..> h9 : Mitigates
+m7 ..> h9 <<mitigation>> : Mitigates
 
 'Automatic user registration'
 u2 <.. h11 <<misuse>> : Threatens

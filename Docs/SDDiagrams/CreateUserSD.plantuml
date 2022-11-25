@@ -1,5 +1,15 @@
 @startuml Create User SD
 
+skinparam sequence {
+    GroupBorderColor red
+    GroupBorderThickness 1
+
+    ArrowColor orangered
+
+    LifeLineBorderColor blue
+
+    ParticipantBackgroundColor lightblue
+}
 
 actor User
 participant UserController

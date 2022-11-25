@@ -1,8 +1,17 @@
 @startuml Login Flowchart
 
+skinparam activity {
+    BackgroundColor lightblue
+    
+    StartColor green
+    EndColor red
+    
+    diamondBackgroundColor lightgreen
+}
+
 (*) --> "Recieve login data"
 
-if "Ip not blocked " then
+if "Ip not blocked" then
     if "Email exists" then
         if "Password matches" then
             if "User has logged in before from ip" then
