@@ -22,7 +22,7 @@ namespace IdentityApi.Interfaces
         Task<DbUser> GetUserByIDAsync(int userID);
 
         /// <summary>
-        /// Uppdates the failed tries on the user 
+        /// Updates the failed tries on the user 
         /// Locks account if tries are above the threshold
         /// </summary>
         /// <returns>Updated user</returns>
@@ -35,6 +35,12 @@ namespace IdentityApi.Interfaces
         /// <returns>Updated user</returns>
         Task<DbUser> UpdateUserLoginSuccess(int userID);
 
+        /// <summary>
+        /// Updates user successful login from new location
+        /// Updates the last request date
+        /// </summary>
+        /// <returns>Updated user</returns>
+        Task<DbUser> UpdateUserLoginNewLocation(int userID);
 
     }
 }

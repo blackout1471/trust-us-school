@@ -46,6 +46,22 @@ namespace IdentityApi.Controllers
 
             return Ok(_tokenManager.GenerateUserToken(user));
         }
+        /// <summary>
+        /// Logs user in with onetime password, if exists
+        /// </summary>
+        /// <returns>User Token</returns>
+        [HttpPost]
+        [Route("verificationlogin")]
+        public async Task<ActionResult<UserToken>> VerificationLogin(UserLogin userLogin)
+        {
+            var user = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
+
+            if (user == null)
+                throw new UserIncorrectLoginException();
+
+            return Ok(_tokenManager.GenerateUserToken(user));
+
+        }
 
         /// <summary>
         /// Logs user in, if exists

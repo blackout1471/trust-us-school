@@ -14,6 +14,7 @@ class UserController{
     +Create(userCreate : UserCreate) : Task<ActionResult<UserToken>>
     +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
     +GetUserFromToken() : Task<ActionResult<User>>
+    +VerificationLogin(userLogin : UserLogin) : Task<ActionResult<UserToken>>
 }
 
 'Controllers mappings' 
@@ -25,8 +26,9 @@ UserController o-- ITokenManager
 
 interface IUserManager{
     +CreateUserAsync(userCreate : UserCreate) : Task<User>
-    +LoginAsync(userLogin : UserLogin) : Task<User>
+    +LoginAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
     +GetUserByIDAsync(id : int) : Task<User>
+    +LoginWithVerificationCodeAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
 }
 
 interface ITokenManager{
@@ -51,6 +53,9 @@ class UserManager{
     -_userProvider : IUserProvider
     -_leakedPasswordProvider : ILeakedPasswordProvider;
     -_userLocationManager : IUserLocationManager
+    -_messageService : IMessageService
+    -_messageProvider : IMessageProvider
+    -_logger : ILogger
     +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager)
     --
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
@@ -86,6 +91,7 @@ interface IUserProvider{
     +GetUserByIdAsync(id : int) : Task<DbUser>
     +UpdateUserFailedTries(userId : int) : Task<DbUser>
     +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
+    +UpdateUserLoginNewLocation(userId : int) : Task<DbUser>
 }
 
 interface ILeakedPasswordProvider {
@@ -135,6 +141,8 @@ class Security{
     {static}-GetEncryptedPassword(password : string) : string
     {static}+GetSalt(saltLength : int) : string
     {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
+    {static}+GetHotp(key : string, counter : long) : string
+    {static}+GetHmacKey() : string
 }
 
 class RegexHelper{
@@ -167,6 +175,9 @@ class User{
 class DbUser{
     +HashedPassword : string
     +Salt : string
+    +SecretKey : string
+    +Count : long
+    +LastRequestDate : datetime?
 }
 
 class UserCreate {

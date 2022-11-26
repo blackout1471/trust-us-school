@@ -25,7 +25,6 @@ IF OBJECT_ID(N'[dbo].Users', N'U') IS NULL
 create table Users(
   ID int IDENTITY(1,1) PRIMARY KEY,
   Email varchar(100),
-  HashedVeritification varchar(200),
   IsVerified bit default(0), 
   FirstName varchar(50),
   LastName varchar(50),
@@ -44,7 +43,15 @@ create table UserPasswords( /*Consider doing it in new namespace*/
       HashedPassword varchar(200),
       Salt varchar(200)
 )
-
+-- Check if table exists, U is for user defined table
+IF OBJECT_ID(N'[dbo].SecretKeyCounter', N'U') IS NULL
+create table SecretKeyCounter(
+      ID int IDENTITY(1,1) PRIMARY KEY,
+      UserID int,
+      SecretKey varchar(200),
+      Counter BIGINT,
+      LastRequestDate datetime
+)
 -- Check if table exists, U is for user defined table
 IF OBJECT_ID(N'[dbo].UserLocation', N'U') IS NULL
 create table UserLocation(
@@ -64,7 +71,8 @@ create table UserLocation(
 
 ALTER TABLE UserPasswords
 ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
-
+ALTER TABLE SecretKeyCounter
+ADD FOREIGN KEY (UserID) REFERENCES Users(ID);
 go
 
 /*
@@ -86,6 +94,8 @@ as
 select * from Users
 join UserPasswords
 on UserPasswords.UserID = Users.ID
+join SecretKeyCounter
+on SecretKeyCounter.UserID = Users.ID
 where Users.ID = @UserID or users.Email = @Email
 
 go
@@ -100,7 +110,9 @@ CREATE PROCEDURE SP_Createuser
 @Salt varchar(200),
 @FirstName varchar(50) = null,
 @LastName varchar(50) = null,
-@PhoneNUmber varchar(50) = null
+@PhoneNUmber varchar(50) = null,
+@SecretKey varchar(200),
+@Counter BIGINT
 AS
 
 -- Insert user information into database
@@ -113,6 +125,10 @@ declare @CreatedUserID int = (select top(1)ID from Users where Email = @Email)
 -- Insert the password and salt into the other table
 insert into UserPasswords (UserID, HashedPassword, Salt)
 values (@CreatedUserID, @HashedPassword, @Salt)
+
+-- Insert the secret and counter into the other table
+insert into SecretKeyCounter (UserID, SecretKey, Counter)
+values (@CreatedUserID, @SecretKey, @Counter)
 
 -- Select all user information
 exec SP_FetchFullUser @UserID = @CreatedUserID
@@ -291,4 +307,18 @@ and
 UserLocation.Successful = 0
 and
 DATEADD(minute, 10, UserLocation.CreateDate) > getdate() -- in the last 10 minutes
+go
+
+-- Updates last request
+DROP PROCEDURE IF EXISTS dbo.SP_UpdateLastRequest;
+go
+
+CREATE PROCEDURE SP_UpdateLastRequest 
+@UserID int
+as 
+Update SecretKeyCounter
+Set LastRequestDate = GETDate(), Counter = Counter +1
+where @UserID = SecretKeyCounter.UserID
+
+exec SP_FetchFullUser @UserID = @UserID
 go

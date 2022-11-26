@@ -1,5 +1,4 @@
 ﻿using MessageService.Messages;
-using MessageService.Recipients;
 
 namespace MessageService.MessageServices
 {
@@ -8,9 +7,8 @@ namespace MessageService.MessageServices
         /// <summary>
         /// Sends a message async
         /// </summary>
-        /// <param name="recipient"> Recipient of message </param>
         /// <param name="message"> Message to be sent</param>
-        public Task SendMessageAsync(IRecipient recipient, IMessage message);
+        public Task SendMessageAsync(IMessage message);
 
     }
 }

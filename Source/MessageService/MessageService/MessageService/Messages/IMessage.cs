@@ -9,5 +9,6 @@ namespace MessageService.Messages
     public interface IMessage
     {
         string Message { get; set; }
+        string To { get; set; }
     }
 }
