@@ -6,22 +6,27 @@ using IdentityApi.Models;
 using Mapster;
 using System.Security.Cryptography;
 using System.Text;
+using MessageService.MessageServices;
+using MessageService.Providers;
 
 namespace IdentityApi.Managers
 {
     public class UserManager : IUserManager
     {
         private readonly IUserProvider _userProvider;
+        private readonly IMessageService _messageService;
+        private readonly IMessageProvider _messageProvider;
         private readonly IUserLocationManager _userLocationManager;
         private readonly ILeakedPasswordProvider _leakedPasswordProvider;
         private readonly ILogger<UserManager> _logger;
-
-        public UserManager(IUserProvider userProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
+        public UserManager(IUserProvider userProvider, IMessageService messageService, IMessageProvider messageProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
         {
             _userProvider = userProvider;
             _userLocationManager = userLocationManager;
             _leakedPasswordProvider = leakedPasswordProvider;
             _logger = logger;
+            _messageService = messageService;
+            _messageProvider = messageProvider;
         }
 
         /// <inheritdoc/>
@@ -50,6 +55,9 @@ namespace IdentityApi.Managers
 
             toCreateDbUser.Salt = Security.GetSalt(50);
             toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
+            //TODO: Make a random counter start
+            toCreateDbUser.Counter = 0;
+            toCreateDbUser.SecretKey = Security.GetHmacKey();
 
             var createdUser = await _userProvider.CreateUserAsync(toCreateDbUser);
             _logger.LogInformation($"User[{userCreate.Email}] has been created");
@@ -57,6 +65,9 @@ namespace IdentityApi.Managers
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
             await _userLocationManager.LogLocationAsync(userLocation);
+            var registerMessage = _messageProvider.GetRegisterMessage(createdUser.Email, createdUser.SecretKey);
+
+            await _messageService.SendMessageAsync(registerMessage);
 
             // Map from db user to user
             return createdUser.Adapt<User>();
@@ -107,7 +118,19 @@ namespace IdentityApi.Managers
                 // if user was not logged in from this location before
                 if (!await _userLocationManager.UserWasLoggedInFromLocationAsync(userLocation))
                 {
-                    // send 2fa here
+                    if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
+                    {
+                        //TODO: Handle multiple logins in an attempt to generate more OTPS
+                        //Maybe just return or throw error
+                    }
+                    existingUser = await _userProvider.UpdateUserLoginNewLocation(existingUser.ID);
+                    var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
+                    if (hotp != null)
+                    {
+                        var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
+
+                        await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
+                    }
                     await _userLocationManager.LogLocationAsync(userLocation);
                     throw new Required2FAException();
                 }
@@ -146,6 +169,62 @@ namespace IdentityApi.Managers
 
             // Check if password has been leaked
             return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
+        }
+
+        /// <inheritdoc/>
+        public async Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation)
+        {
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+                throw new IpBlockedException();
+
+            // checks if user exists
+            var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
+
+            if (existingUser == null)
+            {
+                await _userLocationManager.LogLocationAsync(userLocation);
+
+                return null;
+            }
+
+            // User is locked, no need for further checks
+            if (existingUser.IsLocked)
+            {
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
+                throw new AccountLockedException();
+            }
+
+            // TODO: Add in SP
+            if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
+            {
+                //TODO: Log, maybe a session expired exception
+                //throw new Exception("Login failed, password expired");
+            }
+
+            // check if given otp password matches what is expected
+            if (userLogin.Password == Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
+            {
+
+                // login success 
+                existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+                userLocation.Successful = true;
+                userLocation.UserID = existingUser.ID;
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
+
+                return existingUser;
+            }
+            else
+            {
+                // login failed
+                await _userLocationManager.LogLocationAsync(userLocation);
+
+
+                _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing with 2 step");
+                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                throw new UserIncorrectLoginException();
+            }
         }
     }
 }

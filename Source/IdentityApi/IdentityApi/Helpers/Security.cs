@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace IdentityApi.Helpers
@@ -21,7 +22,33 @@ namespace IdentityApi.Helpers
 
             return hashed;
         }
+        /// <summary>
+        /// Takes a key and a counter, hashes them, then bitwise
+        /// </summary>
+        /// <returns>A 20 byte HOTP</returns>
+        public static string GetHotp(string key, long counter)
+        {
+            byte[] keyBytes = Convert.FromBase64String(key);
+            byte[] counterInBytes = BitConverter.GetBytes(counter);
+            var hmacsha = new HMACSHA512(keyBytes);
+            byte[] hmac_result = hmacsha.ComputeHash(counterInBytes);
 
+            //TODO: If we have time, implement and understand bitwise operation to make a 6 digit int instead of a giant ass string
+            string hotp = "";
+            for (int i = 0; i <= hmac_result.Length - 1; i++)
+                hotp += hmac_result[i].ToString("x2").ToUpperInvariant();
+
+            return hotp;
+        }
+        /// <summary>
+        /// Generates a random HMAC key
+        /// </summary>
+        public static string GetHmacKey()
+        {
+            var hmac = new HMACSHA512();
+            var key = Convert.ToBase64String(hmac.Key);
+            return key;
+        }
         /// <summary>
         /// Generates random salt based on the salt length
         /// </summary>

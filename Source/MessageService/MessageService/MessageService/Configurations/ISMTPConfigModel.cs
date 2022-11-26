@@ -1,21 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MessageService.Configurations
+﻿namespace MessageService.Configurations
 {
     public interface ISMTPConfigModel
     {
-        public string SenderAddress { get; set; }
-        public string SenderDisplayName { get; set; }
-        public string UserName { get; set; }
-        public string Password { get; set; }
-        public string Host { get; set; }
-        public int Port { get; set; }
-        public bool EnableSSL { get; set; }
-        public bool UseDefaultCredentials { get; set; }
-        public bool IsBodyHTML { get; set; }
+        public string SenderAddress { get; }
+        public string SenderDisplayName { get;}
+        public string UserName { get; }
+        public string Password { get; }
+        public string Host { get; }
+        public int Port { get;}
+        public bool EnableSSL { get; }
+        public bool UseDefaultCredentials { get; }
+        public bool IsBodyHTML { get; }
     }
 }

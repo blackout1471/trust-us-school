@@ -1,17 +1,20 @@
+using IdentityApi.Filters;
+using IdentityApi.Interfaces;
+using IdentityApi.Managers;
+using IdentityApi.Middlewares;
+using IdentityApi.Providers;
+using MessageService.Configurations;
+using MessageService.MessageServices;
+using MessageService.Providers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 using System.Reflection;
-using IdentityApi.Interfaces;
-using IdentityApi.Managers;
-using IdentityApi.Providers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
-using Microsoft.AspNetCore.HttpOverrides;
-using IdentityApi.Filters;
-using Microsoft.AspNetCore.Mvc;
-using IdentityApi.Middlewares;
 
 namespace IdentityApi
 {
@@ -50,6 +53,9 @@ namespace IdentityApi
                     optional: true)
                 .Build();
 
+            //Configures SMTP
+            builder.Services.Configure<SMTPConfigModel>(configuration.GetSection("SMTPConfiguration"));
+
             // Add serilog for logging
             Log.Logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
@@ -74,12 +80,13 @@ namespace IdentityApi
             // Providers
             builder.Services.AddScoped<IUserProvider, UserProvider>();
             builder.Services.AddScoped<ILeakedPasswordProvider, LeakedPasswordProvider>();
-
+            builder.Services.AddScoped<IMessageProvider, EmailMessageProvider>();
             // Managers
             builder.Services.AddScoped<IUserManager, UserManager>();
             builder.Services.AddScoped<ITokenManager, TokenManager>();
             builder.Services.AddScoped<IUserLocationManager, UserLocationManager>();
             builder.Services.AddScoped<IUserLocationProvider, UserLocationProvider>();
+            builder.Services.AddScoped<IMessageService, MailMessageService>();
 
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>

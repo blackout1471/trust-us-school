@@ -1,6 +1,7 @@
 ﻿using IdentityApi.Interfaces;
 using System.Data;
 using IdentityApi.DbModels;
+using System;
 
 namespace IdentityApi.Providers
 {
@@ -14,15 +15,17 @@ namespace IdentityApi.Providers
         /// <inheritdoc/>
         public async Task<DbUser> CreateUserAsync(DbUser userCreate)
         {
-            var spElements = new SpElement[]
-            {
-                new SpElement("Email", userCreate.Email, SqlDbType.VarChar),
-                new SpElement("HashedPassword", userCreate.HashedPassword, SqlDbType.VarChar),
-                new SpElement("Salt", userCreate.Salt, SqlDbType.VarChar),
-                new SpElement("FirstName", userCreate.FirstName, SqlDbType.VarChar),
-                new SpElement("LastName", userCreate.LastName, SqlDbType.VarChar),
-                new SpElement("PhoneNumber", userCreate.PhoneNumber, SqlDbType.VarChar)
-            };
+                var spElements = new SpElement[]
+                {
+                    new SpElement("Email", userCreate.Email, SqlDbType.VarChar),
+                    new SpElement("HashedPassword", userCreate.HashedPassword, SqlDbType.VarChar),
+                    new SpElement("Salt", userCreate.Salt, SqlDbType.VarChar),
+                    new SpElement("FirstName", userCreate.FirstName, SqlDbType.VarChar),
+                    new SpElement("LastName", userCreate.LastName, SqlDbType.VarChar),
+                    new SpElement("PhoneNumber", userCreate.PhoneNumber, SqlDbType.VarChar),
+                    new SpElement("SecretKey", userCreate.SecretKey, SqlDbType.VarChar),
+                    new SpElement("Counter", userCreate.Counter, SqlDbType.BigInt)
+                };
 
             var userTable = await RunSpAsync("SP_CreateUser", spElements);
 
@@ -76,6 +79,17 @@ namespace IdentityApi.Providers
             return DRToUser(userTable.Rows[0]);
         }
 
+
+        public async Task<DbUser> UpdateUserLoginNewLocation(int userID)
+        {
+            var userTable = await RunSpAsync("SP_UpdateLastRequest", new SpElement("UserID", userID, SqlDbType.Int));
+
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
+
+            return DRToUser(userTable.Rows[0]);
+        }
+
         /// <summary>
         /// Maps datarow to db user
         /// </summary>
@@ -99,8 +113,18 @@ namespace IdentityApi.Providers
             if (dr.Table.Columns.Contains("HashedPassword"))
                 dbUser.HashedPassword = dr["HashedPassword"]?.ToString();
 
+
             if (dr.Table.Columns.Contains("Salt"))
                 dbUser.Salt = dr["Salt"]?.ToString();
+
+            if (dr.Table.Columns.Contains("SecretKey"))
+                dbUser.SecretKey = dr["SecretKey"]?.ToString();
+
+            if (dr.Table.Columns.Contains("Counter"))
+                dbUser.Counter = Convert.ToInt64(dr["Counter"]);
+
+            if (dr.Table.Columns.Contains("LastRequestDate"))
+                dbUser.LastRequestDate = !string.IsNullOrEmpty(dr["LastRequestDate"].ToString()) ? (DateTime?)dr["LastRequestDate"] : null;
             return dbUser;
         }
     }

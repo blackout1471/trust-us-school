@@ -23,3 +23,4 @@ go
 DROP TABLE IF EXISTS [dbo].UserLocation;
 DROP TABLE IF EXISTS [dbo].UserPasswords;
 DROP TABLE IF EXISTS [dbo].Users;
+DROP TABLE IF EXISTS [dbo].SecretKeyCounter;

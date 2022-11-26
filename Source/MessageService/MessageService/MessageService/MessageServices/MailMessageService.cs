@@ -1,6 +1,6 @@
 ﻿using MessageService.Configurations;
 using MessageService.Messages;
-using MessageService.Recipients;
+using Microsoft.Extensions.Options;
 using System.Net;
 using System.Net.Mail;
 
@@ -8,22 +8,22 @@ namespace MessageService.MessageServices
 {
     public class MailMessageService : IMessageService
     {
-        ISMTPConfigModel configuration;
+        SMTPConfigModel configuration;
         SmtpClient smtpClient;
-        public MailMessageService(ISMTPConfigModel configurations)
+        public MailMessageService(IOptions<SMTPConfigModel> configurations)
         {
-            this.configuration = configurations;
+            this.configuration = configurations.Value;
             this.SetupSmtpClient();
         }
 
         /// <inheritdoc/>
         /// <exception cref="ArgumentNullException"></exception>
-        public async Task SendMessageAsync(IRecipient recipient, IMessage message)
+        public async Task SendMessageAsync(IMessage message)
         {
-            if (string.IsNullOrEmpty(recipient.To))
+            if (string.IsNullOrEmpty(message.To))
                 throw new ArgumentNullException();
 
-            MailMessage mail = CreateMailMessage(message.Message, recipient.To);
+            MailMessage mail = CreateMailMessage(message.Message, message.To);
 
             await smtpClient.SendMailAsync(mail);
         }
@@ -60,7 +60,7 @@ namespace MessageService.MessageServices
                     EnableSsl = configuration.EnableSSL,
                     Port = configuration.Port,
                     UseDefaultCredentials = configuration.UseDefaultCredentials,
-                    Credentials = new NetworkCredential(configuration.UserName, configuration.Password),
+                    Credentials = configuration.UseDefaultCredentials ? null : new NetworkCredential(configuration.UserName, configuration.Password),
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                 };
 
