@@ -280,7 +280,7 @@ namespace IdentityApiUnitTest.Managers
             return new UserLogin()
             {
                 Email = "a@b.com",
-                Password = "19C3AC2A1465BDB4CCECBE4FAED78B2C8AF633ED"
+                Password = "36DA913AAFC687A11B5BF11313A493AC18D4A56DB7B6E4B24689F07E1ECD36A5FAE2D293B98A622BBB2494CECE8A35F98D1719483DCC226EFEC9DE86274A9B0E"
             };
         }
 
