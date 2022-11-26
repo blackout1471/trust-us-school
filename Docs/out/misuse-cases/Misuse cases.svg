@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="1268px" preserveAspectRatio="none" style="width:1222px;height:1268px;background:#FFFFFF;" version="1.1" viewBox="0 0 1222 1268" width="1222px" zoomAndPan="magnify"><defs/><g><!--MD5=[99b31deea5d7419a569cd5090bf83263]
+cluster System--><g id="cluster_System"><rect fill="none" height="1255" rx="2.5" ry="2.5" style="stroke:#181818;stroke-width:1.0;" width="967" x="82" y="7"/><text fill="#000000" font-family="sans-serif" font-size="14" font-weight="bold" lengthAdjust="spacing" textLength="50" x="540.5" y="23.5332">System</text></g><g id="elem_u1"><ellipse cx="199.6349" cy="681.9545" fill="#F1F1F1" rx="35.6349" ry="27.4545" style="stroke:#008000;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="39" x="178.1349" y="677.6664">«use»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="35" x="180.1349" y="695.2758">Login</text></g><g id="elem_u2"><ellipse cx="199.3378" cy="485.2107" fill="#F1F1F1" rx="45.8378" ry="26.2107" style="stroke:#008000;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="39" x="175.3098" y="480.1044">«use»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="53" x="168.3098" y="497.7138">Register</text></g><g id="elem_u3"><ellipse cx="199.3685" cy="381.1745" fill="#F1F1F1" rx="58.3685" ry="25.6745" style="stroke:#008000;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="39" x="175.0311" y="374.9173">«use»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="74" x="157.5311" y="392.5266">Verify Email</text></g><g id="elem_u4"><ellipse cx="199.4757" cy="576.1597" fill="#F1F1F1" rx="58.9757" ry="25.6597" style="stroke:#008000;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="39" x="175.1229" y="569.8663">«use»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="75" x="157.1229" y="587.4756">Verify Login</text></g><g id="elem_h1"><ellipse cx="910.6283" cy="669.9615" fill="#000000" rx="78.6283" ry="25.9615" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="875.1842" y="663.7872">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="104" x="853.1842" y="681.3966">Stolen password</text></g><g id="elem_h2"><ellipse cx="910.6595" cy="583.1446" fill="#000000" rx="98.1595" ry="25.6446" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="874.7114" y="576.2873">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136" x="836.7114" y="593.8967">Brute force user login</text></g><g id="elem_h3"><ellipse cx="910.3634" cy="1032.8674" fill="#000000" rx="82.8634" ry="25.8674" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="874.8115" y="1026.5001">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111" x="849.3115" y="1044.1095">Stolen user token</text></g><g id="elem_h4"><ellipse cx="910.2756" cy="238.1382" fill="#000000" rx="98.7756" ry="25.6382" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="874.3114" y="231.266">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="137" x="835.8114" y="248.8754">Tampering parameter</text></g><g id="elem_h7"><ellipse cx="910.3061" cy="811.0674" fill="#000000" rx="106.8061" ry="25.5674" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="874.1306" y="804.0241">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="150" x="829.1306" y="821.6335">Leaked error messages</text></g><g id="elem_h9"><ellipse cx="545.3634" cy="1219.8674" fill="#000000" rx="82.8634" ry="25.8674" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="509.8115" y="1213.5001">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="111" x="484.3115" y="1231.1095">Network clear text</text></g><g id="elem_h11"><ellipse cx="910.4831" cy="477.8966" fill="#000000" rx="122.4831" ry="26.8966" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="874.8701" y="469.1955">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="193" x="808.3701" y="486.8049">Automatically creation of users</text></g><g id="elem_h12"><ellipse cx="910.4515" cy="362.1903" fill="#000000" rx="121.4515" ry="26.6903" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="60" x="874.7399" y="353.7117">«misuse»</text><text fill="#FFFFFF" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="189" x="810.2399" y="371.3211">Repeated verification of token</text></g><g id="elem_m1"><ellipse cx="545.7217" cy="512.9443" fill="#ADD8E6" rx="127.7217" ry="27.9443" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="76" x="502.4097" y="503.6618">«mitigation»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="209" x="435.9097" y="521.2711">Obstruction of unauthorized login</text></g><g id="elem_m2"><ellipse cx="545.5016" cy="1130.8003" fill="#ADD8E6" rx="124.5016" ry="27.3003" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="76" x="501.9153" y="1122.2268">«mitigation»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="197" x="441.4153" y="1139.8361">Prevention of stolen user token</text></g><g id="elem_m3"><ellipse cx="545.4852" cy="158.197" fill="#ADD8E6" rx="123.9852" ry="27.197" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="76" x="501.8508" y="149.7379">«mitigation»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="195" x="442.3508" y="167.3473">Prevention of applikation crash</text></g><g id="elem_m5"><ellipse cx="545.4448" cy="865.827" fill="#ADD8E6" rx="109.9448" ry="25.827" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="76" x="501.1306" y="859.1613">«mitigation»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="153" x="462.6306" y="876.7707">Generic error messages</text></g><g id="elem_m7"><ellipse cx="199.415" cy="1210.954" fill="#ADD8E6" rx="101.415" ry="25.954" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="76" x="155.3206" y="1204.5422">«mitigation»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="139" x="123.8206" y="1222.1516">Encrypt sensitive data</text></g><g id="elem_m8"><ellipse cx="545.5208" cy="423.1993" fill="#ADD8E6" rx="77.0208" ry="26.6993" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="76" x="502.0327" y="418.1308">«mitigation»</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="98" x="491.0327" y="435.7402">Log user action</text></g><!--MD5=[8fc3522a43f8c7199df5e09e5bb0188e]
+entity user--><g id="elem_user"><ellipse cx="20.5" cy="553.5" fill="#F1F1F1" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M20.5,561.5 L20.5,588.5 M7.5,569.5 L33.5,569.5 M20.5,588.5 L7.5,603.5 M20.5,588.5 L33.5,603.5 " fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="29" x="6" y="619.5332">User</text></g><!--MD5=[ac8c53f4295e0d4643b14ec64b4a531b]
+entity hacker--><g id="elem_hacker"><ellipse cx="1186.5" cy="600.5" fill="#000000" rx="8" ry="8" style="stroke:#181818;stroke-width:0.5;"/><path d="M1186.5,608.5 L1186.5,635.5 M1173.5,616.5 L1199.5,616.5 M1186.5,635.5 L1173.5,650.5 M1186.5,635.5 L1199.5,650.5 " fill="none" style="stroke:#181818;stroke-width:0.5;"/><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="57" x="1158" y="666.5332">Bad user</text></g><!--MD5=[00cd1a0913fac11e59c8f7ddb037601d]
+link user to u1--><g id="link_user_u1"><path d="M35.03,593.67 C45.47,600.97 60.38,611.05 74,619 C105.49,637.37 142.98,655.92 168.54,668.08 " fill="none" id="user-u1" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[aa6f08068a5178ce10a20232451fc4bf]
+link user to u2--><g id="link_user_u2"><path d="M35.27,567.51 C45.13,556.54 59.23,542.45 74,533 C99.95,516.39 132.54,504.08 157.87,496.09 " fill="none" id="user-u2" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[43db6f846241600475fbd97712a87a4d]
+link h1 to hacker--><g id="link_h1_hacker"><path d="M983.13,659.8 C1040.21,651.68 1117.07,640.74 1157.68,634.96 " fill="none" id="h1-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[c67e331a623edc746024a978e1061b09]
+link h2 to hacker--><g id="link_h2_hacker"><path d="M1001.03,592.85 C1040.23,597.93 1086.64,604.97 1128,614 C1137.87,616.15 1148.51,619.11 1157.93,621.96 " fill="none" id="h2-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[7727246030a0605bc8bd4959e127de1c]
+link h3 to hacker--><g id="link_h3_hacker"><path d="M934.05,1007.92 C963.87,974.18 1017.27,911.74 1057,854 C1099.55,792.16 1141.59,715.44 1165.47,670.01 " fill="none" id="h3-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f5c18d4093f188ca293bb0dcf8b3a622]
+link h4 to hacker--><g id="link_h4_hacker"><path d="M969.03,258.77 C998.59,271.89 1033.29,291.44 1057,318 C1129.77,399.5 1164.63,527.8 1178.25,591.87 " fill="none" id="h4-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[6c0ee04322dca1d4e812f178b12213f1]
+link h7 to hacker--><g id="link_h7_hacker"><path d="M947.89,787.1 C1003.35,750.66 1107.84,682.01 1157.69,649.27 " fill="none" id="h7-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[98ac5440bdc4083b5f3a4c4c68bf6ff5]
+link h9 to hacker--><g id="link_h9_hacker"><path d="M628.84,1220.17 C741.04,1215.82 941.23,1191.06 1057,1076 C1170.65,963.06 1185.23,756.35 1186.11,670.26 " fill="none" id="h9-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[829e03b7edac60ae729d11d747a36f5e]
+link h11 to hacker--><g id="link_h11_hacker"><path d="M973.25,501.26 C999.6,511.95 1030.35,525.49 1057,540 C1090.45,558.22 1096.96,565.92 1128,588 C1137.85,595.01 1148.49,602.88 1157.91,609.95 " fill="none" id="h11-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[633adb6664beea1601a1993d488122e4]
+link h12 to hacker--><g id="link_h12_hacker"><path d="M975.81,384.47 C1002.91,396.08 1033.53,412.23 1057,433 C1108.09,478.22 1147.08,548.38 1168.1,591.9 " fill="none" id="h12-hacker" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[b714b29b3b55099d6e573b5ea7d03601]
+link u2 to u3--><g id="link_u2_u3"><path d="M199.5,458.76 C199.5,444.5 199.5,426.79 199.5,411.87 " fill="none" id="u2-to-u3" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="199.5,406.52,195.5,415.52,199.5,411.52,203.5,415.52,199.5,406.52" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="160" y="438.2451">«include»</text></g><!--MD5=[7097f9702f7eb16e26d912201ce91cac]
+reverse link u1 to u4--><g id="link_u1_u4"><path d="M199.5,649.33 C199.5,633.99 199.5,615.96 199.5,601.62 " fill="none" id="u1-backto-u4" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="199.5,654.43,203.5,645.43,199.5,649.43,195.5,645.43,199.5,654.43" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="60" x="157.5" y="633.4951">«extends»</text></g><!--MD5=[ecdddfa33d159b43230f5e4737c067af]
+reverse link u1 to h1--><g id="link_u1_h1"><path d="M236.78,695.48 C279.44,710.55 352.72,734.02 418,743 C530.28,758.45 560.93,759.9 673,743 C739.28,733 812.61,708.08 859.77,690.14 " fill="none" id="u1-backto-h1" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="231.98,693.78,239.126,700.5575,236.6926,695.4508,241.7993,693.0174,231.98,693.78" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="739.4951">Threatens</text></g><!--MD5=[aec65cbbf590468c2eee25509933ecdd]
+link m1 to h1--><g id="link_m1_h1"><path d="M611.8,536.92 C632.07,545.51 654.05,556.07 673,568 C687.93,577.4 687.84,584.97 703,594 C737.68,614.65 750.13,612.02 788,626 C808.75,633.66 831.54,641.95 851.72,649.24 " fill="none" id="m1-to-h1" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="856.52,650.98,849.4172,644.1573,851.8181,649.2793,846.6961,651.6803,856.52,650.98" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="590.4951">Mitigates</text></g><!--MD5=[f423ff875d92e3fd1674fe387ad9670c]
+link u1 to m1--><g id="link_u1_m1"><path d="M229.01,666.21 C270.26,643.56 349.17,600.95 418,568 C438.1,558.38 460.3,548.49 480.41,539.79 " fill="none" id="u1-to-m1" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="485.21,537.72,475.3616,537.6257,480.6217,539.7068,478.5405,544.9669,485.21,537.72" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="579.4951">«include»</text></g><!--MD5=[73b002be7274f07d1f894273a3a4f654]
+reverse link u1 to h2--><g id="link_u1_h2"><path d="M240.44,682.91 C322.29,684.06 514.69,683.2 673,655 C706.91,648.96 791.26,622.19 849.48,603.06 " fill="none" id="u1-backto-h2" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="235.21,682.83,244.1519,686.9582,240.2095,682.9014,244.2662,678.959,235.21,682.83" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="651.4951">Threatens</text></g><!--MD5=[19e08ca2a2eaea4af6b7c2b9e6d059c5]
+link m1 to h2--><g id="link_m1_h2"><path d="M616.37,536.3 C643.2,544.52 674.28,553.15 703,559 C738.06,566.14 776.93,571.34 811.4,575.05 " fill="none" id="m1-to-h2" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="816.45,575.58,807.9079,570.6776,811.4764,575.067,807.0871,578.6354,816.45,575.58" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="555.4951">Mitigates</text></g><!--MD5=[7af6643d222564640c8ca6b57f31ff4b]
+link m8 to h2--><g id="link_m8_h2"><path d="M602.03,441.04 C624.27,448.59 650.03,457.76 673,467 C711.56,482.51 720.76,487.55 758,506 C771.54,512.71 774.58,515.05 788,522 C811.39,534.1 837.46,547.24 859.45,558.22 " fill="none" id="m8-to-h2" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="864.07,560.52,857.7993,552.9254,859.595,558.2897,854.2307,560.0854,864.07,560.52" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="477.4951">Mitigates</text></g><!--MD5=[d3c630ca03f41fd023efd61e4f34407e]
+link u1 to m8--><g id="link_u1_m8"><path d="M231.7,670.38 C254.45,660.28 284.14,643.39 301,619 C339.41,563.43 283.67,518.19 331,470 C365.12,435.26 418.67,423.53 463.6,420.48 " fill="none" id="u1-to-m8" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="468.76,420.17,459.536,416.7178,463.769,420.4703,460.0165,424.7033,468.76,420.17" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="433.4951">«include»</text></g><!--MD5=[73d375901045b199b9930e6e79a1184c]
+reverse link u1 to h3--><g id="link_u1_h3"><path d="M210.07,713.59 C226.96,764.73 266.53,866.24 331,929 C467.19,1061.56 711.42,1056.28 834.4,1043.57 " fill="none" id="u1-backto-h3" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="208.5,708.8,207.4982,718.5978,210.0554,713.5519,215.1013,716.1091,208.5,708.8" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="989.4951">Threatens</text></g><!--MD5=[273f7158b4086becbf0aa4c772a89a41]
+link m2 to h3--><g id="link_m2_h3"><path d="M625.27,1109.74 C689.96,1092.27 780.63,1067.79 842.03,1051.21 " fill="none" id="m2-to-h3" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="847.14,1049.84,837.4096,1048.3173,842.3119,1051.1399,839.4894,1056.0422,847.14,1049.84" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="1073.4951">Mitigates</text></g><!--MD5=[845dde8f126139446f17409c5a30c9d0]
+link u1 to m2--><g id="link_u1_m2"><path d="M201.96,709.62 C207.1,778.63 230.04,960.18 331,1060 C359.05,1087.73 398.18,1104.63 435.29,1114.93 " fill="none" id="u1-to-m2" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="440.28,1116.28,432.6465,1110.0567,435.4555,1114.9668,430.5454,1117.7759,440.28,1116.28" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="1056.4951">«include»</text></g><!--MD5=[2199d65d30d345aa9b0dcc791ea41892]
+reverse link u1 to h4--><g id="link_u1_h4"><path d="M236.75,668.57 C258.94,658.41 285.9,642.2 301,619 C351.96,540.72 297.37,498.14 331,411 C343.45,378.74 388.23,299.58 418,282 C482.37,244 687.35,237.36 811.34,236.98 " fill="none" id="u1-backto-h4" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="232.09,670.65,241.9388,670.63,236.6549,668.61,238.6749,663.3261,232.09,670.65" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="237.4951">Threatens</text></g><!--MD5=[2be9f0783bd1e1ca954215d0f3c39908]
+reverse link u2 to h4--><g id="link_u2_h4"><path d="M243.64,469.46 C264.44,459.68 287.71,444.89 301,424 C367.47,319.52 255.76,245.35 331,147 C356.23,114.03 377.2,120.69 418,113 C529.37,92.01 563,85.72 673,113 C751.66,132.51 832.97,183.5 876.77,213.99 " fill="none" id="u2-backto-h4" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="238.97,471.6,248.8181,471.48,243.514,469.5138,245.4802,464.2096,238.97,471.6" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="91.4951">Threatens</text></g><!--MD5=[1619e40c8f9c97d86edcde1f8d66d99b]
+link m3 to h4--><g id="link_m3_h4"><path d="M633.45,177.16 C693,190.29 771.4,207.56 829.42,220.35 " fill="none" id="m3-to-h4" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="834.62,221.5,826.6857,215.665,829.7361,220.429,824.9721,223.4793,834.62,221.5" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="190.4951">Mitigates</text></g><!--MD5=[7e556b3cbb03a422d5c6a1ceb64edb09]
+link m8 to h4--><g id="link_m8_h4"><path d="M596.59,403 C620.05,393.29 648.22,381.11 673,369 C741.63,335.45 818.58,291.61 865.54,264.13 " fill="none" id="m8-to-h4" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="869.99,261.52,860.2027,262.6199,865.6763,264.0482,864.2479,269.5218,869.99,261.52" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="325.4951">Mitigates</text></g><!--MD5=[bd2b4b0b419a8c2c706751228a77238b]
+link u1 to m3--><g id="link_u1_m3"><path d="M232.41,670.85 C255.54,661 285.39,644.21 301,619 C372.93,502.81 256.28,427.42 331,313 C346.88,288.67 368.52,302.56 388,281 C410.42,256.19 394.28,235.57 418,212 C430.93,199.16 447.39,189.17 464.14,181.48 " fill="none" id="u1-to-m3" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="468.86,179.37,459.0112,179.39,464.2951,181.41,462.2751,186.6939,468.86,179.37" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="277.4951">«include»</text></g><!--MD5=[6a6b6529e6c4c8f37dfc0ab6eef74701]
+link u2 to m3--><g id="link_u2_m3"><path d="M238.98,471.33 C260.74,461.56 286.43,446.18 301,424 C354.46,342.63 265.26,278.81 331,207 C353.24,182.7 384.87,169.24 417,162.06 " fill="none" id="u2-to-m3" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="422.15,160.96,412.5133,158.9269,417.2602,162.0037,414.1833,166.7506,422.15,160.96" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="169.4951">«include»</text></g><!--MD5=[f58221a8b8bedcc95908455ba7d78ae1]
+link u2 to m8--><g id="link_u2_m8"><path d="M238.68,471.12 C260.33,461.28 286.01,445.89 301,424 C344.1,361.06 272.53,304 331,255 C435.21,167.66 414.44,364.87 418,369 C433.09,386.47 454.83,398.45 476.04,406.59 " fill="none" id="u2-to-m8" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="480.84,408.37,473.7991,401.4834,476.1537,406.6269,471.0101,408.9815,480.84,408.37" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="229.4951">«include»</text></g><!--MD5=[289ded780686dbc6ce97cbc03afcb61e]
+reverse link u1 to h7--><g id="link_u1_h7"><path d="M213.12,712.89 C232.53,757.02 273.57,838.26 331,888 C363.03,915.74 376.56,918.14 418,927 C528.83,950.7 562.6,952.62 673,927 C749.18,909.32 829.11,863.5 873.79,835.03 " fill="none" id="u1-backto-h7" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="211.08,708.22,210.9857,718.0684,213.0668,712.8083,218.3269,714.8895,211.08,708.22" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="923.4951">Threatens</text></g><!--MD5=[fcf8e1ba8149898f259323a0e5c5fb9c]
+reverse link u2 to h7--><g id="link_u2_h7"><path d="M239.78,503.92 C282.74,524.01 354.02,555.64 418,576 C528.66,611.21 567.57,584.32 673,633 C695.63,643.45 819.78,740.28 878.59,786.57 " fill="none" id="u2-backto-h7" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="235.2,501.77,241.6345,509.2264,239.7225,503.9024,245.0464,501.9904,235.2,501.77" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="572.4951">Threatens</text></g><!--MD5=[c0974b4d3afe297369aa71860fafcab1]
+link m5 to h7--><g id="link_m5_h7"><path d="M638.57,852.05 C692.39,843.9 760.2,833.62 814.51,825.39 " fill="none" id="m5-to-h7" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="819.73,824.6,810.2355,821.982,814.7855,825.3431,811.4244,829.8932,819.73,824.6" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="832.4951">Mitigates</text></g><!--MD5=[cde8b1b13f9af9f206f4222a86df7511]
+link u1 to m5--><g id="link_u1_m5"><path d="M210.44,708.23 C227.74,749.67 267.7,828.96 331,862 C367.56,881.09 412.67,884.34 451.99,881.92 " fill="none" id="u1-to-m5" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="457.25,881.56,447.9968,878.1869,452.2618,881.903,448.5456,886.168,457.25,881.56" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="858.4951">«include»</text></g><!--MD5=[a7887a8dede60d0f48673995a3b43987]
+link u2 to m5--><g id="link_u2_m5"><path d="M241.49,495.8 C262.02,503.16 285.69,514.93 301,533 C332.1,569.7 313.61,592.15 331,637 C362.55,718.35 354.41,753.25 418,813 C432.12,826.26 450.04,836.45 467.92,844.17 " fill="none" id="u2-to-m5" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="472.96,846.29,466.1986,839.1287,468.3467,844.3619,463.1136,846.51,472.96,846.29" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="633.4951">«include»</text></g><!--MD5=[a2c9caa6342976a28470c237951d2893]
+link m7 to h9--><g id="link_m7_h9"><path d="M300.92,1213.63 C350.58,1214.93 409.92,1216.48 457.59,1217.73 " fill="none" id="m7-to-h9" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="462.76,1217.86,453.8779,1213.6046,457.762,1217.7172,453.6494,1221.6013,462.76,1217.86" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="333" y="1210.4951">Mitigates</text></g><!--MD5=[2f295129c61d7251e2bebc432141d8a5]
+reverse link u2 to h11--><g id="link_u2_h11"><path d="M235.24,463.23 C261.07,447.56 297.49,426.53 331,411 C487.19,338.58 532.3,325.37 703,303 C727.24,299.82 738.45,288.33 758,303 C796.14,331.62 758.78,368.32 788,406 C804.08,426.73 827.94,442.71 850.27,454.29 " fill="none" id="u2-backto-h11" style="stroke:#FF0000;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#FF0000" points="230.86,465.9,240.6276,464.6373,235.131,463.3003,236.468,457.8037,230.86,465.9" style="stroke:#FF0000;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="57" x="517" y="304.4951">Threatens</text></g><!--MD5=[43ff026c948ac69a38a28ab3e8faf505]
+link m1 to h11--><g id="link_m1_h11"><path d="M648.31,529.66 C683.24,532.87 722.47,533.71 758,528 C787.99,523.18 820.09,513.31 846.99,503.61 " fill="none" id="m1-to-h11" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="851.95,501.8,842.1242,501.1261,847.2527,503.5133,844.8655,508.6418,851.95,501.8" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="524.4951">Mitigates</text></g><!--MD5=[84c5a121ada631aaace47dc3f38c0088]
+link m8 to h11--><g id="link_m8_h11"><path d="M619.62,430.23 C660.44,434.61 712.16,440.76 758,448 C776.88,450.98 797,454.63 816.2,458.34 " fill="none" id="m8-to-h11" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="821.58,459.39,813.5138,453.7388,816.6727,458.4314,811.9801,461.5904,821.58,459.39" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="437.4951">Mitigates</text></g><!--MD5=[ee148696cef332413654258a0918605c]
+link u2 to m1--><g id="link_u2_m1"><path d="M245.12,488.63 C289.41,492.24 359.35,497.93 420.49,502.91 " fill="none" id="u2-to-m1" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="425.62,503.32,416.9687,498.6131,420.636,502.9201,416.3289,506.5874,425.62,503.32" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="332" y="492.4951">«include»</text></g><!--MD5=[77aef18e20c67ccace690b734deb87dd]
+link m8 to h12--><g id="link_m8_h12"><path d="M615.2,411.45 C669.78,402.28 746.91,389.32 808.51,378.97 " fill="none" id="m8-to-h12" style="stroke:#0000FF;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#0000FF" points="813.67,378.1,804.1314,375.6475,808.7392,378.9289,805.4577,383.5367,813.67,378.1" style="stroke:#0000FF;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="53" x="704" y="385.4951">Mitigates</text></g><!--MD5=[19c639a57f4153afc05d75b8912a524b]
+@startuml Misuse cases
+
+left to right direction
+
+actor "User" as user
+actor "Bad user" as hacker #black
+
+skinparam usecase {
+    FontColor<<misuse>> White
+    BackgroundColor<<misuse>> Black
+    ArrowColor<<misuse>> red
+
+    BackgroundColor<<mitigation>> lightblue
+    ArrowColor<<mitigation>> blue
+
+    bordercolor<<use>> green
+}
+
+rectangle System {
+    usecase "Login" <<use>> as u1
+    usecase "Register" <<use>> as u2
+    usecase "Verify Email" <<use>> as u3
+    usecase "Verify Login" <<use>> as u4
+
+    usecase "Stolen password" as h1 <<misuse>>
+    usecase "Brute force user login" as h2 <<misuse>>
+    usecase "Stolen user token" as h3 <<misuse>>
+    usecase "Tampering parameter" as h4 <<misuse>>
+    usecase "Leaked error messages" as h7 <<misuse>>
+    usecase "Network clear text" as h9 <<misuse>>
+    usecase "Automatically creation of users" as h11 <<misuse>>
+    usecase "Repeated verification of token" as h12 <<misuse>>
+    
+    usecase "Obstruction of unauthorized login" as m1 <<mitigation>>
+    usecase "Prevention of stolen user token" as m2 <<mitigation>>
+    usecase "Prevention of applikation crash" as m3 <<mitigation>>
+    usecase "Generic error messages" as m5 <<mitigation>>
+    usecase "Encrypt sensitive data" as m7 <<mitigation>>
+    usecase "Log user action" as m8 <<mitigation>>
+}
+
+user - - u1
+user - - u2
+
+h1 - - - hacker
+h2 - - - hacker
+h3 - - - hacker
+h4 - - - hacker
+h7 - - - hacker
+h9 - - - hacker
+h11 - - - hacker
+h12 - - - hacker
+
+u2 .> u3: <<include>>
+u1 <. u4: <<extends>>
+
+'Stolen password'
+u1 <.. h1 <<misuse>> : Threatens
+m1 ..> h1 <<mitigation>> : Mitigates
+u1 ..> m1 : <<include>>
+
+'Brute force'
+u1 <.. h2 <<misuse>> : Threatens
+m1 ..> h2 <<mitigation>> : Mitigates
+m8 ..> h2 <<mitigation>> : Mitigates
+u1 ..> m8 : <<include>>
+
+'Stolen user token'
+u1 <.. h3 <<misuse>> : Threatens
+m2 ..> h3 <<mitigation>> : Mitigates
+u1 ..> m2 : <<include>>
+
+'tampering parameter'
+u1 <.. h4 <<misuse>> : Threatens
+u2 <.. h4 <<misuse>> : Threatens
+m3 ..> h4 <<mitigation>> : Mitigates
+m8 ..> h4 <<mitigation>> : Mitigates
+u1 ..> m3 : <<include>>
+u2 ..> m3 : <<include>>
+u2 ..> m8 : <<include>>
+
+'Fullstack messages'
+u1 <.. h7 <<misuse>> : Threatens
+u2 <.. h7 <<misuse>> : Threatens
+m5 ..> h7 <<mitigation>> : Mitigates
+u1 ..> m5 : <<include>>
+u2 ..> m5 : <<include>>
+
+'Network clear text'
+m7 ..> h9 <<mitigation>> : Mitigates
+
+'Automatic user registration'
+u2 <.. h11 <<misuse>> : Threatens
+m1 ..> h11 <<mitigation>> : Mitigates
+m8 ..> h11 <<mitigation>> : Mitigates
+u2 ..> m1 : <<include>>
+
+'repeated verification of token'
+m8 ..> h12 <<mitigation>> : Mitigates
+
+
+@enduml
+
+@startuml Misuse cases
+
+left to right direction
+
+actor "User" as user
+actor "Bad user" as hacker #black
+
+skinparam usecase {
+    FontColor<<misuse>> White
+    BackgroundColor<<misuse>> Black
+    ArrowColor<<misuse>> red
+
+    BackgroundColor<<mitigation>> lightblue
+    ArrowColor<<mitigation>> blue
+
+    bordercolor<<use>> green
+}
+
+rectangle System {
+    usecase "Login" <<use>> as u1
+    usecase "Register" <<use>> as u2
+    usecase "Verify Email" <<use>> as u3
+    usecase "Verify Login" <<use>> as u4
+
+    usecase "Stolen password" as h1 <<misuse>>
+    usecase "Brute force user login" as h2 <<misuse>>
+    usecase "Stolen user token" as h3 <<misuse>>
+    usecase "Tampering parameter" as h4 <<misuse>>
+    usecase "Leaked error messages" as h7 <<misuse>>
+    usecase "Network clear text" as h9 <<misuse>>
+    usecase "Automatically creation of users" as h11 <<misuse>>
+    usecase "Repeated verification of token" as h12 <<misuse>>
+    
+    usecase "Obstruction of unauthorized login" as m1 <<mitigation>>
+    usecase "Prevention of stolen user token" as m2 <<mitigation>>
+    usecase "Prevention of applikation crash" as m3 <<mitigation>>
+    usecase "Generic error messages" as m5 <<mitigation>>
+    usecase "Encrypt sensitive data" as m7 <<mitigation>>
+    usecase "Log user action" as m8 <<mitigation>>
+}
+
+user - - u1
+user - - u2
+
+h1 - - - hacker
+h2 - - - hacker
+h3 - - - hacker
+h4 - - - hacker
+h7 - - - hacker
+h9 - - - hacker
+h11 - - - hacker
+h12 - - - hacker
+
+u2 .> u3: <<include>>
+u1 <. u4: <<extends>>
+
+u1 <.. h1 <<misuse>> : Threatens
+m1 ..> h1 <<mitigation>> : Mitigates
+u1 ..> m1 : <<include>>
+
+u1 <.. h2 <<misuse>> : Threatens
+m1 ..> h2 <<mitigation>> : Mitigates
+m8 ..> h2 <<mitigation>> : Mitigates
+u1 ..> m8 : <<include>>
+
+u1 <.. h3 <<misuse>> : Threatens
+m2 ..> h3 <<mitigation>> : Mitigates
+u1 ..> m2 : <<include>>
+
+u1 <.. h4 <<misuse>> : Threatens
+u2 <.. h4 <<misuse>> : Threatens
+m3 ..> h4 <<mitigation>> : Mitigates
+m8 ..> h4 <<mitigation>> : Mitigates
+u1 ..> m3 : <<include>>
+u2 ..> m3 : <<include>>
+u2 ..> m8 : <<include>>
+
+u1 <.. h7 <<misuse>> : Threatens
+u2 <.. h7 <<misuse>> : Threatens
+m5 ..> h7 <<mitigation>> : Mitigates
+u1 ..> m5 : <<include>>
+u2 ..> m5 : <<include>>
+
+m7 ..> h9 <<mitigation>> : Mitigates
+
+u2 <.. h11 <<misuse>> : Threatens
+m1 ..> h11 <<mitigation>> : Mitigates
+m8 ..> h11 <<mitigation>> : Mitigates
+u2 ..> m1 : <<include>>
+
+m8 ..> h12 <<mitigation>> : Mitigates
+
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>
