@@ -17,15 +17,16 @@ Get source with git by typing command ```git clone https://github.com/blackout14
 Each project has it's own .sln file for visual studio except the javascript library.
 
 The projects can be located as such
-`
-├── Source
-│   ├── IdentityApi - The rest api folder
-│   │   ├── IdentityApi.sln
-│   ├── MessageService - The message service library used to send email etc.
-│   │   ├── MessageService.sln
-│   ├── Webclient - The prototype frontend.
-│   │   ├── TrustLogin - The javascript communication library folder.
-`
+
+    .
+    ├── Source
+    │   ├── IdentityApi - The rest api folder
+    │   │   ├── IdentityApi.sln
+    │   ├── MessageService - The message service library used to send email etc.
+    │   │   ├── MessageService.sln
+    │   ├── Webclient - The prototype frontend.
+    │   │   ├── TrustLogin - The javascript communication library folder.
+
 
 ## Setting up local environment
 1. Pull repository.
@@ -38,16 +39,16 @@ The projects can be located as such
 8. Open webclient login.html or register.html
 
 ## Finding environment settings
-`
-├── Source
-│   ├── IdentityApi - The rest api folder
-│   │   ├── IdentityApi
-│   │   │   ├── appsettings.json
-│   │   │   ├── appsettings.development.json
-│   ├── Webclient - The prototype frontend.
-│   │   ├── TrustLogin - The javascript communication library folder.
-│   │   │   ├── Environment.js
-`
+
+    .
+    ├── Source
+    │   ├── IdentityApi - The rest api folder
+    │   │   ├── IdentityApi
+    │   │   │   ├── appsettings.json
+    │   │   │   ├── appsettings.development.json
+    │   ├── Webclient - The prototype frontend.
+    │   │   ├── TrustLogin - The javascript communication library folder.
+    │   │   │   ├── Environment.js
 
 ## Tests
 The tests are contained in each solution respectively.
