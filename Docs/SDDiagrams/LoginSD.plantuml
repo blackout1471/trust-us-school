@@ -35,8 +35,8 @@ UserProvider->UserManager: Return User
 
 alt User not found
 
-UserManager->UserController: Login failed
-UserController->User: Login failed
+UserManager-->UserController: Login failed
+UserController-->User: Login failed
 
 end
 
@@ -52,8 +52,8 @@ UserManager->UserManager: Check if salted password matches user password
 
 alt Password does not match
 
-UserManager->UserController: Login failed
-UserController->User: Login failed
+UserManager-->UserController: Login failed
+UserController-->User: Login failed
 
 end
 
@@ -71,20 +71,20 @@ UserController->UserManager: VerificationLogin(email, verification code)
 UserManager->UserManager: Check if verification matches
 alt Verification does not match
 
-UserManager->UserController: Login failed
-UserController->User: Login failed
+UserManager-->UserController: Login failed
+UserController-->User: Login failed
 
 end
-UserManager->UserController: Returns User
+UserManager-->UserController: Returns User
 UserController->TokenManager: Get token for user (User)
-TokenManager->UserController: Returns Token
-UserController->User: Return token
+TokenManager-->UserController: Returns Token
+UserController-->User: Return token
 end
 
-UserManager->UserController: Returns User
+UserManager-->UserController: Returns User
 UserController->TokenManager: Get token for user (User)
-TokenManager->UserController: Returns Token
+TokenManager-->UserController: Returns Token
 
-UserController->User: Return token
+UserController-->User: Return token
 
 @enduml
