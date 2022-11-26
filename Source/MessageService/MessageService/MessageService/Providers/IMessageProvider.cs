@@ -9,7 +9,6 @@ namespace MessageService.Providers
         /// </summary>
         /// <param name="to"> Recipient of message </param>
         /// <param name="key"> Secret key for otp</param>
-        /// <returns></returns>
         public IMessage GetRegisterMessage(string to, string key);
 
         /// <summary>

@@ -53,6 +53,9 @@ class UserManager{
     -_userProvider : IUserProvider
     -_leakedPasswordProvider : ILeakedPasswordProvider;
     -_userLocationManager : IUserLocationManager
+    -_messageService : IMessageService
+    -_messageProvider : IMessageProvider
+    -_logger : ILogger
     +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager)
     --
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
