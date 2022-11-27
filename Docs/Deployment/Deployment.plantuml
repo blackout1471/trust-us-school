@@ -46,7 +46,7 @@ node "<<Device>>\nPhone" as phone {
     }
 }
 
-node "<<Device>>\PC" as dev {
+node "<<Device>>\ndev PC" as dev {
     node "<<Browser>>\nFirefox/Chrome/Safari/Edge" as n3 
 }
 
