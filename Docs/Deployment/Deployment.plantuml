@@ -1,0 +1,59 @@
+@startuml deploymentdiagram
+
+skinparam ArtifactBorderColor DarkOrange
+skinparam NodeBorderColor Darkgreen
+skinparam DatabaseBorderColor firebrick
+
+skinparam ArrowColor<<https>> blue
+skinparam ArrowColor<<tcp>> darkviolet
+
+left to right direction
+
+header
+<font color=blue size=14>https arrow</font>
+<font color=darkviolet size=14>tcp/ip arrow</font> 
+endheader
+
+node "<<Device>>\nWindow Server 2019" as devserver {
+    node "<<Server>>\n IIS 10.0" {
+        node "<<Execution environment>>\n.Net 6" {
+            artifact "<<Artifact>>\nRest api" as rest
+        }
+    }
+
+    database "<<Server>>\nMSSQL 2019" as db
+
+    node "<<Server>>\nKibana" as kibana
+    node "<<Server>>\nElasticSearch" as elastic
+    node "<<Server>>\nLogStash" as logstash
+}
+
+kibana <.. elastic<<https>> : 5601
+logstash ..> elastic<<https>> : 9200
+rest ..> elastic<<https>> : 9200
+
+rest <..> db<<tcp>> : 1433
+
+node "<<Device>>\nPC" as pc {
+    node "<<Browser>>\nFirefox/Chrome/Safari/Edge" as n1 {
+        artifact "<<Artifact>>\nJavascript" as a1
+    }
+}
+
+node "<<Device>>\nPhone" as phone {
+    node "<<Browser>>\nFirefox/Chrome/Safari/Edge" as n2 {
+        artifact "<<Artifact>>\nJavascript" as a2
+    }
+}
+
+node "<<Device>>\PC" as dev {
+    node "<<Browser>>\nFirefox/Chrome/Safari/Edge" as n3 
+}
+
+dev <..> kibana<<https>> : 5601
+
+a1 <..> rest<<https>> : 443
+a2 <..> rest<<https>> : 443
+
+
+@enduml
