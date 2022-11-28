@@ -1,0 +1,102 @@
+@startuml Misuse cases
+
+left to right direction
+
+actor "User" as user
+actor "Bad user" as hacker #black
+
+skinparam usecase {
+    FontColor<<misuse>> White
+    BackgroundColor<<misuse>> Black
+    ArrowColor<<misuse>> red
+
+    BackgroundColor<<mitigation>> lightblue
+    ArrowColor<<mitigation>> blue
+
+    bordercolor<<use>> green
+}
+
+rectangle System {
+    usecase "Login" <<use>> as u1
+    usecase "Register" <<use>> as u2
+    usecase "Verify Email" <<use>> as u3
+    usecase "Verify Login" <<use>> as u4
+
+    usecase "Stolen password" as h1 <<misuse>>
+    usecase "Brute force user login" as h2 <<misuse>>
+    usecase "Stolen user token" as h3 <<misuse>>
+    usecase "Tampering parameter" as h4 <<misuse>>
+    usecase "Leaked error messages" as h7 <<misuse>>
+    usecase "Network clear text" as h9 <<misuse>>
+    usecase "Automatically creation of users" as h11 <<misuse>>
+    usecase "Repeated verification of token" as h12 <<misuse>>
+    
+    usecase "Obstruction of unauthorized login" as m1 <<mitigation>>
+    usecase "Prevention of stolen user token" as m2 <<mitigation>>
+    usecase "Prevention of applikation crash" as m3 <<mitigation>>
+    usecase "Generic error messages" as m5 <<mitigation>>
+    usecase "Encrypt sensitive data" as m7 <<mitigation>>
+    usecase "Log user action" as m8 <<mitigation>>
+}
+
+user -- u1
+user -- u2
+
+h1 --- hacker
+h2 --- hacker
+h3 --- hacker
+h4 --- hacker
+h7 --- hacker
+h9 --- hacker
+h11 --- hacker
+h12 --- hacker
+
+u2 .> u3: <<include>>
+u1 <. u4: <<extends>>
+
+'Stolen password'
+u1 <.. h1 <<misuse>> : Threatens
+m1 ..> h1 <<mitigation>> : Mitigates
+u1 ..> m1 : <<include>>
+
+'Brute force'
+u1 <.. h2 <<misuse>> : Threatens
+m1 ..> h2 <<mitigation>> : Mitigates
+m8 ..> h2 <<mitigation>> : Mitigates
+u1 ..> m8 : <<include>>
+
+'Stolen user token'
+u1 <.. h3 <<misuse>> : Threatens
+m2 ..> h3 <<mitigation>> : Mitigates
+u1 ..> m2 : <<include>>
+
+'tampering parameter'
+u1 <.. h4 <<misuse>> : Threatens
+u2 <.. h4 <<misuse>> : Threatens
+m3 ..> h4 <<mitigation>> : Mitigates
+m8 ..> h4 <<mitigation>> : Mitigates
+u1 ..> m3 : <<include>>
+u2 ..> m3 : <<include>>
+u2 ..> m8 : <<include>>
+
+'Fullstack messages'
+u1 <.. h7 <<misuse>> : Threatens
+u2 <.. h7 <<misuse>> : Threatens
+m5 ..> h7 <<mitigation>> : Mitigates
+u1 ..> m5 : <<include>>
+u2 ..> m5 : <<include>>
+
+'Network clear text'
+m7 ..> h9 <<mitigation>> : Mitigates
+
+'Automatic user registration'
+u2 <.. h11 <<misuse>> : Threatens
+m1 ..> h11 <<mitigation>> : Mitigates
+m8 ..> h11 <<mitigation>> : Mitigates
+u2 ..> m1 : <<include>>
+
+'repeated verification of token'
+m8 ..> h12 <<mitigation>> : Mitigates
+
+
+@enduml

@@ -30,8 +30,8 @@ namespace IdentityApi.Helpers
         {
             byte[] keyBytes = Convert.FromBase64String(key);
             byte[] counterInBytes = BitConverter.GetBytes(counter);
-            var hmacsha1 = new HMACSHA1(keyBytes);
-            byte[] hmac_result = hmacsha1.ComputeHash(counterInBytes);
+            var hmacsha = new HMACSHA512(keyBytes);
+            byte[] hmac_result = hmacsha.ComputeHash(counterInBytes);
 
             //TODO: If we have time, implement and understand bitwise operation to make a 6 digit int instead of a giant ass string
             string hotp = "";
@@ -43,10 +43,9 @@ namespace IdentityApi.Helpers
         /// <summary>
         /// Generates a random HMAC key
         /// </summary>
-        /// <returns></returns>
         public static string GetHmacKey()
         {
-            var hmac = new HMACSHA256();
+            var hmac = new HMACSHA512();
             var key = Convert.ToBase64String(hmac.Key);
             return key;
         }
