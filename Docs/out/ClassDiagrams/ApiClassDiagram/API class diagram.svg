@@ -41,7 +41,7 @@ link UserProvider to IUserProvider--><g id="link_UserProvider_IUserProvider"><pa
 link UserProvider to SqlProvider--><g id="link_UserProvider_SqlProvider"><path codeLine="134" d="M3208.64,151.64 C3274.33,187.18 3371.05,239.49 3448.4,281.33 " fill="none" id="UserProvider-to-SqlProvider" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="3451.84,275.24,3466.1,290.91,3445.18,287.55,3451.84,275.24" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2e2cd1f126b2a0e0fb6dd8bdb0da396b]
 link User to UserBase--><g id="link_User_UserBase"><path codeLine="152" d="M1836.23,823.76 C1802.9,845.02 1764.34,869.62 1729.67,891.74 " fill="none" id="User-to-UserBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="1733.11,897.85,1712.48,902.7,1725.58,886.04,1733.11,897.85" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[96a28894da16093fd8a9c441876c8015]
 link UserCreate to UserBase--><g id="link_UserCreate_UserBase"><path codeLine="153" d="M1553.7,802.22 C1564.31,823.34 1578.66,851.87 1592.07,878.56 " fill="none" id="UserCreate-to-UserBase" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="1598.43,875.62,1601.16,896.63,1585.92,881.91,1598.43,875.62" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[64c091ef33e37a15c4a5aacf767b2a5f]
-link DbUser to User--><g id="link_DbUser_User"><path codeLine="155" d="M2053.12,632.03 C2036.23,649.35 2017.85,668.19 2000.31,686.17 " fill="none" id="DbUser-to-User" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="2005.13,691.26,1986.15,700.69,1995.1,681.49,2005.13,691.26" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[14bd77b3d247701a37cfcfc4de0ca2a5]
+link DbUser to User--><g id="link_DbUser_User"><path codeLine="155" d="M2053.12,632.03 C2036.23,649.35 2017.85,668.19 2000.31,686.17 " fill="none" id="DbUser-to-User" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="none" points="2005.13,691.26,1986.15,700.69,1995.1,681.49,2005.13,691.26" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[032f1aa1d83e3771aad1c151b26ff22f]
 @startuml API class diagram
 
 top to bottom direction
@@ -456,7 +456,7 @@ class UserLocation{
 PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
 (GPL source distribution)
 Java Runtime: Java(TM) SE Runtime Environment
-JVM: Java HotSpot(TM) Client VM
+JVM: Java HotSpot(TM) 64-Bit Server VM
 Default Encoding: Cp1252
 Language: en
 Country: US
