@@ -7,8 +7,8 @@ top to bottom direction
 class UserController{
     -_userManager{readonly} : IUserManager
     -_tokenManager : ITokenManager
+    --
     +UserController(userManager : IUserManager, tokenManager : ITokenManager)
-    
     +Create(userCreate : UserCreate) : Task<ActionResult<UserToken>>
     +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
     +GetUserFromToken() : Task<ActionResult<User>>
@@ -43,6 +43,7 @@ interface IUserLocationManager {
 }
 
 class TokenManager {
+    --
     -GetPrincipal(token : string) : ClaimsPrincipal
     -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
 }
@@ -54,14 +55,15 @@ class UserManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
     -_logger : ILogger<UserManager>
+    --
     +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageService : IMessageService, messageProvider : IMessageProvider, logger : ILogger<UserManager>)
-    --
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
 
 class UserLocationManager {
     -_userLocationProvider : IUserLocationProvider
+    --
     +UserLocationManager(userLocationProvider : UserLocationProvider)
 }
 
@@ -98,15 +100,15 @@ interface ILeakedPasswordProvider {
 }
 
 class SqlProvider {
+    --
     +SqlProvider(connection : string)
-
     {abstract}#RunSpAsync(storedProcedureName : string, storedProcedureElements : SpElements[]) : Task<DataTable>
     {abstract}#RunQueryAsync(query : string) : Task<DataTable>
 }
 
 class LeakedPasswordProvider {
-    +LeakedPasswordProvider(configuration : IConfiguration)
     --
+    +LeakedPasswordProvider(configuration : IConfiguration)
 }
 
 interface IUserLocationProvider{
@@ -116,8 +118,8 @@ interface IUserLocationProvider{
 }
 
 class UserProvider {
-    +UserProvider(configuration : IConfiguration)
     --
+    +UserProvider(configuration : IConfiguration)
     -DRToUser(dr : DataRow) : DbUser
 }
 
@@ -137,6 +139,7 @@ UserProvider --|> SqlProvider
 'Utility'
 
 class Security{
+    --
     {static}-GetEncryptedPassword(password : string) : string
     {static}+GetSalt(saltLength : int) : string
     {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
@@ -145,6 +148,7 @@ class Security{
 }
 
 class RegexHelper{
+    --
     {static}+TryToGetBrowserWithoutVersion(browser : string) : string
 }
 
