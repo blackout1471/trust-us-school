@@ -7,30 +7,20 @@ namespace Stress_Test_Web
     {
         static void Main(string[] args)
         {
-            var amount = 500;
-
             HttpClient client = new HttpClient();
 
+            Console.WriteLine("Write server ip. ex: 10.108.149.14");
+            var ip = Console.ReadLine();
 
-            Console.WriteLine("Write server ip. ex: 127.0.0.1");
-            var ip = "10.108.149.14:80";
+            Console.WriteLine("Write amount:");
+            var amount = int.Parse(Console.ReadLine());
 
-            var credentials = CreateRandomUser(client, ip).Result;
-            var request = new { email = credentials.Email, password = credentials.Password };
+            var loginTest = new LoginTest(ip, amount, client);
 
+            var result = loginTest.RunTests().Result;
 
-            var loginTasks = new List<Task>();
-            for (int i = 0; i < amount; i++)
-            {
-                loginTasks.Add(Task.Run( async () => await client.PostAsJsonAsync("http://" + ip + $"/api/user/login", request)));
-            }
-
-            Stopwatch watch = new Stopwatch();
-            watch.Start();
-            Task.WhenAll(loginTasks.ToArray()).Wait();
-            watch.Stop();
-
-            Console.WriteLine($"{amount} requests took {watch.ElapsedMilliseconds}ms total and {watch.ElapsedMilliseconds / amount}ms in average");
+            Console.WriteLine($"{amount} request took |");
+            Console.WriteLine(result);
 
             Console.ReadKey();
         }
