@@ -12,8 +12,7 @@ namespace IdentityApiIntegrationTest
         public static UserCreate GenerateNewUserRequest()
         {
             var rnd = Guid.NewGuid()
-                .ToString("n")
-                .Substring(0, 8);
+                .ToString("n");
 
             return new UserCreate()
             {

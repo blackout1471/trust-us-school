@@ -1,7 +1,5 @@
-﻿using FakeItEasy;
-using IdentityApi.DbModels;
+﻿using IdentityApi.DbModels;
 using IdentityApi.Providers;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 
 namespace IdentityApiUnitTest.Providers
@@ -66,22 +64,22 @@ namespace IdentityApiUnitTest.Providers
             // Assert
             Assert.False(expected);
         }
-    }
 
-    internal class FakeSqlProvider : LeakedPasswordProvider
-    {
-        public DataTable Result { get; set; } = default!;
-
-        public FakeSqlProvider() : base(null) {}
-
-        protected override Task<DataTable> RunQueryAsync(string query)
+        internal class FakeSqlProvider : LeakedPasswordProvider
         {
-            return Task.FromResult(Result);
-        }
+            public DataTable Result { get; set; } = default!;
 
-        protected override Task<DataTable> RunSpAsync(string spName, params SpElement[] spElements)
-        {
-            return Task.FromResult(Result);
+            public FakeSqlProvider() : base(null) { }
+
+            protected override Task<DataTable> RunQueryAsync(string query)
+            {
+                return Task.FromResult(Result);
+            }
+
+            protected override Task<DataTable> RunSpAsync(string spName, params SpElement[] spElements)
+            {
+                return Task.FromResult(Result);
+            }
         }
     }
 }

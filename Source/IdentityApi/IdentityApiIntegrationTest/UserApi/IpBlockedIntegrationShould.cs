@@ -69,5 +69,30 @@ namespace IdentityApiIntegrationTest.UserApi
             // Assert
             Assert.Equal(expected, jObject.Value<string>("error"));
         }
+
+        [Fact]
+        public async void ExpectStatusCode403_WhenIPBlocked_VerifyUserRegister()
+        {
+            // Arrange
+            IpBlockedException ipBlockedException = new IpBlockedException();
+            var expected = ipBlockedException.Message;
+            string actual = null;
+
+            var userLogin = new UserLogin
+            {
+                Email = "test@test.dk",
+                Password = "Incorrect password"
+            };
+
+            // act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "verifyregister", userLogin);
+            actual = await response.Content.ReadAsStringAsync();
+
+
+            JToken jObject = JsonConvert.DeserializeObject<JToken>(actual);
+
+            // Assert
+            Assert.Equal(expected, jObject.Value<string>("error"));
+        }
     }
 }

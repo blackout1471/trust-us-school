@@ -13,6 +13,7 @@ class UserController{
     +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
     +GetUserFromToken() : Task<ActionResult<User>>
     +VerificationLogin(userLogin : UserLogin) : Task<ActionResult<UserToken>>
+    +VerifyUserRegister(UserLogin : UserLogin) : Task<ActionResult>
 }
 
 'Controllers mappings' 
@@ -23,10 +24,11 @@ UserController o-- ITokenManager
 'Managers'
 
 Interface IUserManager {
-    +CreateUserAsync(userCreate : UserCreate) : Task<User>
+    +CreateUserAsync(userCreate : UserCreate) : Task<bool>
     +LoginAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
     +GetUserByIDAsync(id : int) : Task<User>
     +LoginWithVerificationCodeAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
+    +VerifyUserRegistrationAsync(userLogin : UserLogin, userLocation: UserLocation) : Task<bool>
 }
 
 interface ITokenManager {
@@ -61,6 +63,8 @@ class UserManager {
     +UserManager(configuration : IConfiguration, userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageService : IMessageService, messageProvider : IMessageProvider, logger : ILogger<UserManager>)
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
+    -IsUserNotVerified(userLocation : UserLocation, user : DbUser) : Task
+    -IsUserLocked(userLocation : UserLocation, user : DbUser) : Task
 }
 
 class UserLocationManager {
@@ -79,6 +83,8 @@ UserManager .-|> IUserManager
 UserManager o-- IUserProvider
 UserManager o-- IUserLocationManager
 UserManager o-- ILeakedPasswordProvider
+UserManager o-- IMessageService
+UserManager o-- IMessageProvider
 
 TokenManager .-|> ITokenManager
 ITokenManager *-- UserToken
@@ -95,6 +101,7 @@ interface IUserProvider {
     +UpdateUserFailedTries(userId : int) : Task<DbUser>
     +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
     +UpdateUserLoginNewLocation(userId : int) : Task<DbUser>
+    +UpdateUserToVerifiedAsync(userID : int) : Task
     +UpdateUserLoginSuccessWithVerificationCode(userId : int) : Task<DbUser>
 }
 
