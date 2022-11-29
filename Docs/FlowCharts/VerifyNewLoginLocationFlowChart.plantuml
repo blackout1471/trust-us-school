@@ -10,7 +10,7 @@ skinparam activity {
 }
 
 
-(*) --> "Receive email & secret key"
+(*) --> "Receive email & One time password"
 
 if "Ip is blocked" then
 	-->[true] "Return ip blocked message"
