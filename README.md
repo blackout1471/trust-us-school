@@ -6,12 +6,13 @@ Get source with git by typing command ```git clone https://github.com/blackout14
 ## Requirements
 * .Net 6
 * Asp net core
-* Docker (integration tests)
 * Mssql
 * Visual studio
 
 ## Optional requirements
 * Elk stack (can be dockerised) https://github.com/deviantony/docker-elk - This can be used to test the logging mechanism. Can also be seen i console.
+* Docker (integration tests)
+* K6 (stress tests)
 
 ## Opening projects
 Each project has it's own .sln file for visual studio except the javascript library.
@@ -26,6 +27,8 @@ The projects can be located as such
     │   │   ├── MessageService.sln
     │   ├── Webclient - The prototype frontend.
     │   │   ├── TrustLogin - The javascript communication library folder.
+    │   ├── Stress-Test-Web - Stress test folder
+    │   │   ├── *.js - K6 tests, base url etc... can also be found here
 
 
 ## Setting up local environment
@@ -37,6 +40,9 @@ The projects can be located as such
 6. Run IdentityApi with desired profile.
 7. Edit javascript library environment file to point at restapi service.
 8. Open webclient login.html or register.html
+
+(*) Mail server has to be configures in appsettings.json.
+Docker image with mailhog can be set up when testing.
 
 ## Finding environment settings
 
@@ -56,6 +62,11 @@ For Rest api there is unit test and integration test projects.
 The message service also has it's own unit test project.
 
 To be able to run the integrations tests, docker is required. This is because the tests themselves will create the necessary containers with database and etc...
+
+## Stress tests
+To use stress tests, K6 is required. The docker image can be pulled by command `docker pull grafana/k6` in cmd.
+
+1. Run `Run-login-load.bat`
 
 ## Documents
 The folder called `Docs` is used to contain all the documentation for the project such as *class diagrams*, *flowcharts*, *SD diagram*, *ERD diagrams* and images used in the report.

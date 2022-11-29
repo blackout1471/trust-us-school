@@ -231,6 +231,25 @@ exec SP_FetchFullUser @UserID = @UserID
 
 go
 
+CREATE PROCEDURE dbo.SP_UserLoggedInWithVerification 
+@UserID int
+as
+
+update Users
+set FailedTries = 0,
+IsLocked = 0,
+LockedDate = null
+where Users.id = @UserID
+
+Update SecretKeyCounter
+Set LastRequestDate = null
+where @UserID = SecretKeyCounter.UserID
+
+-- Select all user information
+exec SP_FetchFullUser @UserID = @UserID
+
+go
+
 DROP PROCEDURE IF EXISTS dbo.SP_UserLoggedInLocations;
 go
 

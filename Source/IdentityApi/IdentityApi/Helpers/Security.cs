@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace IdentityApi.Helpers
@@ -40,6 +39,7 @@ namespace IdentityApi.Helpers
 
             return hotp;
         }
+
         /// <summary>
         /// Generates a random HMAC key
         /// </summary>

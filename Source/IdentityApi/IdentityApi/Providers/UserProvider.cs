@@ -133,6 +133,15 @@ namespace IdentityApi.Providers
             return dbUser;
         }
 
-        
+        /// <inheritdoc/>
+        public async Task<DbUser> UpdateUserLoginSuccessWithVerificationCode(int userID)
+        {
+            var userTable = await RunSpAsync("SP_UserLoggedInWithVerification", new SpElement("UserID", userID, SqlDbType.Int));
+
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
+
+            return DRToUser(userTable.Rows[0]);
+        }
     }
 }

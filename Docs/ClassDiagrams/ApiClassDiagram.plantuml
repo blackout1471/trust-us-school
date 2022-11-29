@@ -57,6 +57,7 @@ class UserManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
     -_logger : ILogger<UserManager>
+    -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
     --
     +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
         messageService : IMessageService, messageProvider : IMessageProvider, logger : ILogger<UserManager>)
@@ -100,6 +101,7 @@ interface IUserProvider {
     +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
     +UpdateUserLoginNewLocation(userId : int) : Task<DbUser>
     +UpdateUserToVerifiedAsync(userID : int) : Task
+    +UpdateUserLoginSuccessWithVerificationCode(userId : int) : Task<DbUser>
 }
 
 interface ILeakedPasswordProvider {
