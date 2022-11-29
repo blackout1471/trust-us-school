@@ -42,5 +42,11 @@ namespace IdentityApi.Interfaces
         /// <returns>Updated user</returns>
         Task<DbUser> UpdateUserLoginNewLocation(int userID);
 
+        /// <summary>
+        /// Updates user successful login with verification code
+        /// Removes the time the verification code is valid
+        /// </summary>
+        /// <returns>Updated user</returns>
+        Task<DbUser> UpdateUserLoginSuccessWithVerificationCode(int userID);
     }
 }

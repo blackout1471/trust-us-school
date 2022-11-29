@@ -128,7 +128,7 @@ namespace IdentityApi.Managers
                 if (hotp != null)
                 {
                     var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
-                    await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
+                    //await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
                 }
                 await _userLocationManager.LogLocationAsync(userLocation);
                 throw new Required2FAException();
@@ -162,15 +162,9 @@ namespace IdentityApi.Managers
                 throw new AccountLockedException();
             }
 
-            // TODO: Add in SP
-            if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
-            {
-                //TODO: Log, maybe a session expired exception
-                //throw new Exception("Login failed, password expired");
-            }
 
-            // Checks if otp password does not match
-            if (userLogin.Password != Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
+            // check if given otp password is valid
+            if (!Security.VerifyHotp(userLogin.Password, existingUser))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
@@ -180,7 +174,7 @@ namespace IdentityApi.Managers
             }
 
             // login success 
-            existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+            existingUser = await _userProvider.UpdateUserLoginSuccessWithVerificationCode(existingUser.ID);
             userLocation.Successful = true;
             userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
@@ -188,7 +182,6 @@ namespace IdentityApi.Managers
 
             return existingUser;
         }
-
         /// <summary>
         /// Checks whether the given password has been breached,
         /// by calling the leakedpassword provider.
@@ -206,3 +199,5 @@ namespace IdentityApi.Managers
         }
     }
 }
+
+
