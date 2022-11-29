@@ -105,9 +105,9 @@ namespace IdentityApi.Providers
             dbUser.FirstName = dr["FirstName"].ToString();
             dbUser.LastName = dr["LastName"].ToString();
             dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
-            dbUser.IsVerified = (bool)dr["IsLocked"];
+            dbUser.IsVerified = (bool)dr["IsVerified"];
             dbUser.IsLocked = (bool)dr["IsLocked"];
-            dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
+            dbUser.LockedDate = dr["LockedDate"] != null ? (DateTime?)dr["LockedDate"] : null;
             dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
             if (dr.Table.Columns.Contains("HashedPassword"))
