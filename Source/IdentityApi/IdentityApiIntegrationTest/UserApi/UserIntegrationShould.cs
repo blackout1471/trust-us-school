@@ -1,4 +1,5 @@
 ﻿using DotNet.Testcontainers.Containers;
+using IdentityApi.DbModels;
 using IdentityApi.Exceptions;
 using IdentityApi.Models;
 using Newtonsoft.Json;
@@ -33,7 +34,7 @@ namespace IdentityApiIntegrationTest.UserApi
             // Arrange
             var expected = HttpStatusCode.OK;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
-            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            var newUserRequest = await CreateVerifiedUser();
             var customerLoginRequest = new UserLogin
             {
                 Email = newUserRequest.Email,
@@ -116,8 +117,7 @@ namespace IdentityApiIntegrationTest.UserApi
             HttpStatusCode actualRegister = HttpStatusCode.InternalServerError;
             HttpStatusCode actualLogin = HttpStatusCode.InternalServerError;
 
-            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
-            newUserRequest.Password = "Pass123456❤️❤️❤️";
+            var newUserRequest = await CreateVerifiedUser("Pass123456❤️❤️❤️");
 
             var userLoginRequest = new UserLogin
             {
@@ -126,14 +126,10 @@ namespace IdentityApiIntegrationTest.UserApi
             };
 
             // Act
-            var createResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
-            actualLogin = createResponse.StatusCode;
-
             var loginResponse = await _client.PostAsJsonAsync(_baseUrl + "login", userLoginRequest);
-            actualRegister = loginResponse.StatusCode;
+            actualLogin = loginResponse.StatusCode;
 
             // Assert
-            Assert.Equal(expected, actualRegister);
             Assert.Equal(expected, actualLogin);
         }
 
@@ -167,9 +163,15 @@ namespace IdentityApiIntegrationTest.UserApi
             // Arrange
             var expected = HttpStatusCode.OK;
             HttpStatusCode actual = HttpStatusCode.InternalServerError;
-            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
-            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
-            var token = await createUserResponse.Content.ReadFromJsonAsync<UserToken>();
+            var newUserRequest = await CreateVerifiedUser();
+
+            var userLogin = new UserLogin
+            {
+                Email = newUserRequest.Email,
+                Password = newUserRequest.Password
+            };
+            var responseLogin = await _client.PostAsJsonAsync(_baseUrl + "Login", userLogin);
+            var token = await responseLogin.Content.ReadFromJsonAsync<UserToken>();
 
             // Act
             using (var requestMessage = new HttpRequestMessage(HttpMethod.Get, _baseUrl + "getuserbytoken"))
@@ -220,7 +222,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var expected = accountLockedException.Message;
             string actual = null;
 
-            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            var newUserRequest = await CreateVerifiedUser();
 
             var userLogin = new UserLogin
             {
@@ -256,7 +258,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var expected = exception.Message; 
             string actual = null;
 
-            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            var newUserRequest = await CreateVerifiedUser();
 
             var userLogin = new UserLogin
             {
@@ -289,7 +291,7 @@ namespace IdentityApiIntegrationTest.UserApi
             var expected = exception.Message; 
             string actual = null;
 
-            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            var newUserRequest = await CreateVerifiedUser();
 
             var userLogin = new UserLogin
             {
@@ -324,6 +326,18 @@ namespace IdentityApiIntegrationTest.UserApi
             new object[] { "email", new String('a', 7), "first", "last" },
             new object[] { "email", new String('a', 129), "first", "last" },
         };
+
+        private async Task<UserCreate> CreateVerifiedUser(string password = null)
+        {
+            var newUserRequest = TestDataHelper.GenerateNewUserRequest();
+            if (password != null)
+                newUserRequest.Password = password;
+
+            var createUserResponse = await _client.PostAsJsonAsync(_baseUrl + "Create", newUserRequest);
+            var exec = await _sqlQuery($"use TrustUS; Update Users Set IsVerified = 1 where Users.Email = '{newUserRequest.Email}'");
+
+            return newUserRequest;
+        }
         #endregion
 
     }

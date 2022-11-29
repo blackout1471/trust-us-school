@@ -42,5 +42,11 @@ namespace IdentityApi.Interfaces
         /// <returns>Updated user</returns>
         Task<DbUser> UpdateUserLoginNewLocation(int userID);
 
+        /// <summary>
+        /// Updates the status of the user in database to be verfied (IsVerfied = 1)
+        /// </summary>
+        /// <param name="userID">The userId to update.</param>
+        Task UpdateUserToVerifiedAsync(int userID);
+
     }
 }

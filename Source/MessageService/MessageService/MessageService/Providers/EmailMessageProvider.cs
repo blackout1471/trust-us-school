@@ -26,5 +26,12 @@ namespace MessageService.Providers
             return new EmailMessage { To = to, Message = message };
 
         }
+
+        /// <inheritdoc/>
+        public IMessage GetRegisterVerificationMessage(string to, string key)
+        {
+            var message = $"You registration has been registred, use thise key: {key} when verifying your account";
+            return new EmailMessage { To= to, Message = message };
+        }
     }
 }

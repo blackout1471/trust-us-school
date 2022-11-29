@@ -246,7 +246,8 @@ namespace IdentityApiUnitTest.Managers
                 Email = "a@b.com",
                 FirstName = "jon",
                 LastName = "stevensen",
-                PhoneNumber = "13246578"
+                PhoneNumber = "13246578",
+                IsVerified = true,
             };
         }
 
@@ -262,7 +263,8 @@ namespace IdentityApiUnitTest.Managers
                 LastName = "stevensen",
                 PhoneNumber = "13246578",
                 SecretKey = "ABCDE123",
-                Counter = 33
+                Counter = 33,
+                IsVerified = true,
             };
         }
 

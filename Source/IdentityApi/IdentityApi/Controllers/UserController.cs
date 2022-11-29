@@ -28,7 +28,7 @@ namespace IdentityApi.Controllers
         public async Task<ActionResult<UserToken>> Create(UserCreate userCreate)
         {
             var createdUser = await _userManager.CreateUserAsync(userCreate, GetUserLocation());
-            return Ok(_tokenManager.GenerateUserToken(createdUser));
+            return Ok("User has been created!");
         }
 
         /// <summary>
@@ -46,6 +46,7 @@ namespace IdentityApi.Controllers
 
             return Ok(_tokenManager.GenerateUserToken(user));
         }
+
         /// <summary>
         /// Logs user in with onetime password, if exists
         /// </summary>
@@ -61,6 +62,18 @@ namespace IdentityApi.Controllers
 
             return Ok(_tokenManager.GenerateUserToken(user));
 
+        }
+
+        /// <summary>
+        /// Logs user in with onetime password, if exists
+        /// </summary>
+        /// <returns>Ok if user is verified</returns>
+        [HttpPost]
+        [Route("verifyregister")]
+        public async Task<ActionResult<UserToken>> VerifyUserRegister(UserLogin userLogin)
+        {
+            return await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation()) ? 
+                Ok() : throw new UserIncorrectLoginException();
         }
 
         /// <summary>
