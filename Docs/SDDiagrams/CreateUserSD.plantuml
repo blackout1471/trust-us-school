@@ -73,13 +73,6 @@ UserManager->MessageProvider: GetRegisterMessage(email, key)
 MessageProvider-->UserManager: Return message
 UserManager->MessageService: Send message (message)
 
-UserManager->Security: GetOneTimePassword(email, key)
-Security-->UserManager: Returns one time password
-
-UserManager->MessageProvider: GetRegisterVerificationMessage(email, key)
-MessageProvider-->UserManager: Return message
-UserManager->MessageService: Send message(message)
-
 UserManager-->UserController: Return true
 UserController-->User: Return true
 

@@ -69,13 +69,6 @@ namespace IdentityApi.Managers
 
             await _messageService.SendMessageAsync(registerMessage);
 
-            var hotp = Security.GetHotp(createdUser.SecretKey, createdUser.Counter);
-            if (hotp != null)
-            {
-                var registrationEmail = _messageProvider.GetRegisterVerificationMessage(createdUser.Email, hotp);
-                await _messageService.SendMessageAsync(registrationEmail);
-            }
-
             return true;
         }
 
@@ -159,7 +152,6 @@ namespace IdentityApi.Managers
             // User is locked, no need for further checks
             await IsUserLocked(userLocation, existingUser);
 
-
             // check if given otp password is valid
             if (!IsVerificationCodeValid(userLogin.Password, existingUser))
             {
@@ -198,7 +190,7 @@ namespace IdentityApi.Managers
             await IsUserLocked(userLocation, existingUser);
 
             // Checks if otp password does not match
-            if (userLogin.Password != Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
+            if (userLogin.Password != existingUser.SecretKey)
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);

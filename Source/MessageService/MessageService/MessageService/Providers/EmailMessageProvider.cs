@@ -20,18 +20,11 @@ namespace MessageService.Providers
         /// <inheritdoc/>
         public IMessage GetRegisterMessage(string to, string key)
         {
-            var message = "Welcome, this is your 2-factor password:\n" + key + "\nSave this password in case you lose access to your email.";
+            var message = "Welcome, this is your 2-factor password:\n" + key + "\nSave this password in case you lose access to your email.\nUse this key to verify registration.";
 
 
             return new EmailMessage { To = to, Message = message };
 
-        }
-
-        /// <inheritdoc/>
-        public IMessage GetRegisterVerificationMessage(string to, string key)
-        {
-            var message = $"You registration has been registred, use thise key: {key} when verifying your account";
-            return new EmailMessage { To= to, Message = message };
         }
     }
 }
