@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="569px" preserveAspectRatio="none" style="width:634px;height:569px;background:#FFFFFF;" version="1.1" viewBox="0 0 634 569" width="634px" zoomAndPan="magnify"><defs/><g><ellipse cx="111" cy="16" fill="#222222" rx="10" ry="10" style="stroke:none;stroke-width:1.0;"/><rect fill="#ADD8E6" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="167" x="27.5" y="67"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="147" x="37.5" y="89.457">Receive email &amp; secret key</text><g id="elem_#5"><polygon fill="#90EE90" points="111,143,123,155,111,167,99,155,111,143" style="stroke:#181818;stroke-width:0.5;"/></g><rect fill="#ADD8E6" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="172" x="7" y="222"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="152" x="17" y="244.457">Return ip blocked message</text><g id="elem_#10"><polygon fill="#90EE90" points="211,227.5,223,239.5,211,251.5,199,239.5,211,227.5" style="stroke:#181818;stroke-width:0.5;"/></g><rect fill="#ADD8E6" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="227" x="66.5" y="467"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="207" x="76.5" y="489.457">Return incorrect credentials message</text><g id="elem_#15"><polygon fill="#90EE90" points="295,298,307,310,295,322,283,310,295,298" style="stroke:#181818;stroke-width:0.5;"/></g><rect fill="#ADD8E6" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="180" x="205" y="377"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="160" x="215" y="399.457">Return user locked message</text><g id="elem_#20"><polygon fill="#90EE90" points="417,382.5,429,394.5,417,406.5,405,394.5,417,382.5" style="stroke:#181818;stroke-width:0.5;"/></g><rect fill="#ADD8E6" height="35.0938" rx="12.5" ry="12.5" style="stroke:#181818;stroke-width:0.5;" width="196" x="319" y="467"/><text fill="#000000" font-family="sans-serif" font-size="12" lengthAdjust="spacing" textLength="176" x="329" y="489.457">Return user is verified message</text><ellipse cx="417" cy="553" fill="none" rx="10" ry="10" style="stroke:#FF0000;stroke-width:1.0;"/><ellipse cx="417.5" cy="553.5" fill="#FF0000" rx="6" ry="6" style="stroke:none;stroke-width:1.0;"/><!--MD5=[6387e05d8ef5e28c68a5bde45daef8cd]
+link start to Receive email & secret key--><g id="link_start_Receive email &amp; secret key"><path d="M111,26.25 C111,35.43 111,49.84 111,61.9 " fill="none" id="start-to-Receive email &amp; secret key" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="111,66.91,115,57.91,111,61.91,107,57.91,111,66.91" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[1d0469052e28c91bfe5f8294a4468b54]
+link Receive email & secret key to #5--><g id="link_Receive email &amp; secret key_#5"><path d="M111,102.08 C111,112.87 111,126.88 111,137.63 " fill="none" id="Receive email &amp; secret key-to-#5" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="111,142.92,115,133.92,111,137.92,107,133.92,111,142.92" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="59" x="37.6188" y="132.485">Ip is blocked</text></g><!--MD5=[556588b319764b122b83060284bcf201]
+link #5 to Return ip blocked message--><g id="link_#5_Return ip blocked message"><path d="M109,165.14 C106.3,177.54 101.39,200.05 97.72,216.88 " fill="none" id="#5-to-Return ip blocked message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="96.62,221.91,102.4329,213.9595,97.6774,217.0231,94.6138,212.2676,96.62,221.91" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="19" x="106" y="199.4189">true</text></g><!--MD5=[46dcf2c2a445c5816f2e190415bdd366]
+link #5 to #10--><g id="link_#5_#10"><path d="M117.26,161.16 C134.02,174.99 180.09,213 200.74,230.04 " fill="none" id="#5-to-#10" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="204.75,233.34,200.3386,224.5343,200.8879,230.1645,195.2577,230.7138,204.75,233.34" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="93" x="231.4156" y="223.6486">user does not exist</text></g><!--MD5=[8b50378e7ea514942e335c9d1a85cf75]
+link #10 to Return incorrect credentials message--><g id="link_#10_Return incorrect credentials message"><path d="M209.75,250.33 C205.17,286.22 189.27,410.8 182.79,461.64 " fill="none" id="#10-to-Return incorrect credentials message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="182.12,466.9,187.2173,458.4728,182.7472,461.9395,179.2805,457.4693,182.12,466.9" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="19" x="199" y="354.4189">true</text></g><!--MD5=[964bdbcd74089faaa499bf5ab2d768b0]
+link #10 to #15--><g id="link_#10_#15"><path d="M217.31,245.65 C231.66,257.35 266.86,286.05 284.52,300.46 " fill="none" id="#10-to-#15" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="288.61,303.79,284.1632,295.0022,284.7351,300.63,279.1073,301.202,288.61,303.79" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="67" x="207.8978" y="297.9836">Is user locked</text></g><!--MD5=[1ef02b6714ba5b3c383f1bba62f45f7d]
+link #15 to Return user locked message--><g id="link_#15_Return user locked message"><path d="M295,322.13 C295,334.77 295,355.72 295,371.66 " fill="none" id="#15-to-Return user locked message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="295,376.85,299,367.85,295,371.85,291,367.85,295,376.85" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="19" x="296" y="354.4189">true</text></g><!--MD5=[354f6a9647aa1417fae839d21f2cfb02]
+link #15 to #20--><g id="link_#15_#20"><path d="M301.89,315.34 C318.24,325.7 360.64,352.81 395,377 C398.82,379.69 402.93,382.73 406.55,385.46 " fill="none" id="#15-to-#20" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="410.53,388.49,405.799,379.8518,406.5542,385.4581,400.9479,386.2132,410.53,388.49" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="191" x="436.6826" y="383.3569">Does secret not match given password</text></g><!--MD5=[c4fdf273b225c2872b9c1e5d5f765f09]
+link #20 to Return incorrect credentials message--><g id="link_#20_Return incorrect credentials message"><path d="M410.82,400.99 C406.6,404.52 400.75,408.99 395,412 C350.03,435.54 295.78,453.51 253.02,465.55 " fill="none" id="#20-to-Return incorrect credentials message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="248.13,466.92,257.8777,468.328,252.9424,465.5634,255.7071,460.6281,248.13,466.92" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="19" x="351" y="444.4189">true</text></g><!--MD5=[a8e97b5d154b83532ecc2984b64fa509]
+link #20 to Return user is verified message--><g id="link_#20_Return user is verified message"><path d="M417,406.65 C417,420.39 417,444.08 417,461.54 " fill="none" id="#20-to-Return user is verified message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="417,466.73,421,457.73,417,461.73,413,457.73,417,466.73" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[f0f71c5b094a82acf3488167b15f37fd]
+link Return user is verified message to end--><g id="link_Return user is verified message_end"><path d="M417,502.28 C417,513.29 417,527.52 417,537.94 " fill="none" id="Return user is verified message-to-end" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="417,543,421,534,417,538,413,534,417,543" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[9fddaa3ec0fb714554c0973946595aa4]
+@startuml User registration verification
+
+skinparam activity {
+    BackgroundColor lightblue
+    
+    StartColor green
+    EndColor red
+    
+    diamondBackgroundColor lightgreen
+}
+
+
+(*) - -> "Receive email & secret key"
+
+if "Ip is blocked" then
+	- ->[true] "Return ip blocked message"
+else
+	if "user does not exist" then
+		- ->[true] "Return incorrect credentials message"
+	else
+		if "Is user locked" then
+			- ->[true] "Return user locked message"
+		else
+			if "Does secret not match given password" then
+				- ->[true] "Return incorrect credentials message"
+			else
+				- ->"Return user is verified message"
+			end if
+		end if
+	end if
+end if
+
+- ->(*)
+
+@enduml
+
+PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) Client VM
+Default Encoding: Cp1252
+Language: en
+Country: US
+--></g></svg>
