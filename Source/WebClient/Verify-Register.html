@@ -36,7 +36,7 @@
             let password = document.getElementById('inputPassword').value;
 
             try {
-                let response = await userIntegration.verifyLogin(email, password);
+                let response = await userIntegration.verifyRegistration(email, password);
                 if (response != undefined)
                   document.getElementById('response').innerText = "You have been verified, you can now login";
             }
