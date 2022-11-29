@@ -1,6 +1,4 @@
-﻿using IdentityApi.DbModels;
-using IdentityApi.Models;
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 
 namespace IdentityApi.Helpers
