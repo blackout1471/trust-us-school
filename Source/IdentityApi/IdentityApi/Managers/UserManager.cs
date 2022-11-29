@@ -121,14 +121,14 @@ namespace IdentityApi.Managers
                 if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
                 {
                     //TODO: Handle multiple logins in an attempt to generate more OTPS
-                    //Maybe just return or throw error
+                    //Maybe just return null or throw error
                 }
                 existingUser = await _userProvider.UpdateUserLoginNewLocation(existingUser.ID);
                 var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
                 if (hotp != null)
                 {
                     var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
-                    //await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
+                    await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
                 }
                 await _userLocationManager.LogLocationAsync(userLocation);
                 throw new Required2FAException();

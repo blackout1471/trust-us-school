@@ -50,7 +50,7 @@ namespace IdentityApi.Helpers
         public static bool VerifyHotp(string hotp, DbUser user)
         {
             // TODO: Add in SP
-            if (!user.LastRequestDate.HasValue || user.LastRequestDate.Value.AddMinutes(75) < DateTime.Now)
+            if (!user.LastRequestDate.HasValue || user.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
             {
                 return false;
             }
