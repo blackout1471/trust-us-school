@@ -37,7 +37,8 @@ class UserIntegration {
             
             // Error handling
             response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
-        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
     };
 
     // Calls the api to register an user with the given details.
@@ -50,7 +51,21 @@ class UserIntegration {
             
             // Error handling
             response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
-        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
+    };
+
+    verifyLogin = async (email, password) => {
+        let bodyRequest = {email: email, password: password};
+
+        return await this.#createFetch(bodyRequest, 'POST', 'verificationlogin').then(response => {
+            if (response.status == 200)
+            return response.json();
+        
+        // Error handling
+        response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
     };
 
 }
