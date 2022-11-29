@@ -1,7 +1,6 @@
 ﻿using IdentityApi.Interfaces;
 using System.Data;
 using IdentityApi.DbModels;
-using System;
 
 namespace IdentityApi.Providers
 {
@@ -107,7 +106,7 @@ namespace IdentityApi.Providers
             dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
             dbUser.IsVerified = (bool)dr["IsVerified"];
             dbUser.IsLocked = (bool)dr["IsLocked"];
-            dbUser.LockedDate = dr["LockedDate"] != null ? (DateTime?)dr["LockedDate"] : null;
+            dbUser.LockedDate = !string.IsNullOrEmpty(dr["LockedDate"].ToString()) ? (DateTime?)dr["LockedDate"] : null;
             dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
             if (dr.Table.Columns.Contains("HashedPassword"))
