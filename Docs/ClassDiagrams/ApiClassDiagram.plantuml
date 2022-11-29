@@ -42,6 +42,11 @@ interface IUserLocationManager {
     +UserWasLoggedInFromLocationAsync(userLocation : UserLocation) : Task<bool>
 }
 
+interface IMessageManager {
+    +SendLoginAttemptMessage(to : string, otp : string) : void
+    +SendLoginRegistrationMessage(to : string, key : string) : void
+}
+
 class TokenManager {
     --
     -GetPrincipal(token : string) : ClaimsPrincipal
@@ -52,13 +57,12 @@ class UserManager {
     -_userProvider : IUserProvider
     -_leakedPasswordProvider : ILeakedPasswordProvider;
     -_userLocationManager : IUserLocationManager
-    -_messageService : IMessageService
-    -_messageProvider : IMessageProvider
+    -_messageManager : IMessageManager
     -_logger : ILogger<UserManager>
     -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
     --
     +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
-     messageService : IMessageService, messageProvider : IMessageProvider, logger : ILogger<UserManager>)
+     messageManager : IMessageManager, logger : ILogger<UserManager>)
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
 
@@ -67,6 +71,12 @@ class UserLocationManager {
     --
     +UserLocationManager(userLocationProvider : UserLocationProvider)
 }
+class MessageManager {
+    -_messageService : IMessageService
+    -_messageProvider : IMessageProvider
+
+    +MessageManager(messageService : EmailMessageService, messageProvider : MailMessageProvider)
+}
 
 
 'Managers mappings'
@@ -74,10 +84,12 @@ class UserLocationManager {
 IUserManager --> UserCreate
 IUserManager --> UserLogin
 UserManager .-|> IUserManager
+MessageManager .-|> IMessageManager
 
 UserManager o-- IUserProvider
 UserManager o-- IUserLocationManager
 UserManager o-- ILeakedPasswordProvider
+UserManager o-- IMessageManager
 
 TokenManager .-|> ITokenManager
 ITokenManager *-- UserToken

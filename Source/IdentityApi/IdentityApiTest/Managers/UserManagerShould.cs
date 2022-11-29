@@ -1,15 +1,10 @@
 ﻿using FakeItEasy;
-using FakeItEasy.Configuration;
 using IdentityApi.DbModels;
 using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
-using IdentityApi.Providers;
-using MessageService.MessageServices;
-using MessageService.Providers;
 using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -19,8 +14,7 @@ namespace IdentityApiUnitTest.Managers
         private readonly IUserProvider _fakeUserProvider;
         private readonly ILeakedPasswordProvider _fakeLeakedPasswordProvider;
         private readonly IUserLocationManager _fakeLocationManager;
-        private readonly IMessageService _messageService;
-        private readonly IMessageProvider _messageProvider;
+        private readonly IMessageManager _messageManager;
         private readonly UserManager _userManager;
 
         public UserManagerShould()
@@ -29,13 +23,11 @@ namespace IdentityApiUnitTest.Managers
             _fakeUserProvider = A.Fake<IUserProvider>();
             _fakeLeakedPasswordProvider = A.Fake<ILeakedPasswordProvider>();
             _fakeLocationManager = A.Fake<IUserLocationManager>();
-            _messageService = A.Fake<IMessageService>();
-            _messageProvider = A.Fake<IMessageProvider>();
+            _messageManager = A.Fake<IMessageManager>();
 
             _userManager = new UserManager(
                 _fakeUserProvider,
-                _messageService,
-                _messageProvider,
+                _messageManager,
                 _fakeLogger,
                 _fakeLocationManager, 
                 _fakeLeakedPasswordProvider

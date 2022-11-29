@@ -14,19 +14,17 @@ namespace IdentityApi.Managers
     public class UserManager : IUserManager
     {
         private readonly IUserProvider _userProvider;
-        private readonly IMessageService _messageService;
-        private readonly IMessageProvider _messageProvider;
+        private readonly IMessageManager _messageManager;
         private readonly IUserLocationManager _userLocationManager;
         private readonly ILeakedPasswordProvider _leakedPasswordProvider;
         private readonly ILogger<UserManager> _logger;
-        public UserManager(IUserProvider userProvider, IMessageService messageService, IMessageProvider messageProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
+        public UserManager(IUserProvider userProvider, IMessageManager messageManager, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
         {
             _userProvider = userProvider;
             _userLocationManager = userLocationManager;
             _leakedPasswordProvider = leakedPasswordProvider;
             _logger = logger;
-            _messageService = messageService;
-            _messageProvider = messageProvider;
+            _messageManager = messageManager;
         }
 
         /// <inheritdoc/>
@@ -65,9 +63,7 @@ namespace IdentityApi.Managers
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
             await _userLocationManager.LogLocationAsync(userLocation);
-            var registerMessage = _messageProvider.GetRegisterMessage(createdUser.Email, createdUser.SecretKey);
-
-            await _messageService.SendMessageAsync(registerMessage);
+            _messageManager.SendRegistrationMessage(createdUser.Email, createdUser.SecretKey);
 
             // Map from db user to user
             return createdUser.Adapt<User>();
@@ -127,8 +123,7 @@ namespace IdentityApi.Managers
                 var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
                 if (hotp != null)
                 {
-                    var loginFromAnotherLocationEmail = _messageProvider.GetLoginAttemptMessage(existingUser.Email, hotp);
-                    await _messageService.SendMessageAsync(loginFromAnotherLocationEmail);
+                    _messageManager.SendLoginAttemptMessage(existingUser.Email, hotp);
                 }
                 await _userLocationManager.LogLocationAsync(userLocation);
                 throw new Required2FAException();
