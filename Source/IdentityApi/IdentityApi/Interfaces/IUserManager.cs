@@ -5,9 +5,10 @@ namespace IdentityApi.Interfaces
     public interface IUserManager
     {
         /// <summary>
-        /// Creates user
+        /// Creates an user, and sends a verfication email to the user.
         /// </summary>
-        Task<User> CreateUserAsync(UserCreate userCreate, UserLocation userLocation);
+        /// <returns>True if user has been created, false otherwise</returns>
+        Task<bool> CreateUserAsync(UserCreate userCreate, UserLocation userLocation);
 
         /// <summary>
         /// Logs user in
@@ -20,6 +21,13 @@ namespace IdentityApi.Interfaces
         /// </summary>
         /// <returns>Logged in user</returns>
         Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation);
+
+        /// <summary>
+        /// Verifies the registered user by using an one time password.
+        /// </summary>
+        /// <param name="userLogin">The user credentials, password is one time password.</param>
+        /// <returns>True if user is verified, false otherwise.</returns>
+        Task<bool> VerifyUserRegistrationAsync(UserLogin userLogin, UserLocation userlocation);
 
         /// <summary>
         /// Gets user based on id

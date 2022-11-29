@@ -1,15 +1,12 @@
 ﻿using FakeItEasy;
-using FakeItEasy.Configuration;
 using IdentityApi.DbModels;
 using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
-using IdentityApi.Providers;
 using MessageService.MessageServices;
 using MessageService.Providers;
 using Microsoft.Extensions.Logging;
-using System.Text;
 
 namespace IdentityApiUnitTest.Managers
 {
@@ -188,8 +185,6 @@ namespace IdentityApiUnitTest.Managers
             var expected = GetUser();
             var userLogin = GetUserLogin();
 
-            var userProvider = A.Fake<IUserProvider>();
-
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
 
             // Act
@@ -206,8 +201,6 @@ namespace IdentityApiUnitTest.Managers
             var expected = GetUser();
             var userLogin = GetUserLoginVerification();
 
-            var userProvider = A.Fake<IUserProvider>();
-
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
 
             // Act
@@ -218,13 +211,11 @@ namespace IdentityApiUnitTest.Managers
         }
 
         [Fact]
-        public async void ThrowsException_WhenUserNotLoggedInLoctaion_Login()
+        public async void ThrowsException_WhenUserNotLoggedInLocation_Login()
         {
             // Arrange
             var expected = GetUser();
             var userLogin = GetUserLogin();
-
-            var userProvider = A.Fake<IUserProvider>();
 
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
@@ -237,6 +228,96 @@ namespace IdentityApiUnitTest.Managers
             await Assert.ThrowsAsync<Required2FAException>(func);
         }
 
+        [Fact]
+        public async void ThrowsAccountIsNotVerifiedException_WhenUserIsNotVerified_Login()
+        {
+            // Arrange
+            var expected = GetUser();
+            var userLogin = GetUserLogin();
+            var dbUser = GetDbUser();
+            dbUser.IsVerified = false;
+
+            var userProvider = A.Fake<IUserProvider>();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored))
+                .Returns(true);
+
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            // Act
+            var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<AccountIsNotVerifiedException>(func);
+        }
+
+        [Fact]
+        public async void ThrowsIpBlockedException_WhenUserIsBlocked_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
+            
+            // Act
+            var func = async () => await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<IpBlockedException>(func);
+        }
+
+        [Fact]
+        public async void ExpectFalse_WhenUserDoNotExist_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(null);
+
+            // Act
+            var actual = await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public async void ThrowUserIsLockedException_WhenUserIsLocked_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+            var dbUser = GetDbUser();
+            dbUser.IsLocked = true;
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
+
+            // Act
+            var func = async () => await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<AccountLockedException>(func);
+        }
+
+        [Fact]
+        public async void ThrowUserIncorrectLoginException_WhenPasswordsDoNotMatch_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+            var dbUser = GetDbUser();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
+
+            // Act
+            var func = async () => await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
+        }
+
 
         private User GetUser()
         {
@@ -246,7 +327,8 @@ namespace IdentityApiUnitTest.Managers
                 Email = "a@b.com",
                 FirstName = "jon",
                 LastName = "stevensen",
-                PhoneNumber = "13246578"
+                PhoneNumber = "13246578",
+                IsVerified = true,
             };
         }
 
@@ -263,7 +345,8 @@ namespace IdentityApiUnitTest.Managers
                 PhoneNumber = "13246578",
                 SecretKey = "ABCDE123",
                 LastRequestDate = DateTime.Now,
-                Counter = 33
+                Counter = 33,
+                IsVerified = true,
             };
         }
 

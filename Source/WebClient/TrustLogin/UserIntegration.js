@@ -37,7 +37,8 @@ class UserIntegration {
             
             // Error handling
             response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
-        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
     };
 
     // Calls the api to register an user with the given details.
@@ -46,11 +47,40 @@ class UserIntegration {
 
         return await this.#createFetch(bodyRequest, 'POST', 'create').then(response => {
             if (response.status == 200)
-                return response.json();
+                return response.statusText
             
             // Error handling
             response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
-        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
+    };
+
+    // Calls the api to verify locked account
+    verifyLogin = async (email, password) => {
+        let bodyRequest = {email: email, password: password};
+
+        return await this.#createFetch(bodyRequest, 'POST', 'verificationlogin').then(response => {
+            if (response.status == 200)
+                return response.statusText
+        
+        // Error handling
+        response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
+    };
+
+    // Calls api to verify registration for an account
+    verifyRegistration = async (email, password) => {
+        let bodyRequest = {email: email, password: password};
+
+        return await this.#createFetch(bodyRequest, 'POST', 'verifyregister').then(response => {
+            if (response.status == 200)
+                return response.statusText
+        
+        // Error handling
+        response.json().then(json => this.#callOnErrorEvent(json['error'], response.status));
+        }, networkError => this.#callOnErrorEvent("Network error: " + networkError.message, 500)
+        );
     };
 
 }

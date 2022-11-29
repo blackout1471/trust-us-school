@@ -341,3 +341,18 @@ where @UserID = SecretKeyCounter.UserID
 
 exec SP_FetchFullUser @UserID = @UserID
 go
+
+
+
+-- SP_UserRegistrationVerified updates the verfied status in user table to be true.
+Drop Procedure If EXISTS SP_UserRegistrationVerified
+go
+
+Create Procedure SP_UserRegistrationVerified
+@UserID int
+as
+Update Users
+Set IsVerified = 1
+where @UserID = Users.ID
+
+go

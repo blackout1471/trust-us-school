@@ -1,7 +1,6 @@
 ﻿using IdentityApi.Interfaces;
 using System.Data;
 using IdentityApi.DbModels;
-using System;
 
 namespace IdentityApi.Providers
 {
@@ -90,6 +89,12 @@ namespace IdentityApi.Providers
             return DRToUser(userTable.Rows[0]);
         }
 
+        /// <inheritdoc />
+        public async Task UpdateUserToVerifiedAsync(int userID)
+        {
+            await RunSpAsync("SP_UserRegistrationVerified", new SpElement("UserID", userID, SqlDbType.Int));
+        }
+
         /// <summary>
         /// Maps datarow to db user
         /// </summary>
@@ -105,9 +110,9 @@ namespace IdentityApi.Providers
             dbUser.FirstName = dr["FirstName"].ToString();
             dbUser.LastName = dr["LastName"].ToString();
             dbUser.PhoneNumber = dr["PhoneNumber"].ToString();
-            dbUser.IsVerified = (bool)dr["IsLocked"];
+            dbUser.IsVerified = (bool)dr["IsVerified"];
             dbUser.IsLocked = (bool)dr["IsLocked"];
-            dbUser.LockedDate = dr["LockedDate"] == null ? (DateTime?)dr["LockedDate"] : null;
+            dbUser.LockedDate = !string.IsNullOrEmpty(dr["LockedDate"].ToString()) ? (DateTime?)dr["LockedDate"] : null;
             dbUser.FailedTries = Convert.ToInt32(dr["FailedTries"]);
 
             if (dr.Table.Columns.Contains("HashedPassword"))
