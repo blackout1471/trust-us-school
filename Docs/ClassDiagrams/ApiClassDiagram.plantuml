@@ -55,9 +55,10 @@ class UserManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
     -_logger : ILogger<UserManager>
+    -_configuration : IConfiguration
     -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
     --
-    +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
+    +UserManager(configuration : IConfiguration, userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageService : IMessageService, messageProvider : IMessageProvider, logger : ILogger<UserManager>)
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
 }
@@ -142,9 +143,10 @@ UserProvider --|> SqlProvider
 
 class Security{
     --
-    {static}-GetEncryptedPassword(password : string) : string
+    {static}-ComputeHash(password : string) : string
+    {static}-HashPassword(password : salt, salt : string) : string
     {static}+GetSalt(saltLength : int) : string
-    {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
+    {static}+GetEncryptedAndSaltedPassword(password : string, salt : string, pepper : string) : string
     {static}+GetHotp(key : string, counter : long) : string
     {static}+GetHmacKey() : string
 }

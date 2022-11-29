@@ -18,9 +18,11 @@ namespace IdentityApi.Managers
         private readonly IMessageProvider _messageProvider;
         private readonly IUserLocationManager _userLocationManager;
         private readonly ILeakedPasswordProvider _leakedPasswordProvider;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<UserManager> _logger;
-        public UserManager(IUserProvider userProvider, IMessageService messageService, IMessageProvider messageProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
+        public UserManager(IConfiguration configuration, IUserProvider userProvider, IMessageService messageService, IMessageProvider messageProvider, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
         {
+            _configuration = configuration;
             _userProvider = userProvider;
             _userLocationManager = userLocationManager;
             _leakedPasswordProvider = leakedPasswordProvider;
@@ -53,8 +55,8 @@ namespace IdentityApi.Managers
             // Map from user create to db user
             var toCreateDbUser = userCreate.Adapt<DbUser>();
 
-            toCreateDbUser.Salt = Security.GetSalt(50);
-            toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
+            toCreateDbUser.Salt = Security.GetSalt(32);
+            toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt, _configuration["Pepper"]);
             //TODO: Make a random counter start
             toCreateDbUser.Counter = 0;
             toCreateDbUser.SecretKey = Security.GetHmacKey();
@@ -106,7 +108,7 @@ namespace IdentityApi.Managers
             }
 
             // Check if passwords do not match
-            if (existingUser.HashedPassword != Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
+            if (existingUser.HashedPassword != Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt, _configuration["Pepper"]))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);

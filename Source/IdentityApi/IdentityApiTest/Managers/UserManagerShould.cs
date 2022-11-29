@@ -8,6 +8,7 @@ using IdentityApi.Models;
 using IdentityApi.Providers;
 using MessageService.MessageServices;
 using MessageService.Providers;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Text;
 
@@ -21,6 +22,7 @@ namespace IdentityApiUnitTest.Managers
         private readonly IUserLocationManager _fakeLocationManager;
         private readonly IMessageService _messageService;
         private readonly IMessageProvider _messageProvider;
+        private readonly IConfiguration _configuration;
         private readonly UserManager _userManager;
 
         public UserManagerShould()
@@ -31,8 +33,9 @@ namespace IdentityApiUnitTest.Managers
             _fakeLocationManager = A.Fake<IUserLocationManager>();
             _messageService = A.Fake<IMessageService>();
             _messageProvider = A.Fake<IMessageProvider>();
-
+            _configuration = A.Fake<IConfiguration>();
             _userManager = new UserManager(
+                _configuration,
                 _fakeUserProvider,
                 _messageService,
                 _messageProvider,
@@ -52,7 +55,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
-
+            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             // Act
             var actual = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -230,6 +233,8 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
+            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
+
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -256,8 +261,8 @@ namespace IdentityApiUnitTest.Managers
             {
                 ID = 1,
                 Email = "a@b.com",
-                HashedPassword = "C123469DB6AEE601787C5974D80A7D7223486F1523B00803E82EF60CD5EB27918C1CA9F77AE8B61E73CF944CE82B469491CEEDEDFE89C936DAE3220F6C7A78B9",
-                Salt = "CVkTFhIFerV0uxOMbZ0fFlE4HFVrwOs2PW5kkPEvzSoFcVJkNP",
+                HashedPassword = "eG9Cgwq22HalElRHffdS+VRpovkQE7GVTjBo2N5jqHk7Sm6q0KdJRotjjoGupudBVgAUJrHD+DBmYU4o43n9rw==",
+                Salt = "rIVLXrD6SaBRQxLv7zkYOQrLbfe3s2xkdupQvYAEBAo=",
                 FirstName = "jon",
                 LastName = "stevensen",
                 PhoneNumber = "13246578",
@@ -273,7 +278,7 @@ namespace IdentityApiUnitTest.Managers
             return new UserLogin()
             {
                 Email = "a@b.com",
-                Password = "tron"
+                Password = "verysecurepassword"
             };
         }
         private UserLogin GetUserLoginVerification()
