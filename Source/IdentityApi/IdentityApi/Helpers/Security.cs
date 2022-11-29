@@ -41,26 +41,7 @@ namespace IdentityApi.Helpers
 
             return hotp;
         }
-        /// <summary>
-        /// Verifies if the hotp matches with the dbusers
-        /// </summary>
-        /// <param name="hotp"> hmac-based one-time password</param>
-        /// <param name="user"> The Db user</param>
-        /// <returns>Whether or not the hmac-based one-time password is valid</returns>
-        public static bool VerifyHotp(string hotp, DbUser user)
-        {
-            // TODO: Add in SP
-            if (!user.LastRequestDate.HasValue || user.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
-            {
-                return false;
-            }
-            if (hotp != Security.GetHotp(user.SecretKey, user.Counter))
-            {
-                return false;
-            }
 
-            return true;
-        }
         /// <summary>
         /// Generates a random HMAC key
         /// </summary>

@@ -164,7 +164,7 @@ namespace IdentityApi.Managers
 
 
             // check if given otp password is valid
-            if (!Security.VerifyHotp(userLogin.Password, existingUser))
+            if (!IsVerificationCodeValid(userLogin.Password, existingUser))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
@@ -196,6 +196,27 @@ namespace IdentityApi.Managers
 
             // Check if password has been leaked
             return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
+        }
+
+        /// <summary>
+        /// Verifies the verificaton code
+        /// </summary>
+        /// <param name="verificationCode"> Verification code</param>
+        /// <param name="user"> The Db user</param>
+        /// <returns>Whether or not the verification code is valid</returns>
+        private bool IsVerificationCodeValid(string verificationCode, DbUser user)
+        {
+            // TODO: Add in SP
+            if (!user.LastRequestDate.HasValue || user.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
+            {
+                return false;
+            }
+            if (verificationCode != Security.GetHotp(user.SecretKey, user.Counter))
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
