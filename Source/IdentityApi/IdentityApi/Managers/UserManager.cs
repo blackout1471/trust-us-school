@@ -121,7 +121,7 @@ namespace IdentityApi.Managers
                 if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
                 {
                     //TODO: Handle multiple logins in an attempt to generate more OTPS
-                    //Maybe just return or throw error
+                    //Maybe just return null or throw error
                 }
                 existingUser = await _userProvider.UpdateUserLoginNewLocation(existingUser.ID);
                 var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
@@ -162,15 +162,9 @@ namespace IdentityApi.Managers
                 throw new AccountLockedException();
             }
 
-            // TODO: Add in SP
-            if (existingUser.LastRequestDate.HasValue && existingUser.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
-            {
-                //TODO: Log, maybe a session expired exception
-                //throw new Exception("Login failed, password expired");
-            }
 
-            // Checks if otp password does not match
-            if (userLogin.Password != Security.GetHotp(existingUser.SecretKey, existingUser.Counter))
+            // check if given otp password is valid
+            if (!IsVerificationCodeValid(userLogin.Password, existingUser))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
@@ -180,7 +174,7 @@ namespace IdentityApi.Managers
             }
 
             // login success 
-            existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+            existingUser = await _userProvider.UpdateUserLoginSuccessWithVerificationCode(existingUser.ID);
             userLocation.Successful = true;
             userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
@@ -188,7 +182,6 @@ namespace IdentityApi.Managers
 
             return existingUser;
         }
-
         /// <summary>
         /// Checks whether the given password has been breached,
         /// by calling the leakedpassword provider.
@@ -204,5 +197,28 @@ namespace IdentityApi.Managers
             // Check if password has been leaked
             return await _leakedPasswordProvider.GetIsPasswordLeakedAsync(hashedPassword);
         }
+
+        /// <summary>
+        /// Verifies the verificaton code
+        /// </summary>
+        /// <param name="verificationCode"> Verification code</param>
+        /// <param name="user"> The Db user</param>
+        /// <returns>Whether or not the verification code is valid</returns>
+        private bool IsVerificationCodeValid(string verificationCode, DbUser user)
+        {
+            // TODO: Add in SP
+            if (!user.LastRequestDate.HasValue || user.LastRequestDate.Value.AddMinutes(15) < DateTime.Now)
+            {
+                return false;
+            }
+            if (verificationCode != Security.GetHotp(user.SecretKey, user.Counter))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
+
+

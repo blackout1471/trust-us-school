@@ -79,7 +79,7 @@ namespace IdentityApi.Providers
             return DRToUser(userTable.Rows[0]);
         }
 
-
+        /// <inheritdoc/>
         public async Task<DbUser> UpdateUserLoginNewLocation(int userID)
         {
             var userTable = await RunSpAsync("SP_UpdateLastRequest", new SpElement("UserID", userID, SqlDbType.Int));
@@ -126,6 +126,17 @@ namespace IdentityApi.Providers
             if (dr.Table.Columns.Contains("LastRequestDate"))
                 dbUser.LastRequestDate = !string.IsNullOrEmpty(dr["LastRequestDate"].ToString()) ? (DateTime?)dr["LastRequestDate"] : null;
             return dbUser;
+        }
+
+        /// <inheritdoc/>
+        public async Task<DbUser> UpdateUserLoginSuccessWithVerificationCode(int userID)
+        {
+            var userTable = await RunSpAsync("SP_UserLoggedInWithVerification", new SpElement("UserID", userID, SqlDbType.Int));
+
+            if (userTable?.Rows?.Count == 0 || userTable?.Rows == null)
+                return null;
+
+            return DRToUser(userTable.Rows[0]);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLoginVerification();
 
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessWithVerificationCode(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
 
             // Act
@@ -262,6 +262,7 @@ namespace IdentityApiUnitTest.Managers
                 LastName = "stevensen",
                 PhoneNumber = "13246578",
                 SecretKey = "ABCDE123",
+                LastRequestDate = DateTime.Now,
                 Counter = 33
             };
         }
