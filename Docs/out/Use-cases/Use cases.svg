@@ -7,7 +7,7 @@ link user to u2--><g id="link_user_u2"><path d="M35.26,205.58 C45.34,196.31 59.7
 link u2 to u3--><g id="link_u2_u3"><path d="M163.5,127.2 C163.5,113.82 163.5,94.55 163.5,79.9 " fill="none" id="u2-to-u3" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="163.5,74.73,159.5,83.73,163.5,79.73,167.5,83.73,163.5,74.73" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="55" x="124" y="106.4951">«include»</text></g><!--MD5=[7097f9702f7eb16e26d912201ce91cac]
 reverse link u1 to u4--><g id="link_u1_u4"><path d="M163.5,272.02 C163.5,257.36 163.5,238.08 163.5,224.73 " fill="none" id="u1-backto-u4" style="stroke:#181818;stroke-width:1.0;stroke-dasharray:7.0,7.0;"/><polygon fill="#181818" points="163.5,277.2,167.5,268.2,163.5,272.2,159.5,268.2,163.5,277.2" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="60" x="121.5" y="256.4951">«extends»</text></g><!--MD5=[dbe83a7c1b7f7f8d4debfab66d6af5ec]
 link u1 to api--><g id="link_u1_api"><path d="M186.56,280.82 C204.6,270.72 230.7,255.84 253,242 C266.19,233.82 280.77,224.06 291.68,216.63 " fill="none" id="u1-api" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[7ef1909bb8b07693faf71bf40856fee7]
-link u2 to api--><g id="link_u2_api"><path d="M197.68,154.26 C214.46,160.24 235.03,167.99 253,176 C266.31,181.93 280.89,189.6 291.77,195.56 " fill="none" id="u2-api" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[971853b2c9fedfffc55de394d7c3a753]
+link u2 to api--><g id="link_u2_api"><path d="M197.68,154.26 C214.46,160.24 235.03,167.99 253,176 C266.31,181.93 280.89,189.6 291.77,195.56 " fill="none" id="u2-api" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[2d556f5656dce9c1a4c51dffdb599c55]
 @startuml Use cases
 left to right direction
 
@@ -45,7 +45,7 @@ u2 - - api
 PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
 (GPL source distribution)
 Java Runtime: Java(TM) SE Runtime Environment
-JVM: Java HotSpot(TM) 64-Bit Server VM
+JVM: Java HotSpot(TM) Client VM
 Default Encoding: Cp1252
 Language: en
 Country: US

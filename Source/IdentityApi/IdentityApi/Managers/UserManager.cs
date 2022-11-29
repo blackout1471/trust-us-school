@@ -76,7 +76,6 @@ namespace IdentityApi.Managers
                 await _messageService.SendMessageAsync(registrationEmail);
             }
 
-            // Map from db user to user
             return true;
         }
 

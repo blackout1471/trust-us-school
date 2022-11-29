@@ -25,10 +25,10 @@ namespace IdentityApi.Controllers
         /// <returns>User token for newly created user</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult<UserToken>> Create(UserCreate userCreate)
+        public async Task<ActionResult> Create(UserCreate userCreate)
         {
-            var createdUser = await _userManager.CreateUserAsync(userCreate, GetUserLocation());
-            return Ok("User has been created!");
+            return await _userManager.CreateUserAsync(userCreate, GetUserLocation()) ? 
+                Ok("User has been created!") : throw new Exception("Something went wrong! try again");
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace IdentityApi.Controllers
         /// <returns>Ok if user is verified</returns>
         [HttpPost]
         [Route("verifyregister")]
-        public async Task<ActionResult<UserToken>> VerifyUserRegister(UserLogin userLogin)
+        public async Task<ActionResult> VerifyUserRegister(UserLogin userLogin)
         {
             return await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation()) ? 
                 Ok() : throw new UserIncorrectLoginException();
