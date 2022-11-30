@@ -21,10 +21,10 @@ else
 		if "Is user locked" then
 			-->[true] "Return user locked message"
 		else
-			if "Does one time password not match given password" then
-				-->[true] "Return incorrect credentials message"
+			if "Does one time password match" then
+				-->[false] "Return incorrect credentials message"
 			else
-				-->"Return users token"
+				-->"Return user token"
 			end if
 		end if
 	end if
