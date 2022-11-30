@@ -70,7 +70,13 @@ UserLocationManager-->UserManager: Returns whether user has been logged in from 
 
 alt Has not been logged in from location before
 
-UserManager->MessageService: Send mail with verification code to user(email)
+UserManager->MessageManager: Send mail with verification code to user(email)
+MessageManager->UserManager: Return true if message was sent
+alt Message was not sent
+MessageManager-->UserManager: Return false
+UserManager --> UserController: Throw SendMessageIssueException
+UserController --> User: return contact support error
+end
 UserManager-->UserController: Throw Required 2FA exception
 UserController-->User: Return status forbidden
 User->UserController: Enters verification code

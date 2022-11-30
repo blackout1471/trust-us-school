@@ -24,7 +24,6 @@ namespace IdentityApi.Filters
             switch (context.Exception)
             {
                 case AccountIsNotVerifiedException:
-                case SendMessageIssueException:
                 case Required2FAException:
                 case IpBlockedException:
                 case UserIncorrectLoginException:
@@ -37,6 +36,10 @@ namespace IdentityApi.Filters
                     context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.Conflict);
                     context.ExceptionHandled = true;
                     break;              
+                case SendMessageIssueException:
+                    context.Result = GenerateExceptionResult(exception.Message, HttpStatusCode.InternalServerError);
+                    context.ExceptionHandled = true;
+                    break;
                 default:
                     context.Result = GenerateExceptionResult("Unexpected error occurred", HttpStatusCode.InternalServerError);
                     _logger.LogError(exception, "Unexpected error occurred");

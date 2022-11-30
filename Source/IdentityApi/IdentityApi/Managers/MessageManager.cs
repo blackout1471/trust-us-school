@@ -29,7 +29,7 @@ namespace IdentityApi.Managers
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Something went wrong when sending message, exception: " + ex.ToString());
+                _logger.LogError(ex, "Something went wrong when sending message");
                 return false;
             }
         }
@@ -45,7 +45,7 @@ namespace IdentityApi.Managers
             }
             catch (Exception ex)
             {
-                _logger.LogWarning("Something went wrong when sending message, exception: " + ex.ToString());
+                _logger.LogError(ex, "Something went wrong when sending message");
                 return false;
             }
         }

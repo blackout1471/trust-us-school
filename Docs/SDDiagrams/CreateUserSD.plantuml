@@ -19,8 +19,7 @@ participant LeakedPasswordProvider
 participant TokenManager
 participant UserLocationManager
 participant Security
-participant MessageProvider
-participant MessageService
+participant MessageManager
 
 
 
@@ -69,10 +68,14 @@ Security-->UserManager: Return salted password
 UserManager->UserProvider: Save user in database (user)
 UserProvider-->UserManager: Return saved user
 
-UserManager->MessageProvider: GetRegisterMessage(email, key)
-MessageProvider-->UserManager: Return message
-UserManager->MessageService: Send message (message)
+UserManager->MessageManager: SendRegistrationMessage(email, key)
+MessageManager-->UserManager: Return true if message was sent
+alt Message was not sent
+MessageManager-->UserManager: Return false
+UserManager --> UserController: Throw SendMessageIssueException
+UserController --> User: return contact support error
 
+end
 UserManager-->UserController: Return true
 UserController-->User: Return true
 
