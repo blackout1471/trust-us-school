@@ -69,9 +69,8 @@ UserManager->UserProvider: Save user in database (user)
 UserProvider-->UserManager: Return saved user
 
 UserManager->MessageManager: SendRegistrationMessage(email, key)
-MessageManager-->UserManager: Return true if message was sent
+MessageManager-->UserManager: Return whether the message was sent or not
 alt Message was not sent
-MessageManager-->UserManager: Return false
 UserManager --> UserController: Throw SendMessageIssueException
 UserController --> User: return contact support error
 
