@@ -1,0 +1,35 @@
+@startuml User registration verification
+
+skinparam activity {
+    BackgroundColor lightblue
+    
+    StartColor green
+    EndColor red
+    
+    diamondBackgroundColor lightgreen
+}
+
+
+(*) --> "Receive email & secret key"
+
+if "Ip is blocked" then
+	-->[true] "Return ip blocked message"
+else
+	if "user does not exist" then
+		-->[true] "Return incorrect credentials message"
+	else
+		if "Is user locked" then
+			-->[true] "Return user locked message"
+		else
+			if "Does secret not match given password" then
+				-->[true] "Return incorrect credentials message"
+			else
+				-->"Return user is verified message"
+			end if
+		end if
+	end if
+end if
+
+-->(*)
+
+@enduml

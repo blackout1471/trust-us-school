@@ -1,0 +1,35 @@
+@startuml Verify new login location
+
+skinparam activity {
+    BackgroundColor lightblue
+    
+    StartColor green
+    EndColor red
+    
+    diamondBackgroundColor lightgreen
+}
+
+
+(*) --> "Receive email & One time password"
+
+if "Ip is blocked" then
+	-->[true] "Return ip blocked message"
+else
+	if "user does not exist" then
+		-->[true] "Return incorrect credentials message"
+	else
+		if "Is user locked" then
+			-->[true] "Return user locked message"
+		else
+			if "Does one time password match" then
+				-->[false] "Return incorrect credentials message"
+			else
+				-->"Return user token"
+			end if
+		end if
+	end if
+end if
+
+-->(*)
+
+@enduml
