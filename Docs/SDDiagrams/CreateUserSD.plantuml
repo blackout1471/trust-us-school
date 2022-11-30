@@ -72,10 +72,10 @@ UserManager->MessageManager: SendRegistrationMessage(email, key)
 MessageManager-->UserManager: Return whether the message was sent or not
 alt Message was not sent
 UserManager --> UserController: Throw SendMessageIssueException
-UserController --> User: return contact support error
+UserController --> User: return status internal error
 
 end
 UserManager-->UserController: Return true
-UserController-->User: Return true
+UserController-->User: Return status code 200
 
 @enduml

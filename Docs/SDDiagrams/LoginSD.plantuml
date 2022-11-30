@@ -75,7 +75,7 @@ MessageManager->UserManager: Return whether the message was sent or not
 alt Message was not sent
 
 UserManager --> UserController: Throw SendMessageIssueException
-UserController --> User: return contact support error
+UserController --> User: Return status internal error
 end
 UserManager-->UserController: Throw Required 2FA exception
 UserController-->User: Return status forbidden
