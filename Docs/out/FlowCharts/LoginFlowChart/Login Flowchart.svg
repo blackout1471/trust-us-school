@@ -18,7 +18,7 @@ link #17 to Return wrong credentials message--><g id="link_#17_Return wrong cred
 link #14 to Return account is not verified message--><g id="link_#14_Return account is not verified message"><path d="M215.1119,386.49 C219.4619,389.8 225.3419,394.22 230.6219,398 C255.7419,415.96 284.8019,435.67 305.9719,449.84 " fill="none" id="#14-to-Return account is not verified message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="310.3619,452.77,305.112,444.437,306.2082,449.9866,300.6586,451.0828,310.3619,452.77" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="24" x="280.6219" y="430.4189">false</text></g><!--MD5=[a5f9be55c8fb30ccce1e7296549632e0]
 link #11 to Return Account is locked message--><g id="link_#11_Return Account is locked message"><path d="M346.6219,308.13 C346.6219,320.77 346.6219,341.72 346.6219,357.66 " fill="none" id="#11-to-Return Account is locked message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="346.6219,362.85,350.6219,353.85,346.6219,357.85,342.6219,353.85,346.6219,362.85" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="24" x="347.6219" y="340.4189">false</text></g><!--MD5=[ab5ea17adc830f9e051bf00dcfd7ba7d]
 link #8 to Return wrong credentials message--><g id="link_#8_Return wrong credentials message"><path d="M420.9919,231.9 C438.0719,246.49 483.6219,286.22 483.6219,295 C483.6219,295 483.6219,295 483.6219,787 C483.6219,817.36 456.6119,837.8 429.1119,850.74 " fill="none" id="#8-to-Return wrong credentials message" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="424.3419,852.91,434.1903,852.8156,428.8913,850.8356,430.8712,845.5366,424.3419,852.91" style="stroke:#181818;stroke-width:1.0;"/><text fill="#000000" font-family="sans-serif" font-size="11" lengthAdjust="spacing" textLength="24" x="484.6219" y="545.9189">false</text></g><!--MD5=[289bd9f7143d1c97131a8b56bece89fe]
-link #5 to Throw Forbidden--><g id="link_#5_Throw Forbidden"><path d="M463.1019,162.82 C469.3019,172.26 480.7919,189.74 489.9519,203.69 " fill="none" id="#5-to-Throw Forbidden" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="492.7119,207.89,491.1247,198.1699,489.9714,203.7079,484.4334,202.5546,492.7119,207.89" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[c55cc0b87f9cceda7036fe3f9a18960d]
+link #5 to Throw Forbidden--><g id="link_#5_Throw Forbidden"><path d="M463.1019,162.82 C469.3019,172.26 480.7919,189.74 489.9519,203.69 " fill="none" id="#5-to-Throw Forbidden" style="stroke:#181818;stroke-width:1.0;"/><polygon fill="#181818" points="492.7119,207.89,491.1247,198.1699,489.9714,203.7079,484.4334,202.5546,492.7119,207.89" style="stroke:#181818;stroke-width:1.0;"/></g><!--MD5=[88f040d604eb23e63c06b0bcfffadde6]
 @startuml Login Flowchart
 
 skinparam activity {
@@ -71,8 +71,8 @@ end if
 PlantUML version 1.2022.7(Mon Aug 22 19:01:30 CEST 2022)
 (GPL source distribution)
 Java Runtime: Java(TM) SE Runtime Environment
-JVM: Java HotSpot(TM) Client VM
+JVM: Java HotSpot(TM) 64-Bit Server VM
 Default Encoding: Cp1252
-Language: en
-Country: US
+Language: da
+Country: DK
 --></g></svg>
