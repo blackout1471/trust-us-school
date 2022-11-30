@@ -5,6 +5,7 @@ namespace IdentityApi.Models
     public class UserBase
     {
         [Required]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]
