@@ -17,9 +17,11 @@ namespace IdentityApi.Managers
         private readonly IMessageManager _messageManager;
         private readonly IUserLocationManager _userLocationManager;
         private readonly ILeakedPasswordProvider _leakedPasswordProvider;
+        private readonly IConfiguration _configuration;
         private readonly ILogger<UserManager> _logger;
-        public UserManager(IUserProvider userProvider, IMessageManager messageManager, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
+        public UserManager(IConfiguration configuration, IUserProvider userProvider, IMessageManager messageManager, ILogger<UserManager> logger, IUserLocationManager userLocationManager, ILeakedPasswordProvider leakedPasswordProvider)
         {
+            _configuration = configuration;
             _userProvider = userProvider;
             _userLocationManager = userLocationManager;
             _leakedPasswordProvider = leakedPasswordProvider;
@@ -28,7 +30,7 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<User> CreateUserAsync(UserCreate userCreate, UserLocation userLocation)
+        public async Task<bool> CreateUserAsync(UserCreate userCreate, UserLocation userLocation)
         {
             if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
                 throw new IpBlockedException();
@@ -51,8 +53,8 @@ namespace IdentityApi.Managers
             // Map from user create to db user
             var toCreateDbUser = userCreate.Adapt<DbUser>();
 
-            toCreateDbUser.Salt = Security.GetSalt(50);
-            toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt);
+            toCreateDbUser.Salt = Security.GetSalt(32);
+            toCreateDbUser.HashedPassword = Security.GetEncryptedAndSaltedPassword(userCreate.Password, toCreateDbUser.Salt, _configuration["Pepper"]);
             //TODO: Make a random counter start
             toCreateDbUser.Counter = 0;
             toCreateDbUser.SecretKey = Security.GetHmacKey();
@@ -65,8 +67,7 @@ namespace IdentityApi.Managers
             await _userLocationManager.LogLocationAsync(userLocation);
             _messageManager.SendRegistrationMessage(createdUser.Email, createdUser.SecretKey);
 
-            // Map from db user to user
-            return createdUser.Adapt<User>();
+            return true;
         }
 
         /// <inheritdoc/>
@@ -93,16 +94,12 @@ namespace IdentityApi.Managers
             // Set user id for the rest of the location logs
             userLocation.UserID = existingUser.ID;
 
-            // User is locked, no need for further checks
-            if (existingUser.IsLocked)
-            {
-                await _userLocationManager.LogLocationAsync(userLocation);
-                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
-                throw new AccountLockedException();
-            }
+            // Check if user is locked or not verified yet
+            await IsUserLocked(userLocation, existingUser);
+            await IsUserNotVerified(userLocation, existingUser);
 
             // Check if passwords do not match
-            if (existingUser.HashedPassword != Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt))
+            if (existingUser.HashedPassword != Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt, _configuration["Pepper"]))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
@@ -150,13 +147,7 @@ namespace IdentityApi.Managers
             }
 
             // User is locked, no need for further checks
-            if (existingUser.IsLocked)
-            {
-                await _userLocationManager.LogLocationAsync(userLocation);
-                _logger.LogWarning($"User[{userLogin.Email}] has been locked");
-                throw new AccountLockedException();
-            }
-
+            await IsUserLocked(userLocation, existingUser);
 
             // check if given otp password is valid
             if (!IsVerificationCodeValid(userLogin.Password, existingUser))
@@ -177,6 +168,47 @@ namespace IdentityApi.Managers
 
             return existingUser;
         }
+
+        /// <inheritdoc />
+        public async Task<bool> VerifyUserRegistrationAsync(UserLogin userLogin, UserLocation userLocation)
+        {
+            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+                throw new IpBlockedException();
+
+            // checks if user exists
+            var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
+            if (existingUser == null)
+            {
+                await _userLocationManager.LogLocationAsync(userLocation);
+                return false;
+            }
+
+            // check whether user is locked, if they are. No need for further checks
+            await IsUserLocked(userLocation, existingUser);
+
+            // Checks if otp password does not match
+            if (userLogin.Password != existingUser.SecretKey)
+            {
+                // login failed
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{userLogin.Email}] failed at verifying registration");
+                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                throw new UserIncorrectLoginException();
+            }
+
+            // login success 
+            existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+            userLocation.Successful = true;
+            userLocation.UserID = existingUser.ID;
+            await _userLocationManager.LogLocationAsync(userLocation);
+            _logger.LogInformation($"User[{userLogin.Email}] has verified registration");
+
+            // Update verified status
+            await _userProvider.UpdateUserToVerifiedAsync(existingUser.ID);
+
+            return true;
+        }
+
         /// <summary>
         /// Checks whether the given password has been breached,
         /// by calling the leakedpassword provider.
@@ -194,6 +226,41 @@ namespace IdentityApi.Managers
         }
 
         /// <summary>
+        /// Checks whether the current given user is locked.
+        /// Throws exceptions if that is the case.
+        /// </summary>
+        /// <param name="userLocation">The location to log</param>
+        /// <param name="currentUser">The current existsting user.</param>
+        /// <exception cref="AccountLockedException">The account is locked</exception>
+        private async Task IsUserLocked(UserLocation userLocation, DbUser currentUser)
+        {
+            // User is locked, no need for further checks
+            if (currentUser.IsLocked)
+            {
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{currentUser.Email}] has been locked");
+                throw new AccountLockedException();
+            }
+        }
+
+        /// <summary>
+        /// Checks whether the current given user is not verified.
+        /// Throws exception if that is the case.
+        /// </summary>
+        /// <param name="userLocation">The location to log</param>
+        /// <param name="currentUser">The current user to handle.</param>
+        /// <exception cref="AccountLockedException">The account is locked</exception>
+        private async Task IsUserNotVerified(UserLocation userLocation, DbUser currentUser)
+        {
+            if (!currentUser.IsVerified)
+            {
+                await _userLocationManager.LogLocationAsync(userLocation);
+                _logger.LogWarning($"User[{currentUser.Email}] has tried to login to an un-verified account");
+                throw new AccountIsNotVerifiedException();
+            }
+        }
+
+        /// <summary>
         /// Verifies the verificaton code
         /// </summary>
         /// <param name="verificationCode"> Verification code</param>
@@ -206,6 +273,7 @@ namespace IdentityApi.Managers
             {
                 return false;
             }
+
             if (verificationCode != Security.GetHotp(user.SecretKey, user.Counter))
             {
                 return false;

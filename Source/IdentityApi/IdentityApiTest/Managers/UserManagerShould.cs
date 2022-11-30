@@ -4,6 +4,7 @@ using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
 namespace IdentityApiUnitTest.Managers
@@ -14,6 +15,7 @@ namespace IdentityApiUnitTest.Managers
         private readonly IUserProvider _fakeUserProvider;
         private readonly ILeakedPasswordProvider _fakeLeakedPasswordProvider;
         private readonly IUserLocationManager _fakeLocationManager;
+        private readonly IConfiguration _configuration;
         private readonly IMessageManager _messageManager;
         private readonly UserManager _userManager;
 
@@ -24,8 +26,10 @@ namespace IdentityApiUnitTest.Managers
             _fakeLeakedPasswordProvider = A.Fake<ILeakedPasswordProvider>();
             _fakeLocationManager = A.Fake<IUserLocationManager>();
             _messageManager = A.Fake<IMessageManager>();
+            _configuration = A.Fake<IConfiguration>();
 
             _userManager = new UserManager(
+                _configuration,
                 _fakeUserProvider,
                 _messageManager,
                 _fakeLogger,
@@ -44,7 +48,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
-
+            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             // Act
             var actual = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -180,8 +184,6 @@ namespace IdentityApiUnitTest.Managers
             var expected = GetUser();
             var userLogin = GetUserLogin();
 
-            var userProvider = A.Fake<IUserProvider>();
-
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
 
             // Act
@@ -198,8 +200,6 @@ namespace IdentityApiUnitTest.Managers
             var expected = GetUser();
             var userLogin = GetUserLoginVerification();
 
-            var userProvider = A.Fake<IUserProvider>();
-
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
 
             // Act
@@ -210,23 +210,113 @@ namespace IdentityApiUnitTest.Managers
         }
 
         [Fact]
-        public async void ThrowsException_WhenUserNotLoggedInLoctaion_Login()
+        public async void ThrowsException_WhenUserNotLoggedInLocation_Login()
         {
             // Arrange
             var expected = GetUser();
             var userLogin = GetUserLogin();
 
-            var userProvider = A.Fake<IUserProvider>();
-
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
+            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
+
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
             // Assert
             await Assert.ThrowsAsync<Required2FAException>(func);
+        }
+
+        [Fact]
+        public async void ThrowsAccountIsNotVerifiedException_WhenUserIsNotVerified_Login()
+        {
+            // Arrange
+            var expected = GetUser();
+            var userLogin = GetUserLogin();
+            var dbUser = GetDbUser();
+            dbUser.IsVerified = false;
+
+            var userProvider = A.Fake<IUserProvider>();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored))
+                .Returns(true);
+
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            // Act
+            var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<AccountIsNotVerifiedException>(func);
+        }
+
+        [Fact]
+        public async void ThrowsIpBlockedException_WhenUserIsBlocked_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
+            
+            // Act
+            var func = async () => await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<IpBlockedException>(func);
+        }
+
+        [Fact]
+        public async void ExpectFalse_WhenUserDoNotExist_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(null);
+
+            // Act
+            var actual = await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public async void ThrowUserIsLockedException_WhenUserIsLocked_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+            var dbUser = GetDbUser();
+            dbUser.IsLocked = true;
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
+
+            // Act
+            var func = async () => await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<AccountLockedException>(func);
+        }
+
+        [Fact]
+        public async void ThrowUserIncorrectLoginException_WhenPasswordsDoNotMatch_VerifyUserRegistrationAsync()
+        {
+            // Arrange
+            var userLogin = GetUserLogin();
+            var dbUser = GetDbUser();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
+
+            // Act
+            var func = async () => await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation());
+
+            // Assert
+            await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
         }
 
 
@@ -238,7 +328,8 @@ namespace IdentityApiUnitTest.Managers
                 Email = "a@b.com",
                 FirstName = "jon",
                 LastName = "stevensen",
-                PhoneNumber = "13246578"
+                PhoneNumber = "13246578",
+                IsVerified = true,
             };
         }
 
@@ -248,14 +339,15 @@ namespace IdentityApiUnitTest.Managers
             {
                 ID = 1,
                 Email = "a@b.com",
-                HashedPassword = "C123469DB6AEE601787C5974D80A7D7223486F1523B00803E82EF60CD5EB27918C1CA9F77AE8B61E73CF944CE82B469491CEEDEDFE89C936DAE3220F6C7A78B9",
-                Salt = "CVkTFhIFerV0uxOMbZ0fFlE4HFVrwOs2PW5kkPEvzSoFcVJkNP",
+                HashedPassword = "eG9Cgwq22HalElRHffdS+VRpovkQE7GVTjBo2N5jqHk7Sm6q0KdJRotjjoGupudBVgAUJrHD+DBmYU4o43n9rw==",
+                Salt = "rIVLXrD6SaBRQxLv7zkYOQrLbfe3s2xkdupQvYAEBAo=",
                 FirstName = "jon",
                 LastName = "stevensen",
                 PhoneNumber = "13246578",
                 SecretKey = "ABCDE123",
                 LastRequestDate = DateTime.Now,
-                Counter = 33
+                Counter = 33,
+                IsVerified = true,
             };
         }
 
@@ -265,7 +357,7 @@ namespace IdentityApiUnitTest.Managers
             return new UserLogin()
             {
                 Email = "a@b.com",
-                Password = "tron"
+                Password = "verysecurepassword"
             };
         }
         private UserLogin GetUserLoginVerification()

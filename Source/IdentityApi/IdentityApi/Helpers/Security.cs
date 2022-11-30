@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using Konscious.Security.Cryptography;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace IdentityApi.Helpers
@@ -6,14 +7,14 @@ namespace IdentityApi.Helpers
     public static class Security
     {
         /// <summary>
-        /// Uses Sha512 to compute the hash of the password
+        /// Uses Sha256 to compute the hash of the password
         /// </summary>
-        /// <returns>Sha512 computed hash</returns>
-        private static string GetEncryptedPassword(string password)
+        /// <returns>Sha256 computed hash</returns>
+        private static string ComputeHash(string valueToHash)
         {
-            SHA512 algorithm = SHA512.Create();
+            SHA256 algorithm = SHA256.Create();
 
-            byte[] data = algorithm.ComputeHash(Encoding.UTF8.GetBytes(password));
+            byte[] data = algorithm.ComputeHash(Encoding.UTF8.GetBytes(valueToHash));
             string hashed = "";
 
             for (int i = 0; i <= data.Length - 1; i++)
@@ -21,6 +22,20 @@ namespace IdentityApi.Helpers
 
             return hashed;
         }
+
+        private static string HashPassword(string password, string salt)
+        {
+            var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
+
+            argon2.Salt = Convert.FromBase64String(salt);
+            argon2.DegreeOfParallelism = 4;
+            argon2.Iterations = 4;
+            argon2.MemorySize = 1024 * 32;
+
+            return Convert.ToBase64String(argon2.GetBytes(64));
+        }
+
+
         /// <summary>
         /// Takes a key and a counter, hashes them, then bitwise
         /// </summary>
@@ -53,20 +68,21 @@ namespace IdentityApi.Helpers
         /// Generates random salt based on the salt length
         /// </summary>
         /// <returns>Random generated salt</returns>
-        public static string GetSalt(int saltLength = 50)
+        public static string GetSalt(int saltLength = 32)
         {
-            byte[] buffer = RandomNumberGenerator.GetBytes(saltLength);
-
-            return Convert.ToBase64String(buffer).Substring(1, saltLength);
+            return Convert.ToBase64String(RandomNumberGenerator.GetBytes(saltLength));
         }
 
         /// <summary>
         /// Adds salt to the password and computes password with sha512
         /// </summary>
         /// <returns>Hashed password with salt</returns>
-        public static string GetEncryptedAndSaltedPassword(string password, string passwordSalt)
+        public static string GetEncryptedAndSaltedPassword(string password, string salt, string pepper)
         {
-            return GetEncryptedPassword($"{passwordSalt}{GetEncryptedPassword(password)}{passwordSalt}");
+            // Get hashed password with pepper
+            var hashedPassword = ComputeHash($"{password}{pepper}");
+
+            return HashPassword(hashedPassword, salt);
         }
     }
 }

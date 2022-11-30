@@ -22,7 +22,8 @@
                 </div>
                 <button id="loginBtn" type="button" class="btn btn-primary mt-3">Login</button>
             </form>
-            <a href="Register.html">Register</a>
+            <a href="Register.html">Register</a><br>
+            <a href="Verify-Login.html">Verify Login</a>
         </div>
         <script>
           var userIntegration = new UserIntegration(environment);
@@ -37,7 +38,7 @@
             try {
                 let response = await userIntegration.login(email, password);
                 if (response != undefined)
-                document.getElementById('response').innerText = "You have been logged in";
+                  document.getElementById('response').innerText = "You have been logged in";
             }
             catch (ex) {
               document.getElementById('response').innerText = ex.message;

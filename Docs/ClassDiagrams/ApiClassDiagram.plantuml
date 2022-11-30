@@ -13,6 +13,7 @@ class UserController{
     +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
     +GetUserFromToken() : Task<ActionResult<User>>
     +VerificationLogin(userLogin : UserLogin) : Task<ActionResult<UserToken>>
+    +VerifyUserRegister(UserLogin : UserLogin) : Task<ActionResult>
 }
 
 'Controllers mappings' 
@@ -23,10 +24,11 @@ UserController o-- ITokenManager
 'Managers'
 
 Interface IUserManager {
-    +CreateUserAsync(userCreate : UserCreate) : Task<User>
+    +CreateUserAsync(userCreate : UserCreate) : Task<bool>
     +LoginAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
     +GetUserByIDAsync(id : int) : Task<User>
     +LoginWithVerificationCodeAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
+    +VerifyUserRegistrationAsync(userLogin : UserLogin, userLocation: UserLocation) : Task<bool>
 }
 
 interface ITokenManager {
@@ -59,11 +61,14 @@ class UserManager {
     -_userLocationManager : IUserLocationManager
     -_messageManager : IMessageManager
     -_logger : ILogger<UserManager>
+    -_configuration : IConfiguration
     -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
     --
-    +UserManager(userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
+    +UserManager(configuration : IConfiguration, userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageManager : IMessageManager, logger : ILogger<UserManager>)
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
+    -IsUserNotVerified(userLocation : UserLocation, user : DbUser) : Task
+    -IsUserLocked(userLocation : UserLocation, user : DbUser) : Task
 }
 
 class UserLocationManager {
@@ -106,6 +111,7 @@ interface IUserProvider {
     +UpdateUserFailedTries(userId : int) : Task<DbUser>
     +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
     +UpdateUserLoginNewLocation(userId : int) : Task<DbUser>
+    +UpdateUserToVerifiedAsync(userID : int) : Task
     +UpdateUserLoginSuccessWithVerificationCode(userId : int) : Task<DbUser>
 }
 
@@ -154,9 +160,10 @@ UserProvider --|> SqlProvider
 
 class Security{
     --
-    {static}-GetEncryptedPassword(password : string) : string
+    {static}-ComputeHash(password : string) : string
+    {static}-HashPassword(password : salt, salt : string) : string
     {static}+GetSalt(saltLength : int) : string
-    {static}+GetEncryptedAndSaltedPassword(password : string, salt : string) : string
+    {static}+GetEncryptedAndSaltedPassword(password : string, salt : string, pepper : string) : string
     {static}+GetHotp(key : string, counter : long) : string
     {static}+GetHmacKey() : string
 }
