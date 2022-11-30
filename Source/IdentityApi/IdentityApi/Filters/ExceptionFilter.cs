@@ -24,6 +24,7 @@ namespace IdentityApi.Filters
             switch (context.Exception)
             {
                 case AccountIsNotVerifiedException:
+                case SendMessageIssueException:
                 case Required2FAException:
                 case IpBlockedException:
                 case UserIncorrectLoginException:

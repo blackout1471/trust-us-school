@@ -65,7 +65,8 @@ namespace IdentityApi.Managers
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
             await _userLocationManager.LogLocationAsync(userLocation);
-            _messageManager.SendRegistrationMessage(createdUser.Email, createdUser.SecretKey);
+            if (!await _messageManager.SendRegistrationMessage(createdUser.Email, createdUser.SecretKey))
+                throw new SendMessageIssueException();
 
             return true;
         }
@@ -120,7 +121,9 @@ namespace IdentityApi.Managers
                 var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
                 if (hotp != null)
                 {
-                    _messageManager.SendLoginAttemptMessage(existingUser.Email, hotp);
+                    if (!await _messageManager.SendLoginAttemptMessage(existingUser.Email, hotp))
+                        throw new SendMessageIssueException();
+                    
                 }
                 await _userLocationManager.LogLocationAsync(userLocation);
                 throw new Required2FAException();

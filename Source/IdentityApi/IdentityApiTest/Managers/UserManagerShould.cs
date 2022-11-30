@@ -221,6 +221,8 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
+            A.CallTo(() => _messageManager.SendLoginAttemptMessage(A<string>.Ignored, A<string>.Ignored)).Returns(true);
+            
 
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());

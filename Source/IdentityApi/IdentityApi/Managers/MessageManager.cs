@@ -9,25 +9,45 @@ namespace IdentityApi.Managers
     {
         private readonly IMessageService _messageService;
         private readonly IMessageProvider _messageProvider;
+        private readonly ILogger<MessageManager> _logger;
 
-        public MessageManager(IMessageService messageService, IMessageProvider messageProvider)
+        public MessageManager(IMessageService messageService, IMessageProvider messageProvider, ILogger<MessageManager> logger)
         {
             _messageService = messageService;
             _messageProvider = messageProvider;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
-        public void SendLoginAttemptMessage(string to, string otp)
+        public async Task<bool> SendLoginAttemptMessage(string to, string otp)
         {
             var message = _messageProvider.GetLoginAttemptMessage(to, otp);
-            _messageService.SendMessageAsync(message).Wait();
+            try
+            {
+                await _messageService.SendMessageAsync(message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Something went wrong when sending message, exception: " + ex.ToString());
+                return false;
+            }
         }
 
         /// <inheritdoc/>
-        public void SendRegistrationMessage(string to, string key)
+        public async Task<bool> SendRegistrationMessage(string to, string key)
         {
-            var message = _messageProvider.GetRegisterMessage(to,key);
-            _messageService.SendMessageAsync(message).Wait();
+            var message = _messageProvider.GetRegisterMessage(to, key);
+            try
+            {
+                await _messageService.SendMessageAsync(message);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning("Something went wrong when sending message, exception: " + ex.ToString());
+                return false;
+            }
         }
     }
 }
