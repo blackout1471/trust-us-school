@@ -14,21 +14,25 @@ skinparam activity {
 if "password length < 8 or > 128" then
   --> "Return password incorrect message"
 else
-if "Ip not blocked " then
-	if "Email exists" then
-		-->[true] "Return email already in use message"
-	else
-		if "User password exists in leaked database" then
-			-->[True]"Return password is leaked message"
-		else
-			-->[false] "Hash password"
-			--> "Save user in database"
-			--> "Send verification mail to user"
-			--> "Return Ok"
-			--> (*)
-		end if
-	end if
+if "Email is not valid" then
+	-->[true] "Return email not valid message"
 else
--->[false] "Return ip blocked message"
+	if "Ip not blocked " then
+		if "Email exists" then
+			-->[true] "Return email already in use message"
+		else
+			if "User password exists in leaked database" then
+				-->[True]"Return password is leaked message"
+			else
+				-->[false] "Hash password"
+				--> "Save user in database"
+				--> "Send verification mail to user"
+				--> "Return Ok"
+				--> (*)
+			end if
+		end if
+	else
+	-->[false] "Return ip blocked message"
+end if
 
 @enduml

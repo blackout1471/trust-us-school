@@ -340,6 +340,32 @@ namespace IdentityApiIntegrationTest.UserApi
             Assert.Equal(expected, jObject.Value<string>("error"));
         }
 
+        [Fact]
+        public async Task ExpectStatusCode400_WhenEmailIsNotValid_Register()
+        {
+            // Arrange
+
+            var expected = HttpStatusCode.BadRequest;
+            var actual = HttpStatusCode.InternalServerError;
+
+            var userCreate = new UserCreate
+            {
+                Email = "notlegit",
+                Password = "Test12345678901",
+                FirstName = "Test",
+                LastName = "Test",
+                PhoneNumber = "123232323",
+            };
+
+
+            // Act
+            var response = await _client.PostAsJsonAsync(_baseUrl + "Create", userCreate);
+            actual = response.StatusCode;
+
+            // Assert
+            Assert.Equal(expected, actual);
+        }
+
         #region TestData Setup
         public static IEnumerable<object[]> RequiredRegisterTestData => new List<object[]>
         {
