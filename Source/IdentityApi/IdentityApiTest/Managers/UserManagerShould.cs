@@ -4,8 +4,6 @@ using IdentityApi.Exceptions;
 using IdentityApi.Interfaces;
 using IdentityApi.Managers;
 using IdentityApi.Models;
-using MessageService.MessageServices;
-using MessageService.Providers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -17,9 +15,8 @@ namespace IdentityApiUnitTest.Managers
         private readonly IUserProvider _fakeUserProvider;
         private readonly ILeakedPasswordProvider _fakeLeakedPasswordProvider;
         private readonly IUserLocationManager _fakeLocationManager;
-        private readonly IMessageService _messageService;
-        private readonly IMessageProvider _messageProvider;
         private readonly IConfiguration _configuration;
+        private readonly IMessageManager _messageManager;
         private readonly UserManager _userManager;
 
         public UserManagerShould()
@@ -28,14 +25,13 @@ namespace IdentityApiUnitTest.Managers
             _fakeUserProvider = A.Fake<IUserProvider>();
             _fakeLeakedPasswordProvider = A.Fake<ILeakedPasswordProvider>();
             _fakeLocationManager = A.Fake<IUserLocationManager>();
-            _messageService = A.Fake<IMessageService>();
-            _messageProvider = A.Fake<IMessageProvider>();
+            _messageManager = A.Fake<IMessageManager>();
             _configuration = A.Fake<IConfiguration>();
+
             _userManager = new UserManager(
                 _configuration,
                 _fakeUserProvider,
-                _messageService,
-                _messageProvider,
+                _messageManager,
                 _fakeLogger,
                 _fakeLocationManager, 
                 _fakeLeakedPasswordProvider
@@ -225,6 +221,8 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
+            A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(true);
+            
 
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
@@ -321,6 +319,43 @@ namespace IdentityApiUnitTest.Managers
 
             // Assert
             await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
+        }
+
+        [Fact]
+        public async void ThrowsSendMessageIssueException_WhenSendRegistrationMessageReturnsFalse_Register()
+        {
+            // Arrange
+            var fakeUserCreate = A.Fake<UserCreate>();
+            fakeUserCreate.Password = "";
+            var fakeUserLoc = A.Fake<UserLocation>();
+
+            A.CallTo(() => _fakeLeakedPasswordProvider.GetIsPasswordLeakedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(null);
+            A.CallTo(() => _messageManager.SendRegistrationMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(false);
+            // Act
+            var func = async () => await _userManager.CreateUserAsync(fakeUserCreate, fakeUserLoc);
+            // Assert
+            await Assert.ThrowsAsync<SendMessageIssueException>(func);
+        }
+
+        [Fact]
+        public async void ThrowsSendMessageIssueException_WhenSendLoginAttemptMessageReturnsFalse_Login()
+        {
+            // Arrange
+            var dbUser = GetDbUser();
+            var userLogin = GetUserLogin();
+            var fakeUserLoc = A.Fake<UserLocation>();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
+            A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
+            // Act
+            var func = async () => await _userManager.LoginAsync(userLogin, fakeUserLoc);
+            // Assert
+            await Assert.ThrowsAsync<SendMessageIssueException>(func);
         }
 
 
