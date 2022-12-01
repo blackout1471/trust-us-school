@@ -27,7 +27,7 @@ namespace IdentityApiUnitTest.Managers
         public async Task ReturnTrue_WhenLoginMessageWasSuccefullySent_SendLoginAttemptMessage()
         {
             // Arrange & Act
-            var actual = await _messageManager.SendLoginAttemptMessage("", "");
+            var actual = await _messageManager.SendLoginAttemptMessageAsync("", "");
             //Assert
             Assert.True(actual);
         }
@@ -39,7 +39,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeMessageService.SendMessageAsync(A<IMessage>.Ignored)).Throws<Exception>();
 
             //Act
-            var actual = await _messageManager.SendLoginAttemptMessage("", "");
+            var actual = await _messageManager.SendLoginAttemptMessageAsync("", "");
             //Assert
             Assert.False(actual);
         }
@@ -48,7 +48,7 @@ namespace IdentityApiUnitTest.Managers
         public async Task ReturnTrue_WhenRegistrationMessageWasSuccesfullySent_SendRegistrationMessage()
         {
             //Arrange & Act
-            var actual = await _messageManager.SendRegistrationMessage("", "");
+            var actual = await _messageManager.SendRegistrationMessageAsync("", "");
 
             //Assert
             Assert.True(actual);
@@ -61,7 +61,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeMessageService.SendMessageAsync(A<IMessage>.Ignored)).Throws<Exception>();
 
             //Act
-            var actual = await _messageManager.SendRegistrationMessage("", "");
+            var actual = await _messageManager.SendRegistrationMessageAsync("", "");
 
             //Assert
             Assert.False(actual);

@@ -45,8 +45,8 @@ interface IUserLocationManager {
 }
 
 interface IMessageManager {
-    +SendLoginAttemptMessage(to : string, otp : string) : Task<bool>
-    +SendLoginRegistrationMessage(to : string, key : string) : Task<bool>
+    +SendLoginAttemptMessageAsync(to : string, otp : string) : Task<bool>
+    +SendLoginRegistrationMessageAsync(to : string, key : string) : Task<bool>
 }
 
 class TokenManager {

@@ -7,13 +7,13 @@
         /// </summary>
         /// <param name="to">Recipient of message</param>
         /// <param name="key">The key for verifying login</param>
-        public Task<bool> SendRegistrationMessage(string to, string key);
+        public Task<bool> SendRegistrationMessageAsync(string to, string key);
 
         /// <summary>
         /// Sends a login attempt message
         /// </summary>
         /// <param name="to">Recipient of message</param>
         /// <param name="otp">The otp for verifying login</param>
-        public Task<bool> SendLoginAttemptMessage(string to, string otp);
+        public Task<bool> SendLoginAttemptMessageAsync(string to, string otp);
     }
 }

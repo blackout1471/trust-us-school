@@ -19,7 +19,7 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<bool> SendLoginAttemptMessage(string to, string otp)
+        public async Task<bool> SendLoginAttemptMessageAsync(string to, string otp)
         {
             var message = _messageProvider.GetLoginAttemptMessage(to, otp);
             try
@@ -35,7 +35,7 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<bool> SendRegistrationMessage(string to, string key)
+        public async Task<bool> SendRegistrationMessageAsync(string to, string key)
         {
             var message = _messageProvider.GetRegisterMessage(to, key);
             try
