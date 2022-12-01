@@ -25,8 +25,9 @@ participant MessageManager
 
 User->UserController: Create user (email, password)
 UserController->UserController: Validate password(password)
+UserController->UserController: Validate email(email)
 
-alt Password not complying
+alt Password not complying or email not complying
 UserController-->User: Return status badrequest
 end
 
