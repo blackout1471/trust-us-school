@@ -321,6 +321,43 @@ namespace IdentityApiUnitTest.Managers
             await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
         }
 
+        [Fact]
+        public async void ThrowsSendMessageIssueException_WhenSendRegistrationMessageReturnsFalse_Register()
+        {
+            // Arrange
+            var fakeUserCreate = A.Fake<UserCreate>();
+            fakeUserCreate.Password = "";
+            var fakeUserLoc = A.Fake<UserLocation>();
+
+            A.CallTo(() => _fakeLeakedPasswordProvider.GetIsPasswordLeakedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(null);
+            A.CallTo(() => _messageManager.SendRegistrationMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(false);
+            // Act
+            var func = async () => await _userManager.CreateUserAsync(fakeUserCreate, fakeUserLoc);
+            // Assert
+            await Assert.ThrowsAsync<SendMessageIssueException>(func);
+        }
+
+        [Fact]
+        public async void ThrowsSendMessageIssueException_WhenSendLoginAttemptMessageReturnsFalse_Login()
+        {
+            // Arrange
+            var dbUser = GetDbUser();
+            var userLogin = GetUserLogin();
+            var fakeUserLoc = A.Fake<UserLocation>();
+
+            A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
+            A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(false);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
+            // Act
+            var func = async () => await _userManager.LoginAsync(userLogin, fakeUserLoc);
+            // Assert
+            await Assert.ThrowsAsync<SendMessageIssueException>(func);
+        }
+
 
         private User GetUser()
         {
