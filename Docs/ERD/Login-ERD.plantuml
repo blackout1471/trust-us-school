@@ -1,5 +1,4 @@
 @startuml ERD
-left to right direction
 
 entity "UserPasswords" as up{
     ID int (PK)
@@ -9,7 +8,7 @@ entity "UserPasswords" as up{
     Salt varchar(200)
 }
 
-entity "SecretKeyCounter" as sk {
+entity "SecretKeyCounters" as sk {
     ID int (PK)
     UsersID int (FK)
     --
@@ -30,7 +29,7 @@ entity Users {
     IsLocked bit
     LockedDate datetime
 }
-entity "UserLocation" as vul {
+entity "UserLocations" as vul {
     ID int (PK)
     UsersID int
     --
@@ -40,11 +39,10 @@ entity "UserLocation" as vul {
     CreateDate datetime
 }
 
-Users::ID"      1" -- "*"vul::UsersID
+Users::ID -r- "*"vul::UsersID : 1
 
-up::UserID"1" -- "1"Users::ID
-
-sk::UserID"1" -- "1"Users::ID
+up::UsersID "1" -r- "1"Users::ID
+sk::UsersID "1" -d- Users::ID : 1
 
 
 @enduml
