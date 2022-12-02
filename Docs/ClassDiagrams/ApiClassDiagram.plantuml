@@ -62,10 +62,10 @@ class UserManager {
     -_messageManager : IMessageManager
     -_logger : ILogger<UserManager>
     -_configuration : IConfiguration
-    -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
     --
     +UserManager(configuration : IConfiguration, userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageManager : IMessageManager, logger : ILogger<UserManager>)
+    -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
     -CheckPasswordLeakedForUser(password : string) : Task<bool>
     -IsUserNotVerified(userLocation : UserLocation, user : DbUser) : Task
     -IsUserLocked(userLocation : UserLocation, user : DbUser) : Task
@@ -79,7 +79,7 @@ class UserLocationManager {
 class MessageManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
-
+    --
     +MessageManager(messageService : EmailMessageService, messageProvider : MailMessageProvider)
 }
 

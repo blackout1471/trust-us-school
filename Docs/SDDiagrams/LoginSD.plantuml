@@ -20,13 +20,21 @@ participant UserLocationManager
 participant Security
 
 User->UserController: Login (email, password)
+
+UserController->>UserController: Validate email syntax(email)
+UserController->>UserController: Validate password syntax(password)
+
+alt Email or password not complying
+UserController-->>User: Return status badrequest
+end
+
 UserController->UserManager: Login (email, password)
 UserManager->UserLocationManager: Check if ip is blocked (ipadress)
-UserLocationManager-->UserManager: Returns whether ip is block
+UserLocationManager-->>UserManager: Returns whether ip is block
 
 alt Ip blocked
-UserManager-->UserController: Throw IpBlocked exception
-UserController-->User: Return status forbidden
+UserManager-->>UserController: Throw IpBlocked exception
+UserController-->>User: Return status forbidden
 end
 
 UserManager->UserProvider: Get user by email(email)
@@ -35,22 +43,22 @@ UserProvider->UserManager: Return User
 
 alt User not found
 
-UserManager-->UserController: Login failed
-UserController-->User: Login failed
+UserManager-->>UserController: Login failed
+UserController-->>User: Login failed
 
 end
 
 alt User is locked
 
-UserManager-->UserController: Throw account locked exception
-UserController-->User: Return status forbidden
+UserManager-->>UserController: Throw account locked exception
+UserController-->>User: Return status forbidden
 
 end
 
 alt User is not verified
 
-UserManager-->UserController: throw Account Is Not Verified Exception
-UserController-->User: Return status forbidden
+UserManager-->>UserController: Throw Account Is Not Verified Exception
+UserController-->>User: Return status forbidden
 
 end
 
@@ -59,14 +67,14 @@ UserManager->UserManager: Check if salted password matches user password
 
 alt Password does not match
 
-UserManager-->UserController: Login failed
-UserController-->User: Login failed
+UserManager-->>UserController: Login failed
+UserController-->>User: Login failed
 
 end
 
 
 UserManager->UserLocationManager: Check if user has been logged in from ip (ip, userid)
-UserLocationManager-->UserManager: Returns whether user has been logged in from ip
+UserLocationManager-->>UserManager: Returns whether user has been logged in from ip
 
 alt Has not been logged in from location before
 
@@ -74,30 +82,30 @@ UserManager->MessageManager: Send mail with verification code to user(email)
 MessageManager->UserManager: Return whether the message was sent or not
 alt Message was not sent
 
-UserManager --> UserController: Throw SendMessageIssueException
-UserController --> User: Return status internal error
+UserManager -->> UserController: Throw SendMessageIssueException
+UserController -->> User: Return status internal error
 end
-UserManager-->UserController: Throw Required 2FA exception
-UserController-->User: Return status forbidden
+UserManager-->>UserController: Throw Required 2FA exception
+UserController-->>User: Return status forbidden
 User->UserController: Enters verification code
 UserController->UserManager: VerificationLogin(email, verification code)
 UserManager->UserManager: Check if verification matches
 alt Verification does not match
 
-UserManager-->UserController: throw UserIncorrectLoginException
-UserController-->User: Return status unauthorized
+UserManager-->>UserController: Throw UserIncorrectLoginException
+UserController-->>User: Return status unauthorized
 
 end
-UserManager-->UserController: Returns User
+UserManager-->>UserController: Returns User
 UserController->TokenManager: Get token for user (User)
-TokenManager-->UserController: Returns Token
-UserController-->User: Return token
+TokenManager-->>UserController: Returns Token
+UserController-->>User: Return token
 end
 
-UserManager-->UserController: Returns User
+UserManager-->>UserController: Returns User
 UserController->TokenManager: Get token for user (User)
-TokenManager-->UserController: Returns Token
+TokenManager-->>UserController: Returns Token
 
-UserController-->User: Return token
+UserController-->>User: Return token
 
 @enduml

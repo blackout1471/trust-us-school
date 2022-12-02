@@ -13,7 +13,7 @@ skinparam activity {
 
 if "Ip not blocked" then
     if "Email exists" then
-        if "Account is not locked" then
+        if "Account is locked" then
             if "Account is verified" then
                 if "Password matches" then
                     if "User has logged in before from ip" then
@@ -36,13 +36,13 @@ if "Ip not blocked" then
                 -->[false] "Return account is not verified message"
             end if
         else
-            -->[false] "Return Account is locked message"
+            -->[true] "Return Account is locked message"
         end if
     else
       -->[false] "Return wrong credentials message"
 
     end if 
 else 
- --> "Throw Forbidden"
+ --> "Return Forbidden message"
 end if
 @enduml

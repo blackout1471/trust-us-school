@@ -15,7 +15,7 @@ skinparam activity {
 if "Ip is blocked" then
 	-->[true] "Return ip blocked message"
 else
-	if "user does not exist" then
+	if "User does not exist" then
 		-->[true] "Return incorrect credentials message"
 	else
 		if "Is user locked" then

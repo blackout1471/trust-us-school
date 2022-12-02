@@ -24,59 +24,60 @@ participant MessageManager
 
 
 User->UserController: Create user (email, password)
-UserController->UserController: Validate password(password)
-UserController->UserController: Validate email(email)
+UserController->>UserController: Validate password(password)
+UserController->>UserController: Validate email(email)
 
 alt Password not complying or email not complying
-UserController-->User: Return status badrequest
+UserController-->>User: Return status badrequest
 end
 
 UserController->UserManager: Create user (email, password)
 UserManager->UserLocationManager: Check if ip is blocked (ipadress)
-UserLocationManager-->UserManager: Returns whether ip is block
+UserLocationManager-->>UserManager: Returns whether ip is block
 
 alt Ip blocked
-UserManager-->UserController: Throw IPBlocked exception
-UserController-->User: Return status forbidden
+UserManager-->>UserController: Throw IPBlocked exception
+UserController-->>User: Return status forbidden
 end
 
 
 UserManager->LeakedPasswordProvider: Check is password leaked (password)
-LeakedPasswordProvider-->UserManager: return boolean
+LeakedPasswordProvider-->>UserManager: Returns whether password has been leaked
 
 alt Password Is leaked
-UserManager-->UserController: Throw password leaked exception
-UserController-->User: Return status forbidden
+UserManager-->>UserController: Throw password leaked exception
+UserController-->>User: Return status forbidden
 end
 
 UserManager->UserProvider: Get user by email(email)
-UserProvider-->UserManager: Return User
+UserProvider-->>UserManager: Return User
 
 alt User found
 
-UserManager-->UserController: Throw user already exists exception
-UserController-->User: return status conflict
+UserManager-->>UserController: Throw user already exists exception
+UserController-->>User: Return status conflict
 
 end
 
 
 UserManager->Security: Get salt
-Security-->UserManager: Return salt
+Security-->>UserManager: Return salt
 
 UserManager->Security: Salt password (password, salt)
-Security-->UserManager: Return salted password
+Security-->>UserManager: Return salted password
 
 UserManager->UserProvider: Save user in database (user)
-UserProvider-->UserManager: Return saved user
+UserProvider-->>UserManager: Return saved user
 
 UserManager->MessageManager: SendRegistrationMessage(email, key)
-MessageManager-->UserManager: Return whether the message was sent or not
-alt Message was not sent
-UserManager --> UserController: Throw SendMessageIssueException
-UserController --> User: return status internal error
+MessageManager-->>UserManager: Return whether the message was sent or not
 
+alt Message was not sent
+UserManager -->> UserController: Throw SendMessageIssueException
+UserController -->> User: Return status internal error
 end
-UserManager-->UserController: Return true
-UserController-->User: Return status code 200
+
+UserManager-->>UserController: Return true
+UserController-->>User: Return status Ok
 
 @enduml
