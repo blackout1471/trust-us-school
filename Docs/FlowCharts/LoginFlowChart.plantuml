@@ -43,6 +43,6 @@ if "Ip not blocked" then
 
     end if 
 else 
- --> "Throw Forbidden"
+ --> "Return Forbidden message"
 end if
 @enduml

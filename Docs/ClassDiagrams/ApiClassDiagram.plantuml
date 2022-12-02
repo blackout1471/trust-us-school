@@ -79,7 +79,7 @@ class UserLocationManager {
 class MessageManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
-
+    --
     +MessageManager(messageService : EmailMessageService, messageProvider : MailMessageProvider)
 }
 

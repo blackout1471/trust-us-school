@@ -10,7 +10,7 @@ interface IMessageService {
 class MailMessageService{
     -configuration : SMTPConfigModel
     -smtpClient : SmtpClient
-
+    --
     +MailMessageService(configurations : IOptions<SMTPConfigModel>)
     -CreateMailMessage(message : string, to : string) : MailMessage
     -SetupSmtpClient() : void 
