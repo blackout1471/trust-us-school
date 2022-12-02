@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using MessageService.MessageServices;
 using MessageService.Providers;
+using System.Diagnostics;
 
 namespace IdentityApi.Managers
 {
@@ -32,8 +33,8 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<bool> CreateUserAsync(UserCreate userCreate, UserLocation userLocation)
         {
-            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
-                throw new IpBlockedException();
+            //if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+            //    throw new IpBlockedException();
 
             // Check if password has been leaked
             if (await CheckPasswordLeakedForUser(userCreate.Password))
@@ -65,8 +66,8 @@ namespace IdentityApi.Managers
             userLocation.UserID = createdUser.ID;
             userLocation.Successful = true;
             await _userLocationManager.LogLocationAsync(userLocation);
-            if (!await _messageManager.SendRegistrationMessageAsync(createdUser.Email, createdUser.SecretKey))
-                throw new SendMessageIssueException();
+            //if (!await _messageManager.SendRegistrationMessageAsync(createdUser.Email, createdUser.SecretKey))
+            //    throw new SendMessageIssueException();
 
             return true;
         }
@@ -81,9 +82,10 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<User> LoginAsync(UserLogin userLogin, UserLocation userLocation)
         {
-            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
-                throw new IpBlockedException();
+            //if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+            //    throw new IpBlockedException();
 
+            //Debug.WriteLine($"Inc req {userLogin.Email}, {userLogin.Password}");
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
             if (existingUser == null)
@@ -103,9 +105,9 @@ namespace IdentityApi.Managers
             if (existingUser.HashedPassword != Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt, _configuration["Pepper"]))
             {
                 // login failed
-                await _userLocationManager.LogLocationAsync(userLocation);
+                //await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
-                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                //await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
 
@@ -121,7 +123,7 @@ namespace IdentityApi.Managers
                 var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
                 if (hotp != null)
                 {
-                    if (!await _messageManager.SendLoginAttemptMessageAsync(existingUser.Email, hotp))
+                    //if (!await _messageManager.SendLoginAttemptMessageAsync(existingUser.Email, hotp))
                         throw new SendMessageIssueException();
                     
                 }
@@ -138,8 +140,8 @@ namespace IdentityApi.Managers
         /// <inheritdoc/>
         public async Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation)
         {
-            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
-                throw new IpBlockedException();
+            //if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+            //    throw new IpBlockedException();
 
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
@@ -158,7 +160,7 @@ namespace IdentityApi.Managers
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing with 2 step");
-                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                //await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
 
@@ -175,8 +177,8 @@ namespace IdentityApi.Managers
         /// <inheritdoc />
         public async Task<bool> VerifyUserRegistrationAsync(UserLogin userLogin, UserLocation userLocation)
         {
-            if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
-                throw new IpBlockedException();
+            //if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
+            //    throw new IpBlockedException();
 
             // checks if user exists
             var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
@@ -195,7 +197,7 @@ namespace IdentityApi.Managers
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] failed at verifying registration");
-                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                //await _userProvider.UpdateUserFailedTries(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
 
