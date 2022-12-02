@@ -57,7 +57,7 @@ end
 
 alt User is not verified
 
-UserManager-->>UserController: throw Account Is Not Verified Exception
+UserManager-->>UserController: Throw Account Is Not Verified Exception
 UserController-->>User: Return status forbidden
 
 end
@@ -92,7 +92,7 @@ UserController->UserManager: VerificationLogin(email, verification code)
 UserManager->UserManager: Check if verification matches
 alt Verification does not match
 
-UserManager-->>UserController: throw UserIncorrectLoginException
+UserManager-->>UserController: Throw UserIncorrectLoginException
 UserController-->>User: Return status unauthorized
 
 end

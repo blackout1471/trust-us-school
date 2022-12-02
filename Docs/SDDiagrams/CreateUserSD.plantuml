@@ -42,7 +42,7 @@ end
 
 
 UserManager->LeakedPasswordProvider: Check is password leaked (password)
-LeakedPasswordProvider-->>UserManager: returns whether password has been leaked
+LeakedPasswordProvider-->>UserManager: Returns whether password has been leaked
 
 alt Password Is leaked
 UserManager-->>UserController: Throw password leaked exception
@@ -55,7 +55,7 @@ UserProvider-->>UserManager: Return User
 alt User found
 
 UserManager-->>UserController: Throw user already exists exception
-UserController-->>User: return status conflict
+UserController-->>User: Return status conflict
 
 end
 
@@ -74,10 +74,10 @@ MessageManager-->>UserManager: Return whether the message was sent or not
 
 alt Message was not sent
 UserManager -->> UserController: Throw SendMessageIssueException
-UserController -->> User: return status internal error
+UserController -->> User: Return status internal error
 end
 
 UserManager-->>UserController: Return true
-UserController-->>User: Return status code 200
+UserController-->>User: Return status Ok
 
 @enduml
