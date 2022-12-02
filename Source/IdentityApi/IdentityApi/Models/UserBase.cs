@@ -5,7 +5,7 @@ namespace IdentityApi.Models
     public class UserBase
     {
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         public string Email { get; set; } = default!;
 
         [Required]
