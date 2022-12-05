@@ -119,6 +119,8 @@ UserLocationManager .--|> IUserLocationManager
 UserLocationManager "1" o-- "1" IUserLocationProvider
 IUserLocationManager "1" --> "1" UserLocation
 
+UserLocationManager .--|> IUserLocationManager
+UserLocationManager "1" o-- "1" IUserLocationProvider
 'Providers'
 
 interface IUserProvider {
