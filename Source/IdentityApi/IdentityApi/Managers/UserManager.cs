@@ -146,6 +146,7 @@ namespace IdentityApi.Managers
                 await _userLocationManager.LogLocationAsync(userLocation);
                 return null;
             }
+            userLocation.UserID = existingUser.ID;
 
             // User is locked, no need for further checks
             await IsUserLockedAsync(userLocation, existingUser);
@@ -163,7 +164,6 @@ namespace IdentityApi.Managers
             // login success 
             existingUser = await _userProvider.UpdateUserLoginSuccessWithVerificationCodeAsync(existingUser.ID);
             userLocation.Successful = true;
-            userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
             _logger.LogInformation($"User[{verifyCredentials.Email}] has been authorized and logged in");
 
@@ -184,6 +184,8 @@ namespace IdentityApi.Managers
                 return false;
             }
 
+            userLocation.UserID = existingUser.ID;
+
             // check whether user is locked, if they are. No need for further checks
             await IsUserLockedAsync(userLocation, existingUser);
 
@@ -200,7 +202,6 @@ namespace IdentityApi.Managers
             // login success 
             existingUser = await _userProvider.UpdateUserLoginSuccessAsync(existingUser.ID);
             userLocation.Successful = true;
-            userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
             _logger.LogInformation($"User[{verifyCredentials.Email}] has verified registration");
 
@@ -239,7 +240,7 @@ namespace IdentityApi.Managers
             if (currentUser.IsLocked)
             {
                 await _userLocationManager.LogLocationAsync(userLocation);
-                _logger.LogWarning($"User[{currentUser.Email}] has been locked");
+                _logger.LogWarning($"User[{currentUser.Email}] has tried to login to an locked account");
                 throw new AccountLockedException();
             }
         }

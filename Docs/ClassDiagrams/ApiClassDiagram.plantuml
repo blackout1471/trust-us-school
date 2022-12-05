@@ -22,6 +22,14 @@ class UserController{
 UserController "1" o-- "1" IUserManager
 UserController "1" o-- "1" ITokenManager
 
+UserController "1" --> "1" UserCreate
+UserController "1" --> "1" UserLogin
+UserController "1" --> "1" VerifyCredentials
+UserController "1" --> "1" User
+UserController "1" --> "1" UserToken
+UserController "1" --> "1" UserLocation
+
+
 'Managers'
 
 Interface IUserManager {
@@ -90,7 +98,9 @@ class MessageManager {
 
 IUserManager "1" --> "1" UserCreate
 IUserManager "1" --> "1" UserLogin
+IUserManager "1" --> "1" UserLocation
 IUserManager "1" --> "1" VerifyCredentials
+IUserManager "1" --> "1" User
 UserManager .-|> IUserManager
 MessageManager .-|> IMessageManager
 
@@ -99,9 +109,15 @@ UserManager "1" o-- "1" IUserLocationManager
 UserManager "1" o-- "1" ILeakedPasswordProvider
 UserManager "1" o-- "1" IMessageManager
 
+UserManager "1" --> "1" DbUser
+
 TokenManager .-|> ITokenManager
 ITokenManager "1" *-- "1" UserToken
+ITokenManager "1" *-- "1" User
 
+UserLocationManager .--|> IUserLocationManager
+UserLocationManager "1" o-- "1" IUserLocationProvider
+IUserLocationManager "1" --> "1" UserLocation
 
 UserLocationManager .--|> IUserLocationManager
 UserLocationManager "1" o-- "1" IUserLocationProvider
@@ -125,7 +141,7 @@ interface ILeakedPasswordProvider {
 class SqlProvider {
     --
     +SqlProvider(connection : string)
-    {abstract}#RunSpAsync(storedProcedureName : string, storedProcedureElements : SpElements[]) : Task<DataTable>
+    {abstract}#RunSpAsync(storedProcedureName : string, storedProcedureElements : SpElement[]) : Task<DataTable>
     {abstract}#RunQueryAsync(query : string) : Task<DataTable>
 }
 
@@ -159,6 +175,10 @@ LeakedPasswordProvider --|> SqlProvider
 UserProvider .-|> IUserProvider
 UserProvider --|> SqlProvider
 
+UserProvider "1" --> "*" SpElement
+SqlProvider "1" --> "*" SpElement
+LeakedPasswordProvider --> "*" SpElement
+
 'Utility'
 
 class Security{
@@ -174,6 +194,14 @@ class Security{
 class RegexHelper{
     --
     {static}+TryToGetBrowserWithoutVersion(browser : string) : string
+}
+
+'Models'
+
+class SpElement{
+    +Key : string,
+    +Value : object,
+    +ValueType : SqlDbType
 }
 
 'Users mappings'
