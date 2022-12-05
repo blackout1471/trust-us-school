@@ -6,8 +6,6 @@ using IdentityApi.Models;
 using Mapster;
 using System.Security.Cryptography;
 using System.Text;
-using MessageService.MessageServices;
-using MessageService.Providers;
 
 namespace IdentityApi.Managers
 {
