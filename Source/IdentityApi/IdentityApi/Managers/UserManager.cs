@@ -105,7 +105,7 @@ namespace IdentityApi.Managers
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing");
-                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                await _userProvider.UpdateUserFailedTriesAsync(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
 
@@ -117,7 +117,7 @@ namespace IdentityApi.Managers
                     //TODO: Handle multiple logins in an attempt to generate more OTPS
                     //Maybe just return null or throw error
                 }
-                existingUser = await _userProvider.UpdateUserLoginNewLocation(existingUser.ID);
+                existingUser = await _userProvider.UpdateUserLoginNewLocationAsync(existingUser.ID);
                 var hotp = Security.GetHotp(existingUser.SecretKey, existingUser.Counter);
                 if (hotp != null)
                 {
@@ -130,7 +130,7 @@ namespace IdentityApi.Managers
             }
 
             // login success 
-            existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+            existingUser = await _userProvider.UpdateUserLoginSuccessAsync(existingUser.ID);
             _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
             return existingUser.Adapt<User>();
         }
@@ -158,12 +158,12 @@ namespace IdentityApi.Managers
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing with 2 step");
-                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                await _userProvider.UpdateUserFailedTriesAsync(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
 
             // login success 
-            existingUser = await _userProvider.UpdateUserLoginSuccessWithVerificationCode(existingUser.ID);
+            existingUser = await _userProvider.UpdateUserLoginSuccessWithVerificationCodeAsync(existingUser.ID);
             userLocation.Successful = true;
             userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
@@ -195,12 +195,12 @@ namespace IdentityApi.Managers
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
                 _logger.LogWarning($"User[{userLogin.Email}] failed at verifying registration");
-                await _userProvider.UpdateUserFailedTries(existingUser.ID);
+                await _userProvider.UpdateUserFailedTriesAsync(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
 
             // login success 
-            existingUser = await _userProvider.UpdateUserLoginSuccess(existingUser.ID);
+            existingUser = await _userProvider.UpdateUserLoginSuccessAsync(existingUser.ID);
             userLocation.Successful = true;
             userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);

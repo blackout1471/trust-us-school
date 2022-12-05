@@ -46,7 +46,7 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLogin();
             
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessAsync(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             // Act
@@ -65,7 +65,7 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLoginVerification();
 
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessWithVerificationCode(expected.ID)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessWithVerificationCodeAsync(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
 
             // Act
@@ -219,7 +219,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocationAsync(A<int>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(true);
             
@@ -247,7 +247,7 @@ namespace IdentityApiUnitTest.Managers
                 .Returns(true);
 
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(dbUser);
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocationAsync(A<int>.Ignored)).Returns(dbUser);
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -350,7 +350,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
             A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(false);
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocationAsync(A<int>.Ignored)).Returns(dbUser);
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, fakeUserLoc);

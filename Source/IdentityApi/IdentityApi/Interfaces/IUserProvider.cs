@@ -26,28 +26,28 @@ namespace IdentityApi.Interfaces
         /// Locks account if tries are above the threshold
         /// </summary>
         /// <returns>Updated user</returns>
-        Task<DbUser> UpdateUserFailedTries(int userID);
+        Task<DbUser> UpdateUserFailedTriesAsync(int userID);
 
         /// <summary>
         /// Updates user successful login
         /// Removes any failed tries if there were any
         /// </summary>
         /// <returns>Updated user</returns>
-        Task<DbUser> UpdateUserLoginSuccess(int userID);
+        Task<DbUser> UpdateUserLoginSuccessAsync(int userID);
 
         /// <summary>
         /// Updates user successful login from new location
         /// Updates the last request date
         /// </summary>
         /// <returns>Updated user</returns>
-        Task<DbUser> UpdateUserLoginNewLocation(int userID);
+        Task<DbUser> UpdateUserLoginNewLocationAsync(int userID);
 
         /// <summary>
         /// Updates user successful login with verification code
         /// Removes the time the verification code is valid
         /// </summary>
         /// <returns>Updated user</returns>
-        Task<DbUser> UpdateUserLoginSuccessWithVerificationCode(int userID);
+        Task<DbUser> UpdateUserLoginSuccessWithVerificationCodeAsync(int userID);
 
         /// <summary>
         /// Updates the status of the user in database to be verfied (IsVerfied = 1)
