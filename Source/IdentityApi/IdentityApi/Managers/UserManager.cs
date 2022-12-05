@@ -134,13 +134,13 @@ namespace IdentityApi.Managers
         }
 
         /// <inheritdoc/>
-        public async Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation)
+        public async Task<User> LoginWithVerificationCodeAsync(VerifyCredentials userCredentials, UserLocation userLocation)
         {
             if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
                 throw new IpBlockedException();
 
             // checks if user exists
-            var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
+            var existingUser = await _userProvider.GetUserByEmailAsync(userCredentials.Email);
             if (existingUser == null)
             {
                 await _userLocationManager.LogLocationAsync(userLocation);
@@ -151,11 +151,11 @@ namespace IdentityApi.Managers
             await IsUserLockedAsync(userLocation, existingUser);
 
             // check if given otp password is valid
-            if (!IsVerificationCodeValid(userLogin.Password, existingUser))
+            if (!IsVerificationCodeValid(userCredentials.Password, existingUser))
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
-                _logger.LogWarning($"User[{userLogin.Email}] failed at authorizing with 2 step");
+                _logger.LogWarning($"User[{userCredentials.Email}] failed at authorizing with 2 step");
                 await _userProvider.UpdateUserFailedTriesAsync(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
@@ -165,19 +165,19 @@ namespace IdentityApi.Managers
             userLocation.Successful = true;
             userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
-            _logger.LogInformation($"User[{userLogin.Email}] has been authorized and logged in");
+            _logger.LogInformation($"User[{userCredentials.Email}] has been authorized and logged in");
 
             return existingUser;
         }
 
         /// <inheritdoc />
-        public async Task<bool> VerifyUserRegistrationAsync(UserLogin userLogin, UserLocation userLocation)
+        public async Task<bool> VerifyUserRegistrationAsync(VerifyCredentials userCredentials, UserLocation userLocation)
         {
             if (await _userLocationManager.IsIPLockedAsync(userLocation.IP))
                 throw new IpBlockedException();
 
             // checks if user exists
-            var existingUser = await _userProvider.GetUserByEmailAsync(userLogin.Email);
+            var existingUser = await _userProvider.GetUserByEmailAsync(userCredentials.Email);
             if (existingUser == null)
             {
                 await _userLocationManager.LogLocationAsync(userLocation);
@@ -188,11 +188,11 @@ namespace IdentityApi.Managers
             await IsUserLockedAsync(userLocation, existingUser);
 
             // Checks if otp password does not match
-            if (userLogin.Password != existingUser.SecretKey)
+            if (userCredentials.Password != existingUser.SecretKey)
             {
                 // login failed
                 await _userLocationManager.LogLocationAsync(userLocation);
-                _logger.LogWarning($"User[{userLogin.Email}] failed at verifying registration");
+                _logger.LogWarning($"User[{userCredentials.Email}] failed at verifying registration");
                 await _userProvider.UpdateUserFailedTriesAsync(existingUser.ID);
                 throw new UserIncorrectLoginException();
             }
@@ -202,7 +202,7 @@ namespace IdentityApi.Managers
             userLocation.Successful = true;
             userLocation.UserID = existingUser.ID;
             await _userLocationManager.LogLocationAsync(userLocation);
-            _logger.LogInformation($"User[{userLogin.Email}] has verified registration");
+            _logger.LogInformation($"User[{userCredentials.Email}] has verified registration");
 
             // Update verified status
             await _userProvider.UpdateUserToVerifiedAsync(existingUser.ID);

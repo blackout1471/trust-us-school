@@ -17,17 +17,17 @@ namespace IdentityApi.Interfaces
         Task<User> LoginAsync(UserLogin userLogin, UserLocation userLocation);
 
         /// <summary>
-        /// Logs user in with otp
+        /// Verifies user with one time password and returns a user token.
         /// </summary>
         /// <returns>Logged in user</returns>
-        Task<User> LoginWithVerificationCodeAsync(UserLogin userLogin, UserLocation userLocation);
+        Task<User> LoginWithVerificationCodeAsync(VerifyCredentials userCredentials, UserLocation userLocation);
 
         /// <summary>
         /// Verifies the registered user by using an one time password.
         /// </summary>
-        /// <param name="userLogin">The user credentials, password is one time password.</param>
+        /// <param name="userCredentials">The user credentials, password is one time password.</param>
         /// <returns>True if user is verified, false otherwise.</returns>
-        Task<bool> VerifyUserRegistrationAsync(UserLogin userLogin, UserLocation userlocation);
+        Task<bool> VerifyUserRegistrationAsync(VerifyCredentials userCredentials, UserLocation userlocation);
 
         /// <summary>
         /// Gets user based on id

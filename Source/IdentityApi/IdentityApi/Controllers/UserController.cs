@@ -53,7 +53,7 @@ namespace IdentityApi.Controllers
         /// <returns>User Token</returns>
         [HttpPost]
         [Route("verificationlogin")]
-        public async Task<ActionResult<UserToken>> VerificationLoginAsync(UserLogin userLogin)
+        public async Task<ActionResult<UserToken>> VerificationLoginAsync(VerifyCredentials userLogin)
         {
             var user = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
 
@@ -70,7 +70,7 @@ namespace IdentityApi.Controllers
         /// <returns>Ok if user is verified</returns>
         [HttpPost]
         [Route("verifyregister")]
-        public async Task<ActionResult> VerifyUserRegisterAsync(UserLogin userLogin)
+        public async Task<ActionResult> VerifyUserRegisterAsync(VerifyCredentials userLogin)
         {
             return await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation()) ? 
                 Ok() : throw new UserIncorrectLoginException();
