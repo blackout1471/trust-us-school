@@ -29,7 +29,7 @@ namespace IdentityApiUnitTest.Controllers
             A.CallTo(() => _fakeUserManager.LoginAsync(null, A<UserLocation>.Ignored)).Returns(Task.FromResult<User>(null));
 
             // Act
-            var func = async () => await _userController.Login(null);
+            var func = async () => await _userController.LoginAsync(null);
 
             // Assert
             await Assert.ThrowsAsync<UserIncorrectLoginException>(func);
@@ -45,7 +45,7 @@ namespace IdentityApiUnitTest.Controllers
             A.CallTo(() => _fakeUserManager.LoginAsync(A<UserLogin>.Ignored, A<UserLocation>.Ignored)).Returns(Task.FromResult(fakeUser));
 
             // Act
-            var response = await _userController.Login(null);
+            var response = await _userController.LoginAsync(null);
             actual = response.Result;
 
             // Assert

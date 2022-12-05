@@ -25,7 +25,7 @@ namespace IdentityApi.Controllers
         /// <returns>User token for newly created user</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult> Create(UserCreate userCreate)
+        public async Task<ActionResult> CreateAsync(UserCreate userCreate)
         {
             return await _userManager.CreateUserAsync(userCreate, GetUserLocation()) ? 
                 Ok("User has been created!") : throw new Exception("Something went wrong! try again");
@@ -37,7 +37,7 @@ namespace IdentityApi.Controllers
         /// <returns>User Token</returns>
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<UserToken>> Login(UserLogin userLogin)
+        public async Task<ActionResult<UserToken>> LoginAsync(UserLogin userLogin)
         {
             var user = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -53,7 +53,7 @@ namespace IdentityApi.Controllers
         /// <returns>User Token</returns>
         [HttpPost]
         [Route("verificationlogin")]
-        public async Task<ActionResult<UserToken>> VerificationLogin(UserLogin userLogin)
+        public async Task<ActionResult<UserToken>> VerificationLoginAsync(UserLogin userLogin)
         {
             var user = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
 
@@ -70,7 +70,7 @@ namespace IdentityApi.Controllers
         /// <returns>Ok if user is verified</returns>
         [HttpPost]
         [Route("verifyregister")]
-        public async Task<ActionResult> VerifyUserRegister(UserLogin userLogin)
+        public async Task<ActionResult> VerifyUserRegisterAsync(UserLogin userLogin)
         {
             return await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation()) ? 
                 Ok() : throw new UserIncorrectLoginException();
@@ -83,7 +83,7 @@ namespace IdentityApi.Controllers
         [Authorize]
         [HttpGet]
         [Route("getuserbytoken")]
-        public async Task<ActionResult<User>> GetUserByToken()
+        public async Task<ActionResult<User>> GetUserByTokenAsync()
         {
             var tokenUser = _tokenManager.GetUserTokenFromToken(Request.Headers["Authorization"].ToString().Replace("Bearer ", "").Replace("bearer ", ""));
 
