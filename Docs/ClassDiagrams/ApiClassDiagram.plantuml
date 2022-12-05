@@ -9,11 +9,11 @@ class UserController{
     -_tokenManager : ITokenManager
     --
     +UserController(userManager : IUserManager, tokenManager : ITokenManager)
-    +CreateAsync(userCreate : UserCreate) : Task<ActionResult<UserToken>>
+    +CreateAsync(userCreate : UserCreate) : Task<ActionResult>
     +LoginAsync(userLogin : UserLogin) : Task<ActionResult<UserToken>>
     +GetUserFromTokenAsync() : Task<ActionResult<User>>
-    +VerificationLoginAsync(userLogin : UserLogin) : Task<ActionResult<UserToken>>
-    +VerifyUserRegisterAsync(UserLogin : UserLogin) : Task<ActionResult>
+    +VerificationLoginAsync(verifyCredentials : VerifyCredentials) : Task<ActionResult<UserToken>>
+    +VerifyUserRegisterAsync(verifyCredentials : VerifyCredentials) : Task<ActionResult>
     -GetUserLocation() : UserLocation
 }
 
@@ -28,8 +28,8 @@ Interface IUserManager {
     +CreateUserAsync(userCreate : UserCreate) : Task<bool>
     +LoginAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
     +GetUserByIDAsync(id : int) : Task<User>
-    +LoginWithVerificationCodeAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
-    +VerifyUserRegistrationAsync(userLogin : UserLogin, userLocation: UserLocation) : Task<bool>
+    +LoginWithVerificationCodeAsync(verifyCredentials : VerifyCredentials, userLocation : UserLocation) : Task<User>
+    +VerifyUserRegistrationAsync(verifyCredentials : VerifyCredentials, userLocation: UserLocation) : Task<bool>
 }
 
 interface ITokenManager {
@@ -75,8 +75,9 @@ class UserManager {
 class UserLocationManager {
     -_userLocationProvider : IUserLocationProvider
     --
-    +UserLocationManager(userLocationProvider : UserLocationProvider)
+    +UserLocationManager(userLocationProvider : IUserLocationProvider)
 }
+
 class MessageManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
@@ -89,6 +90,7 @@ class MessageManager {
 
 IUserManager "1" --> "1" UserCreate
 IUserManager "1" --> "1" UserLogin
+IUserManager "1" --> "1" VerifyCredentials
 UserManager .-|> IUserManager
 MessageManager .-|> IMessageManager
 
@@ -220,6 +222,11 @@ class UserBase{
 class UserLogin{
     +Email : string
     +Password : string 
+}
+
+class VerifyCredentials {
+    +Email : string
+    +Password : string
 }
 
 class UserLocation{
