@@ -1,7 +1,7 @@
 @startuml API class diagram
 
 top to bottom direction
-
+skinparam linetype ortho
 'Services'
 interface IMessageService {
     +SendMessageAsync(message : IMessage) : Task

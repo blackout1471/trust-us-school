@@ -1,7 +1,7 @@
 @startuml API class diagram
 
 top to bottom direction
-
+skinparam linetype ortho
 'Controllers'
 
 class UserController{
@@ -19,8 +19,8 @@ class UserController{
 
 'Controllers mappings' 
 
-UserController o-- IUserManager
-UserController o-- ITokenManager
+UserController "1" o-- "1" IUserManager
+UserController "1" o-- "1" ITokenManager
 
 'Managers'
 
@@ -87,22 +87,22 @@ class MessageManager {
 
 'Managers mappings'
 
-IUserManager --> UserCreate
-IUserManager --> UserLogin
+IUserManager "1" --> "1" UserCreate
+IUserManager "1" --> "1" UserLogin
 UserManager .-|> IUserManager
 MessageManager .-|> IMessageManager
 
-UserManager o-- IUserProvider
-UserManager o-- IUserLocationManager
-UserManager o-- ILeakedPasswordProvider
-UserManager o-- IMessageManager
+UserManager "1" o-- "1" IUserProvider
+UserManager "1" o-- "1" IUserLocationManager
+UserManager "1" o-- "1" ILeakedPasswordProvider
+UserManager "1" o-- "1" IMessageManager
 
 TokenManager .-|> ITokenManager
-ITokenManager *-- UserToken
+ITokenManager "1" *-- "1" UserToken
 
 
 UserLocationManager .-|> IUserLocationManager
-UserLocationManager o-- IUserLocationProvider
+UserLocationManager "1" o-- "1" IUserLocationProvider
 'Providers'
 
 interface IUserProvider {
@@ -148,8 +148,8 @@ class UserProvider {
 
 'Providers mappings'
 
-IUserProvider *-- DbUser
-IUserLocationProvider *-- UserLocation  
+IUserProvider "1" *-- "1" DbUser
+IUserLocationProvider "1" *-- "1" UserLocation  
 
 LeakedPasswordProvider .-|> ILeakedPasswordProvider
 LeakedPasswordProvider --|> SqlProvider
