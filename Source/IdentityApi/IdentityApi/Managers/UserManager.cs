@@ -36,7 +36,7 @@ namespace IdentityApi.Managers
                 throw new IpBlockedException();
 
             // Check if password has been leaked
-            if (await CheckPasswordLeakedForUser(userCreate.Password))
+            if (await CheckPasswordLeakedForUserAsync(userCreate.Password))
             {
                 _logger.LogWarning($"User[{userCreate.Email}] tried to register leaked password");
                 throw new PasswordLeakedException();
@@ -96,8 +96,8 @@ namespace IdentityApi.Managers
             userLocation.UserID = existingUser.ID;
 
             // Check if user is locked or not verified yet
-            await IsUserLocked(userLocation, existingUser);
-            await IsUserNotVerified(userLocation, existingUser);
+            await IsUserLockedAsync(userLocation, existingUser);
+            await IsUserNotVerifiedAsync(userLocation, existingUser);
 
             // Check if passwords do not match
             if (existingUser.HashedPassword != Security.GetEncryptedAndSaltedPassword(userLogin.Password, existingUser.Salt, _configuration["Pepper"]))
@@ -150,7 +150,7 @@ namespace IdentityApi.Managers
             }
 
             // User is locked, no need for further checks
-            await IsUserLocked(userLocation, existingUser);
+            await IsUserLockedAsync(userLocation, existingUser);
 
             // check if given otp password is valid
             if (!IsVerificationCodeValid(userLogin.Password, existingUser))
@@ -187,7 +187,7 @@ namespace IdentityApi.Managers
             }
 
             // check whether user is locked, if they are. No need for further checks
-            await IsUserLocked(userLocation, existingUser);
+            await IsUserLockedAsync(userLocation, existingUser);
 
             // Checks if otp password does not match
             if (userLogin.Password != existingUser.SecretKey)
@@ -218,7 +218,7 @@ namespace IdentityApi.Managers
         /// </summary>
         /// <param name="password">The password to check is breached</param>
         /// <returns>True if breached, false otherwise</returns>
-        private async Task<bool> CheckPasswordLeakedForUser(string password)
+        private async Task<bool> CheckPasswordLeakedForUserAsync(string password)
         {
             var stringBytes = Encoding.UTF8.GetBytes(password);
             var hashedBytes = SHA1.HashData(stringBytes);
@@ -235,7 +235,7 @@ namespace IdentityApi.Managers
         /// <param name="userLocation">The location to log</param>
         /// <param name="currentUser">The current existsting user.</param>
         /// <exception cref="AccountLockedException">The account is locked</exception>
-        private async Task IsUserLocked(UserLocation userLocation, DbUser currentUser)
+        private async Task IsUserLockedAsync(UserLocation userLocation, DbUser currentUser)
         {
             // User is locked, no need for further checks
             if (currentUser.IsLocked)
@@ -253,7 +253,7 @@ namespace IdentityApi.Managers
         /// <param name="userLocation">The location to log</param>
         /// <param name="currentUser">The current user to handle.</param>
         /// <exception cref="AccountLockedException">The account is locked</exception>
-        private async Task IsUserNotVerified(UserLocation userLocation, DbUser currentUser)
+        private async Task IsUserNotVerifiedAsync(UserLocation userLocation, DbUser currentUser)
         {
             if (!currentUser.IsVerified)
             {
