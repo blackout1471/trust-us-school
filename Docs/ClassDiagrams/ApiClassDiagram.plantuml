@@ -1,7 +1,7 @@
 @startuml API class diagram
 
 top to bottom direction
-
+skinparam linetype ortho
 'Controllers'
 
 class UserController{
@@ -9,17 +9,18 @@ class UserController{
     -_tokenManager : ITokenManager
     --
     +UserController(userManager : IUserManager, tokenManager : ITokenManager)
-    +Create(userCreate : UserCreate) : Task<ActionResult<UserToken>>
-    +Login(userLogin : UserLogin) : Task<ActionResult<UserToken>>
-    +GetUserFromToken() : Task<ActionResult<User>>
-    +VerificationLogin(userLogin : UserLogin) : Task<ActionResult<UserToken>>
-    +VerifyUserRegister(UserLogin : UserLogin) : Task<ActionResult>
+    +CreateAsync(userCreate : UserCreate) : Task<ActionResult>
+    +LoginAsync(userLogin : UserLogin) : Task<ActionResult<UserToken>>
+    +GetUserFromTokenAsync() : Task<ActionResult<User>>
+    +VerificationLoginAsync(verifyCredentials : VerifyCredentials) : Task<ActionResult<UserToken>>
+    +VerifyUserRegisterAsync(verifyCredentials : VerifyCredentials) : Task<ActionResult>
+    -GetUserLocation() : UserLocation
 }
 
 'Controllers mappings' 
 
-UserController o-- IUserManager
-UserController o-- ITokenManager
+UserController "1" o-- "1" IUserManager
+UserController "1" o-- "1" ITokenManager
 
 'Managers'
 
@@ -27,8 +28,8 @@ Interface IUserManager {
     +CreateUserAsync(userCreate : UserCreate) : Task<bool>
     +LoginAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
     +GetUserByIDAsync(id : int) : Task<User>
-    +LoginWithVerificationCodeAsync(userLogin : UserLogin, userLocation : UserLocation) : Task<User>
-    +VerifyUserRegistrationAsync(userLogin : UserLogin, userLocation: UserLocation) : Task<bool>
+    +LoginWithVerificationCodeAsync(verifyCredentials : VerifyCredentials, userLocation : UserLocation) : Task<User>
+    +VerifyUserRegistrationAsync(verifyCredentials : VerifyCredentials, userLocation: UserLocation) : Task<bool>
 }
 
 interface ITokenManager {
@@ -66,16 +67,17 @@ class UserManager {
     +UserManager(configuration : IConfiguration, userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageManager : IMessageManager, logger : ILogger<UserManager>)
     -IsVerificationCodeValid(verificationCode : string, user : DbUser) : bool
-    -CheckPasswordLeakedForUser(password : string) : Task<bool>
-    -IsUserNotVerified(userLocation : UserLocation, user : DbUser) : Task
-    -IsUserLocked(userLocation : UserLocation, user : DbUser) : Task
+    -CheckPasswordLeakedForUserAsync(password : string) : Task<bool>
+    -IsUserNotVerifiedAsync(userLocation : UserLocation, user : DbUser) : Task
+    -IsUserLockedAsync(userLocation : UserLocation, user : DbUser) : Task
 }
 
 class UserLocationManager {
     -_userLocationProvider : IUserLocationProvider
     --
-    +UserLocationManager(userLocationProvider : UserLocationProvider)
+    +UserLocationManager(userLocationProvider : IUserLocationProvider)
 }
+
 class MessageManager {
     -_messageService : IMessageService
     -_messageProvider : IMessageProvider
@@ -86,33 +88,34 @@ class MessageManager {
 
 'Managers mappings'
 
-IUserManager --> UserCreate
-IUserManager --> UserLogin
+IUserManager "1" --> "1" UserCreate
+IUserManager "1" --> "1" UserLogin
+IUserManager "1" --> "1" VerifyCredentials
 UserManager .-|> IUserManager
 MessageManager .-|> IMessageManager
 
-UserManager o-- IUserProvider
-UserManager o-- IUserLocationManager
-UserManager o-- ILeakedPasswordProvider
-UserManager o-- IMessageManager
+UserManager "1" o-- "1" IUserProvider
+UserManager "1" o-- "1" IUserLocationManager
+UserManager "1" o-- "1" ILeakedPasswordProvider
+UserManager "1" o-- "1" IMessageManager
 
 TokenManager .-|> ITokenManager
-ITokenManager *-- UserToken
+ITokenManager "1" *-- "1" UserToken
 
 
-UserLocationManager .-|> IUserLocationManager
-UserLocationManager o-- IUserLocationProvider
+UserLocationManager .--|> IUserLocationManager
+UserLocationManager "1" o-- "1" IUserLocationProvider
 'Providers'
 
 interface IUserProvider {
     +CreateUserAsync(userCreate : DbUser) : Task<DbUser>
     +GetUserByEmailAsync(email : string) : Task<DbUser>
     +GetUserByIdAsync(id : int) : Task<DbUser>
-    +UpdateUserFailedTries(userId : int) : Task<DbUser>
-    +UpdateUserLoginSuccess(userId : int) : Task<DbUser>
-    +UpdateUserLoginNewLocation(userId : int) : Task<DbUser>
+    +UpdateUserFailedTriesAsync(userId : int) : Task<DbUser>
+    +UpdateUserLoginSuccessAsync(userId : int) : Task<DbUser>
+    +UpdateUserLoginNewLocationAsync(userId : int) : Task<DbUser>
     +UpdateUserToVerifiedAsync(userID : int) : Task
-    +UpdateUserLoginSuccessWithVerificationCode(userId : int) : Task<DbUser>
+    +UpdateUserLoginSuccessWithVerificationCodeAsync(userId : int) : Task<DbUser>
 }
 
 interface ILeakedPasswordProvider {
@@ -147,8 +150,8 @@ class UserProvider {
 
 'Providers mappings'
 
-IUserProvider *-- DbUser
-IUserLocationProvider *-- UserLocation  
+IUserProvider "1" *-- "1" DbUser
+IUserLocationProvider "1" *-- "1" UserLocation  
 
 LeakedPasswordProvider .-|> ILeakedPasswordProvider
 LeakedPasswordProvider --|> SqlProvider
@@ -219,6 +222,11 @@ class UserBase{
 class UserLogin{
     +Email : string
     +Password : string 
+}
+
+class VerifyCredentials {
+    +Email : string
+    +Password : string
 }
 
 class UserLocation{

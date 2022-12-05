@@ -46,7 +46,7 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLogin();
             
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccess(expected.ID)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessAsync(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             // Act
@@ -65,7 +65,7 @@ namespace IdentityApiUnitTest.Managers
             var userLogin = GetUserLoginVerification();
 
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessWithVerificationCode(expected.ID)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessWithVerificationCodeAsync(expected.ID)).Returns(GetDbUser());
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
 
             // Act
@@ -98,7 +98,7 @@ namespace IdentityApiUnitTest.Managers
         public async Task ThrowsUserIncorrectLoginException_WhenPasswordIsWrong_LoginWithVerificationCode()
         {
             // Arrange
-            var userLogin = GetUserLogin();
+            var userLogin = GetVerifyCredentials();
             userLogin.Password = "PasswordThatIsWrong";
             var dbUser = GetDbUser();
 
@@ -219,7 +219,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(GetDbUser());
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocationAsync(A<int>.Ignored)).Returns(GetDbUser());
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(true);
             
@@ -247,7 +247,7 @@ namespace IdentityApiUnitTest.Managers
                 .Returns(true);
 
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns(dbUser);
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocationAsync(A<int>.Ignored)).Returns(dbUser);
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -259,7 +259,7 @@ namespace IdentityApiUnitTest.Managers
         public async void ThrowsIpBlockedException_WhenUserIsBlocked_VerifyUserRegistrationAsync()
         {
             // Arrange
-            var userLogin = GetUserLogin();
+            var userLogin = GetVerifyCredentials();
 
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(true);
             
@@ -274,7 +274,7 @@ namespace IdentityApiUnitTest.Managers
         public async void ExpectFalse_WhenUserDoNotExist_VerifyUserRegistrationAsync()
         {
             // Arrange
-            var userLogin = GetUserLogin();
+            var userLogin = GetVerifyCredentials();
 
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(null);
@@ -290,7 +290,7 @@ namespace IdentityApiUnitTest.Managers
         public async void ThrowUserIsLockedException_WhenUserIsLocked_VerifyUserRegistrationAsync()
         {
             // Arrange
-            var userLogin = GetUserLogin();
+            var userLogin = GetVerifyCredentials();
             var dbUser = GetDbUser();
             dbUser.IsLocked = true;
 
@@ -308,7 +308,7 @@ namespace IdentityApiUnitTest.Managers
         public async void ThrowUserIncorrectLoginException_WhenPasswordsDoNotMatch_VerifyUserRegistrationAsync()
         {
             // Arrange
-            var userLogin = GetUserLogin();
+            var userLogin = GetVerifyCredentials();
             var dbUser = GetDbUser();
 
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
@@ -350,7 +350,7 @@ namespace IdentityApiUnitTest.Managers
             A.CallTo(() => _fakeLocationManager.IsIPLockedAsync(A<string>.Ignored)).Returns(false);
             A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(A<string>.Ignored)).Returns<DbUser>(dbUser);
             A.CallTo(() => _messageManager.SendLoginAttemptMessageAsync(A<string>.Ignored, A<string>.Ignored)).Returns(false);
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocation(A<int>.Ignored)).Returns(dbUser);
+            A.CallTo(() => _fakeUserProvider.UpdateUserLoginNewLocationAsync(A<int>.Ignored)).Returns(dbUser);
             A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
             // Act
             var func = async () => await _userManager.LoginAsync(userLogin, fakeUserLoc);
@@ -399,9 +399,19 @@ namespace IdentityApiUnitTest.Managers
                 Password = "verysecurepassword"
             };
         }
-        private UserLogin GetUserLoginVerification()
+
+        private VerifyCredentials GetVerifyCredentials() 
         {
-            return new UserLogin()
+            return new VerifyCredentials()
+            {
+                Email = "a@b.com",
+                Password = "verysecurepassword"
+            };
+        }
+
+        private VerifyCredentials GetUserLoginVerification()
+        {
+            return new VerifyCredentials()
             {
                 Email = "a@b.com",
                 Password = "36DA913AAFC687A11B5BF11313A493AC18D4A56DB7B6E4B24689F07E1ECD36A5FAE2D293B98A622BBB2494CECE8A35F98D1719483DCC226EFEC9DE86274A9B0E"

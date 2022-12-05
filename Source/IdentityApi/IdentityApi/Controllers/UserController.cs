@@ -25,7 +25,7 @@ namespace IdentityApi.Controllers
         /// <returns>User token for newly created user</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<ActionResult> Create(UserCreate userCreate)
+        public async Task<ActionResult> CreateAsync(UserCreate userCreate)
         {
             return await _userManager.CreateUserAsync(userCreate, GetUserLocation()) ? 
                 Ok("User has been created!") : throw new Exception("Something went wrong! try again");
@@ -37,7 +37,7 @@ namespace IdentityApi.Controllers
         /// <returns>User Token</returns>
         [HttpPost]
         [Route("login")]
-        public async Task<ActionResult<UserToken>> Login(UserLogin userLogin)
+        public async Task<ActionResult<UserToken>> LoginAsync(UserLogin userLogin)
         {
             var user = await _userManager.LoginAsync(userLogin, GetUserLocation());
 
@@ -53,15 +53,14 @@ namespace IdentityApi.Controllers
         /// <returns>User Token</returns>
         [HttpPost]
         [Route("verificationlogin")]
-        public async Task<ActionResult<UserToken>> VerificationLogin(UserLogin userLogin)
+        public async Task<ActionResult<UserToken>> VerificationLoginAsync(VerifyCredentials verifyCredentials)
         {
-            var user = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
+            var user = await _userManager.LoginWithVerificationCodeAsync(verifyCredentials, GetUserLocation());
 
             if (user == null)
                 throw new UserIncorrectLoginException();
 
             return Ok(_tokenManager.GenerateUserToken(user));
-
         }
 
         /// <summary>
@@ -70,9 +69,9 @@ namespace IdentityApi.Controllers
         /// <returns>Ok if user is verified</returns>
         [HttpPost]
         [Route("verifyregister")]
-        public async Task<ActionResult> VerifyUserRegister(UserLogin userLogin)
+        public async Task<ActionResult> VerifyUserRegisterAsync(VerifyCredentials verifyCredentials)
         {
-            return await _userManager.VerifyUserRegistrationAsync(userLogin, GetUserLocation()) ? 
+            return await _userManager.VerifyUserRegistrationAsync(verifyCredentials, GetUserLocation()) ? 
                 Ok() : throw new UserIncorrectLoginException();
         }
 
@@ -83,7 +82,7 @@ namespace IdentityApi.Controllers
         [Authorize]
         [HttpGet]
         [Route("getuserbytoken")]
-        public async Task<ActionResult<User>> GetUserByToken()
+        public async Task<ActionResult<User>> GetUserByTokenAsync()
         {
             var tokenUser = _tokenManager.GetUserTokenFromToken(Request.Headers["Authorization"].ToString().Replace("Bearer ", "").Replace("bearer ", ""));
 

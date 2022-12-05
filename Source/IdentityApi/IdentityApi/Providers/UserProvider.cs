@@ -57,7 +57,7 @@ namespace IdentityApi.Providers
         }
 
         /// <inheritdoc/>
-        public async Task<DbUser> UpdateUserFailedTries(int userID)
+        public async Task<DbUser> UpdateUserFailedTriesAsync(int userID)
         {
             var userTable = await RunSpAsync("SP_UpdateUserFailedTries", new SpElement("UserID", userID, SqlDbType.Int));
 
@@ -68,7 +68,7 @@ namespace IdentityApi.Providers
         }
 
         /// <inheritdoc/>
-        public async Task<DbUser> UpdateUserLoginSuccess(int userID)
+        public async Task<DbUser> UpdateUserLoginSuccessAsync(int userID)
         {
             var userTable = await RunSpAsync("SP_UserLoggedIn", new SpElement("UserID", userID, SqlDbType.Int));
 
@@ -79,7 +79,7 @@ namespace IdentityApi.Providers
         }
 
         /// <inheritdoc/>
-        public async Task<DbUser> UpdateUserLoginNewLocation(int userID)
+        public async Task<DbUser> UpdateUserLoginNewLocationAsync(int userID)
         {
             var userTable = await RunSpAsync("SP_UpdateLastRequest", new SpElement("UserID", userID, SqlDbType.Int));
 
@@ -134,7 +134,7 @@ namespace IdentityApi.Providers
         }
 
         /// <inheritdoc/>
-        public async Task<DbUser> UpdateUserLoginSuccessWithVerificationCode(int userID)
+        public async Task<DbUser> UpdateUserLoginSuccessWithVerificationCodeAsync(int userID)
         {
             var userTable = await RunSpAsync("SP_UserLoggedInWithVerification", new SpElement("UserID", userID, SqlDbType.Int));
 
