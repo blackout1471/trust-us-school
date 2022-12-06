@@ -1,6 +1,6 @@
 @startuml API class diagram
 
-top to bottom direction
+left to right direction
 skinparam linetype ortho
 'Services'
 interface IMessageService {
@@ -18,14 +18,17 @@ class MailMessageService{
 
 'Service mappings'
 MailMessageService .-|> IMessageService
-MailMessageService"1" o-- "1"SMTPConfigModel
+MailMessageService"1" o-- "1" SMTPConfigModel
+
+IMessageService "1" --> "1" IMessage
+
 'Providers'
 interface IMessageProvider{
     +GetRegisterMessage(to: string, key : string) : IMessage
     +GetLoginAttemptMessage(to: string, otp : string) : IMessage
 }
 'Provider mapping'
-IMessageProvider --> IMessage
+IMessageProvider "1" --> "1" IMessage
 
 'Models'
 interface IMessage{
