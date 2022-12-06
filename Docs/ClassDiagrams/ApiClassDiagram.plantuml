@@ -4,9 +4,9 @@ top to bottom direction
 skinparam linetype ortho
 'Controllers'
 
-class UserController{
+class UserController {
     -_userManager{readonly} : IUserManager
-    -_tokenManager : ITokenManager
+    -_tokenManager{readonly} : ITokenManager
     --
     +UserController(userManager : IUserManager, tokenManager : ITokenManager)
     +CreateAsync(userCreate : UserCreate) : Task<ActionResult>
@@ -59,18 +59,22 @@ interface IMessageManager {
 }
 
 class TokenManager {
+    -_configuration{readonly} : IConfiguration
+    -_logger{readonly} : ILogger<TokenManager>
+    -_secret{readonly} : string
     --
+    +TokenManager(configuration : IConfiguration, logger : ILogger<TokenManager>)
     -GetPrincipal(token : string) : ClaimsPrincipal
     -ClaimsIdentityToUserToken(identity : ClaimsPrincipal, token : string) : UserToken
 }
 
 class UserManager {
-    -_userProvider : IUserProvider
-    -_leakedPasswordProvider : ILeakedPasswordProvider;
-    -_userLocationManager : IUserLocationManager
-    -_messageManager : IMessageManager
-    -_logger : ILogger<UserManager>
-    -_configuration : IConfiguration
+    -_userProvider{readonly} : IUserProvider
+    -_leakedPasswordProvider{readonly} : ILeakedPasswordProvider;
+    -_userLocationManager{readonly} : IUserLocationManager
+    -_messageManager{readonly} : IMessageManager
+    -_logger{readonly} : ILogger<UserManager>
+    -_configuration{readonly} : IConfiguration
     --
     +UserManager(configuration : IConfiguration, userProvider : IUserProvider, leakedPasswordProvider : ILeakedPasswordProvider, userLocationManager : IUserLocationManager,
      messageManager : IMessageManager, logger : ILogger<UserManager>)
@@ -81,16 +85,18 @@ class UserManager {
 }
 
 class UserLocationManager {
-    -_userLocationProvider : IUserLocationProvider
+    -_userLocationProvider{readonly} : IUserLocationProvider
     --
     +UserLocationManager(userLocationProvider : IUserLocationProvider)
 }
 
 class MessageManager {
-    -_messageService : IMessageService
-    -_messageProvider : IMessageProvider
+    -_messageService{readonly} : IMessageService
+    -_messageProvider{readonly} : IMessageProvider
+    -_logger : ILogger<MessageManager>
     --
-    +MessageManager(messageService : EmailMessageService, messageProvider : MailMessageProvider)
+    +MessageManager(messageService : EmailMessageService, messageProvider : MailMessageProvider,
+    logger : ILogger<MessageManager>)
 }
 
 
@@ -112,8 +118,8 @@ UserManager "1" o-- "1" IMessageManager
 UserManager "1" --> "1" DbUser
 
 TokenManager .-|> ITokenManager
-ITokenManager "1" *-- "1" UserToken
-ITokenManager "1" *-- "1" User
+ITokenManager "1" --> "1" UserToken
+ITokenManager "1" --> "1" User
 
 UserLocationManager .--|> IUserLocationManager
 UserLocationManager "1" o-- "1" IUserLocationProvider
@@ -162,22 +168,25 @@ class UserProvider {
     -DRToUser(dr : DataRow) : DbUser
 }
 
+class UserLocationProvider{
+    -DrToUserLocation(dr : DataRow) : UserLocation
+} 
 
 
 'Providers mappings'
 
-IUserProvider "1" *-- "1" DbUser
-IUserLocationProvider "1" *-- "1" UserLocation  
+IUserProvider "1" --> "1" DbUser
+IUserLocationProvider "1" --> "1" UserLocation  
+UserLocationProvider .-|> IUserLocationProvider
 
 LeakedPasswordProvider .-|> ILeakedPasswordProvider
 LeakedPasswordProvider --|> SqlProvider
 
 UserProvider .-|> IUserProvider
 UserProvider --|> SqlProvider
+UserLocationProvider --|> SqlProvider
 
-UserProvider "1" --> "*" SpElement
 SqlProvider "1" --> "*" SpElement
-LeakedPasswordProvider --> "*" SpElement
 
 'Utility'
 
