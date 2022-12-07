@@ -37,9 +37,9 @@ namespace IdentityApi.Helpers
 
 
         /// <summary>
-        /// Takes a key and a counter, hashes them, then bitwise
+        /// Takes a key and a counter, hashes them.
         /// </summary>
-        /// <returns>A 20 byte HOTP</returns>
+        /// <returns>A string HOTP</returns>
         public static string GetHotp(string key, long counter)
         {
             byte[] keyBytes = Convert.FromBase64String(key);
@@ -47,7 +47,6 @@ namespace IdentityApi.Helpers
             var hmacsha = new HMACSHA512(keyBytes);
             byte[] hmac_result = hmacsha.ComputeHash(counterInBytes);
 
-            //TODO: If we have time, implement and understand bitwise operation to make a 6 digit int instead of a giant ass string
             string hotp = "";
             for (int i = 0; i <= hmac_result.Length - 1; i++)
                 hotp += hmac_result[i].ToString("x2").ToUpperInvariant();
