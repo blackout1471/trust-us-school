@@ -22,7 +22,11 @@ namespace IdentityApi.Helpers
 
             return hashed;
         }
-
+        
+        /// <summary>
+        /// Uses Argon2id to hash password with given salt
+        /// </summary>
+        /// <returns>Hashed password</returns>
         private static string HashPassword(string password, string salt)
         {
             var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password));
