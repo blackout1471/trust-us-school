@@ -41,20 +41,7 @@ namespace IdentityApiUnitTest.Managers
         [Fact]
         public async Task ExpectUserDetails_WhenLoggingIn_Login()
         {
-            // Arrange 
-            var expected = GetUser();
-            var userLogin = GetUserLogin();
-            
-            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessAsync(expected.ID)).Returns(GetDbUser());
-            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
-            A.CallTo(() => _configuration[A<string>.Ignored]).Returns("cENgCHeYQSv/FYL7tJwIQT7BIYcxI8b8uBe9oKfFzes=");
-            // Act
-            var actual = await _userManager.LoginAsync(userLogin, GetUserLocation());
-
-            // Assert
-            Assert.Equal(expected.Email, actual.Email);
-            Assert.Equal(expected.ID, actual.ID);
+            Assert.True(false);
         }
 
         [Fact]
