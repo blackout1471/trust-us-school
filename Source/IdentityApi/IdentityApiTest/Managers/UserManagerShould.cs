@@ -60,20 +60,7 @@ namespace IdentityApiUnitTest.Managers
         [Fact]
         public async Task ExpectUserDetails_WhenLoggingIn_LoginWithVerificationCode()
         {
-            // Arrange 
-            var expected = GetUser();
-            var userLogin = GetUserLoginVerification();
-
-            A.CallTo(() => _fakeUserProvider.GetUserByEmailAsync(userLogin.Email)).Returns(GetDbUser());
-            A.CallTo(() => _fakeUserProvider.UpdateUserLoginSuccessWithVerificationCodeAsync(expected.ID)).Returns(GetDbUser());
-            A.CallTo(() => _fakeLocationManager.UserWasLoggedInFromLocationAsync(A<UserLocation>.Ignored)).Returns(true);
-
-            // Act
-            var actual = await _userManager.LoginWithVerificationCodeAsync(userLogin, GetUserLocation());
-
-            // Assert
-            Assert.Equal(expected.Email, actual.Email);
-            Assert.Equal(expected.ID, actual.ID);
+            Assert.True(false);
         }
 
         [Fact]
